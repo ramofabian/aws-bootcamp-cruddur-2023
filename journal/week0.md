@@ -50,7 +50,7 @@ Application layer:
     </tr>
 </table>
 
-![iron_triangle]('../_docs/assets/week0/iron_triangle.png')
+![iron_triangle](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/iron_triangle.png)
 
 # Architectural diagram
 
