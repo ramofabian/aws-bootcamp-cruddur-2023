@@ -30,9 +30,9 @@ The company also wants to generally know what spend we expect to encounter and h
 * Once Github account is created create a new repository by using Andrew's template [here](https://github.com/ExamProCo/aws-bootcamp-cruddur-2023).
 
 Notes: 
-    * To create the AWS account you will need a credit card.
-    * Once you have completed these actions you can start with topic and tasks for week 0.
-# Bussines use case of the project
+* To create the AWS account you will need a credit card.
+* Once you have completed these actions you can start with topic and tasks for week 0.
+## Bussines use case of the project
 At the end of the course we will have implemented a new social media called Cruddur, which is an ephemral social network where the users can post, share temporal messages and at the same time bring the user th posibility of monetize the content that has been creted. During this time, we will be using all concepts learned during the lenssons to carry on the works by using AWS services, Github and Gitpod mainly. 
 
 This platform will be using the architecture of microservices which helps to reuse services and code scalling. Where JavaScript + React ill be used for frontend and Python + React will be used for backend, regarding databses it might be using SQL or NOSQL DB, the system will have its own NFDN and security polcies will be implemented to protect the pplatform and users.
@@ -49,11 +49,35 @@ Application layer:
         <td>Data access</td>
     </tr>
 </table>
-Iron triangle
+The Iron triangle should be taken in account to manage the project correctly:
 <p align="center">
   <img src="https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/iron_triangle.png" width="350" alt="accessibility text">
 </p>
 
-# Architectural diagram
+### C4 model
+Pending
+
+## Cloud architecture
+* A good architecture of a cloud should have:
+    * Clear vocabulary --> Understand customer needs.
+    * The requirements should be measurable.
+    * The objective should be verfible.
+    * The requirements should be monitoreable.
+    * Clear undertanding about what can be truncable or feastable.
+    * Address risk, assumptions and constrains.
+* Dising phases:
+    * Conceptual desing --> first idea.
+    * Logical desing --> General information.
+    * Physical desing  --> Actual desing with real inforamtion.
+* Tips from RRACs:
+    * Ask dummy questions --> This is to have the clearest view as possible.
+    * Play be the packet --> Recreating the possible scenarios will allow the designer reduce the range of failures in the future.
+    * Document everything --> Don't miss anything.
+* TOGAF:
+    * Framework for cloud architecture.
+    * It maches within AWS services.
+    * It brings the vocabulary to work as cloud achitector.
+    * The most populat framework for EA.
+
 
 
