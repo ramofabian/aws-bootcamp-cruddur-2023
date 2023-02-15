@@ -50,7 +50,10 @@ Application layer:
     </tr>
 </table>
 
-![iron_triangle](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/iron_triangle.png)
+<p align="center">
+  <img src="your_relative_path_here" width="350" title="hover text">
+  <img src="https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/_docs/assets/week0/iron_triangle.png" width="350" alt="accessibility text">
+</p>
 
 # Architectural diagram
 
