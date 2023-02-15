@@ -28,9 +28,10 @@ The company also wants to generally know what spend we expect to encounter and h
 * Create an account in: Github, Gitpod (or configure your local VSC), Github CodeSpaces, AWS, Momento, Lucid Chards, HoneyComb.io, Rollback.
 * Purchase a new public domain.
 * Once Github account is created create a new repository by using Andrew's template [here](https://github.com/ExamProCo/aws-bootcamp-cruddur-2023).
+
 Notes: 
-- To create the AWS account you will need a credit card.
-- Once you have completed these actions you can start with topic and tasks for week 0.
+    * To create the AWS account you will need a credit card.
+    * Once you have completed these actions you can start with topic and tasks for week 0.
 # Bussines use case of the project
 At the end of the course we will have implemented a new social media called Cruddur, which is an ephemral social network where the users can post, share temporal messages and at the same time bring the user th posibility of monetize the content that has been creted. During this time, we will be using all concepts learned during the lenssons to carry on the works by using AWS services, Github and Gitpod mainly. 
 
@@ -48,6 +49,8 @@ Application layer:
         <td>Data access</td>
     </tr>
 </table>
+
+![imagename]('_docs/assets/week0/iron_triangle.png')
 
 # Architectural diagram
 
