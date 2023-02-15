@@ -38,9 +38,7 @@ This platform will be using the architecture of microservices which helps to reu
 
 Application layer:
 |User Unit|
-|------------------|
 |Bussines logistics|
-|------------------|
 |Data access|
 # Architectural diagram
 
