@@ -37,9 +37,18 @@ At the end of the course we will have implemented a new social media called Crud
 This platform will be using the architecture of microservices which helps to reuse services and code scalling. Where JavaScript + React ill be used for frontend and Python + React will be used for backend, regarding databses it might be using SQL or NOSQL DB, the system will have its own NFDN and security polcies will be implemented to protect the pplatform and users.
 
 Application layer:
-|User Unit|
-|Bussines logistics|
-|Data access|
+<table>
+    <tr>
+        <td>User Unit</td>
+    </tr>
+    <tr>
+        <td>Bussines logistics</td>
+    </tr>
+    <tr>
+        <td>Data access</td>
+    </tr>
+</table>
+
 # Architectural diagram
 
 
