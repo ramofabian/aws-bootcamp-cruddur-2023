@@ -50,7 +50,7 @@ Application layer:
     </tr>
 </table>
 
-![imagename]('_docs/assets/week0/iron_triangle.png')
+![iron_triangle]('../_docs/assets/week0/iron_triangle.png')
 
 # Architectural diagram
 
