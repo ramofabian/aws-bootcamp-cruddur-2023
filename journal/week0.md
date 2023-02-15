@@ -1,5 +1,6 @@
 # Week 0 — Billing and Architecture
-## Topics
+## Technical Tasks
+In the class and during the week, we laid out the foundation for the entire bootcamp by:
 1. Prerequisites
 2. Discussing the format of the bootcamp
 3. Going over the business use-case of our project
@@ -12,3 +13,35 @@
 10. Understanding how to look at monthly billing reports
 11. Launching AWS CloudShell and looking at AWS CLI
 12. Generating AWS credentials
+## Business Scenario
+Your company has asked to put together a technical presentation on the proposed architecture that will be implemented so it can be reviewed by the fractional CTO.
+
+Your presentation must include a technical architectural diagram and breakdown of possible services used along with their justification.
+
+The company also wants to generally know what spend we expect to encounter and how we will ensure we keep our spending low.
+## Weekly Outcome
+* Gain confidence when working meter-billing with a Cloud Service Provider (CSP)
+* To understand how to build useful architecture diagrams
+* To gain a general idea of the cost of common cloud services
+* To ensure we have a working AWS account
+## Prerequisites
+* Create an account in: Github, Gitpod (or configure your local VSC), Github CodeSpaces, AWS, Momento, Lucid Chards, HoneyComb.io, Rollback.
+* Purchase a new public domain.
+* Once Github account is created create a new repository by using Andrew's template [here](https://github.com/ExamProCo/aws-bootcamp-cruddur-2023).
+Notes: 
+- To create the AWS account you will need a credit card.
+- Once you have completed these actions you can start with topic and tasks for week 0.
+# Bussines use case of the project
+At the end of the course we will have implemented a new social media called Cruddur, which is an ephemral social network where the users can post, share temporal messages and at the same time bring the user th posibility of monetize the content that has been creted. During this time, we will be using all concepts learned during the lenssons to carry on the works by using AWS services, Github and Gitpod mainly. 
+
+This platform will be using the architecture of microservices which helps to reuse services and code scalling. Where JavaScript + React ill be used for frontend and Python + React will be used for backend, regarding databses it might be using SQL or NOSQL DB, the system will have its own NFDN and security polcies will be implemented to protect the pplatform and users.
+
+Application layer:
+|User Unit|
+|------------------|
+|Bussines logistics|
+|------------------|
+|Data access|
+# Architectural diagram
+
+
