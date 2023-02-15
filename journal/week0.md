@@ -35,7 +35,7 @@ Notes:
 ## Bussines use case of the project
 At the end of the course we will have implemented a new social media called Cruddur, which is an ephemral social network where the users can post, share temporal messages and at the same time bring the user th posibility of monetize the content that has been creted. During this time, we will be using all concepts learned during the lenssons to carry on the works by using AWS services, Github and Gitpod mainly. 
 
-This platform will be using the architecture of microservices which helps to reuse services and code scalling. Where JavaScript + React ill be used for frontend and Python + React will be used for backend, regarding databses it might be using SQL or NOSQL DB, the system will have its own NFDN and security polcies will be implemented to protect the pplatform and users.
+This platform will be using the architecture of microservices which helps to reuse services and code scalling. Where JavaScript + React will be used for frontend and Python + React will be used for backend, regarding databses it might be using SQL or NOSQL DB, the system will have its own NFQDN and security polcies will be implemented to protect the pplatform and users.
 
 Application layer:
 <table>
@@ -78,6 +78,19 @@ Pending
     * It maches within AWS services.
     * It brings the vocabulary to work as cloud achitector.
     * The most populat framework for EA.
+* [Diagram](https://lucid.app/lucidchart/6f80cd2d-7d18-4731-aadc-bdda9773c092/edit?invitationId=inv_c648fee2-f691-443d-8602-7e959b41a18d&page=u~1sbYNXU9q3#)
+
+## Security Considerations by Ashish Rajan
+
+Pending
+
+## Homework list
+1 Destroy your root account credentials, Set MFA, IAM role
+2 Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue.
+3 Review all the questions of each pillars in the Well Architected Tool (No specialized lens)
+4 Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts
+5 Research the technical and service limits of specific services and how they could impact the technical path for technical flexibility. 
+6 Open a support ticket and request a service limit
 
 
 
