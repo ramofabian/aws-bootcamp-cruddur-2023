@@ -64,51 +64,82 @@ It's a model used to create set of architecture diagramas at work by using the 4
 * [Course diagram](https://lucid.app/lucidchart/6f80cd2d-7d18-4731-aadc-bdda9773c092/edit?invitationId=inv_c648fee2-f691-443d-8602-7e959b41a18d&page=u~1sbYNXU9q3#)
 
 ### Watched Chirag's Week 0 - Spend Considerations	
-:white_check_mark: I watched the video and executed the works address by the instructor. [Link to video](https://www.youtube.com/watch?v=OVw3RrlP-sI&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=13)
+:white_check_mark: DONE, I watched the video, executed the works address by the instructor and summited the quiz without any issue. [Link to video](https://www.youtube.com/watch?v=OVw3RrlP-sI&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=13)
+
 ### Watched Ashish's Week 0 - Security Considerations
-:white_check_mark: I watched the video and executed the works address by the instructor. [Link to video](https://www.youtube.com/watch?v=4EMWBYVggQI&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=15)
+:white_check_mark: DONE, I watched the video, executed the works address by the instructor and summited the quiz without any issue. [Link to video](https://www.youtube.com/watch?v=4EMWBYVggQI&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=15)
 ### Recreate Conceptual Diagram in Lucid Charts or on a Napkin
-:white_check_mark: Done
+:white_check_mark: DONE, I didn't have problems to recreate the chart. 
 
 Find the link to chart file :point_right: [Link to Lucid charts file](https://lucid.app/lucidchart/aea4dfd7-f680-4c1a-99b9-1abad176d570/edit?viewport_loc=-311%2C-84%2C3840%2C1554%2C0_0&invitationId=inv_5bded0c2-5dd1-4840-b55c-264de7306582)
 
 <p align="center"><img src="assets/week0/Cruddur - Conceptual Diagram - Conceptual.png" alt="accessibility text"></p>
 
 ### Recreate Logical Architectual Diagram in Lucid Charts
-:white_check_mark: DONE 
+:white_check_mark: DONE, I didn't have problems to recreate the diagram. 
 
 Find the link to chart file :point_right: [Link to Lucid charts file](https://lucid.app/lucidchart/aea4dfd7-f680-4c1a-99b9-1abad176d570/edit?viewport_loc=-104%2C-36%2C3840%2C1554%2CjF0wpWsibGvK&invitationId=inv_5bded0c2-5dd1-4840-b55c-264de7306582)
 
 <p align="center"><img src="assets/week0/Cruddur - Conceptual Diagram - Logical App.png" alt="accessibility text"></p>
 
 ### Create an Admin User
-:white_check_mark: DONE
+:white_check_mark: DONE, I didn't have problems to create my admin user.
 
+Here there is the prove to the created user called "cristianramos"
 <p align="center"><img src="assets/week0/admin user creation.png" alt="accessibility text"></p>
+
+This user was created on Feb 13th and it has assigned the policy "Administratoraccess" as is stated in the picture below:
 
 <p align="center"><img src="assets/week0/IAM Management Console.png" alt="accessibility text"></p>
 
 ### Use CloudShell
-:white_check_mark: DONE
+:white_check_mark: DONE, I didn't have problems launch and use the cloudshell from root and admin user account.  
+
+In the picture below I was able to execute the commands from CloudShell: "aws sts get-caller-identity" and "aws account get-contact-information": 
 
 <p align="center"><img src="assets/week0/AWS_CloudShell_my_admin_info.png" alt="accessibility text"></p>
 
 ### Generate AWS Credentials
-https://www.youtube.com/watch?v=OdUnNuKylHg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=14
+:white_check_mark: DONE, I did almost all without any problem. However my blocking point was the problems at moment to make the push to Github, because I didn't set correctly the permissions between Gitpod and Github. When I realized about it, I fixed it and the push started to work.
+
+The access key generated:
+<p align="center"><img src="assets/week0/last_access_keys.png" alt="accessibility text"></p>
+
+The access keys exported to env in linux:
+<p align="center"><img src="assets/week0/generated_keys_loaded2.png" alt="accessibility text"></p>
+
+Showing the status of the keys:
+<p align="center"><img src="assets/week0/prove_linux_connection2.png" alt="accessibility text"></p>
+
+Access keys stored on Gitpod:
+<p align="center"><img src="assets/week0/keys_stored_in_gitpod.png" alt="accessibility text"></p>
+
 ### Installed AWS CLI
+:white_check_mark: DONE, I didn't have problems to install and launch and use AWS CLI from Windows or Linux.
 
-:white_check_mark: DONE
-
+Here you can find the proves that I installed the AWS CLI for windows from .msi file:
 <p align="center"><img src="assets/week0/aws_cli_win_install.png" alt="accessibility text"></p>
 
+Then I configured my access key:
 <p align="center"><img src="assets/week0/win_aws_cli_config.png" alt="accessibility text"></p>
 
+And here there is the results:
 <p align="center"><img src="assets/week0/win_aws_cli_review.png" alt="accessibility text"></p>
 
 ### Create a Billing Alarm
-https://www.youtube.com/watch?v=OdUnNuKylHg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=14
+:white_check_mark: DONE, I didn't have problems to create the Billing alarm.
+
+SNS configuration:
+<p align="center"><img src="assets/week0/sns.png" alt="accessibility text"></p>
+
+Created billing alarm:
+<p align="center"><img src="assets/week0/Billing alert.png" alt="accessibility text"></p>
+
 ### Create a Budget	
-https://www.youtube.com/watch?v=OdUnNuKylHg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=14
+:white_check_mark: DONE, I didn't have problems to create the Budget of 10 USD.
+
+Budget configuration:
+<p align="center"><img src="assets/week0/Budget_creation.png" alt="accessibility text"></p>
 
 ## Homework chanlenges
 1. Destroy your root account credentials, Set MFA, IAM role
