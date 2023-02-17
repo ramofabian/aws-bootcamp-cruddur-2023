@@ -82,13 +82,29 @@ Find the link to chart file :point_right: [Link to Lucid charts file](https://lu
 <p align="center"><img src="assets/week0/Cruddur - Conceptual Diagram - Logical App.png" alt="accessibility text"></p>
 
 ### Create an Admin User
-https://www.youtube.com/watch?v=OdUnNuKylHg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=14
+:white_check_mark: DONE
+
+<p align="center"><img src="assets/week0/admin user creation.png" alt="accessibility text"></p>
+
+<p align="center"><img src="assets/week0/IAM Management Console.png" alt="accessibility text"></p>
+
 ### Use CloudShell
-https://www.youtube.com/watch?v=OdUnNuKylHg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=14
+:white_check_mark: DONE
+
+<p align="center"><img src="assets/week0/AWS_CloudShell_my_admin_info.png" alt="accessibility text"></p>
+
 ### Generate AWS Credentials
 https://www.youtube.com/watch?v=OdUnNuKylHg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=14
 ### Installed AWS CLI
-https://www.youtube.com/watch?v=OdUnNuKylHg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=14
+
+:white_check_mark: DONE
+
+<p align="center"><img src="assets/week0/aws_cli_win_install.png" alt="accessibility text"></p>
+
+<p align="center"><img src="assets/week0/win_aws_cli_config.png" alt="accessibility text"></p>
+
+<p align="center"><img src="assets/week0/win_aws_cli_review.png" alt="accessibility text"></p>
+
 ### Create a Billing Alarm
 https://www.youtube.com/watch?v=OdUnNuKylHg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=14
 ### Create a Budget	
