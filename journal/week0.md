@@ -131,6 +131,9 @@ And here there is the results:
 ### Create a Billing Alarm
 :white_check_mark: DONE, I didn't have problems to create the Billing alarm.
 
+Enbaling billing alerts:
+<p align="center"><img src="assets/week0/billing_alert_2.png" alt="accessibility text"></p>
+
 SNS configuration:
 <p align="center"><img src="assets/week0/sns.png" alt="accessibility text"></p>
 
