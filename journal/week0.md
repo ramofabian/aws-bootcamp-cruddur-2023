@@ -68,12 +68,14 @@ It's a model used to create set of architecture diagramas at work by using the 4
 
 ### Watched Ashish's Week 0 - Security Considerations
 :white_check_mark: DONE, I watched the video, executed the works address by the instructor and summited the quiz without any issue. [Link to video](https://www.youtube.com/watch?v=4EMWBYVggQI&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=15)
+
 ### Recreate Conceptual Diagram in Lucid Charts or on a Napkin
 :white_check_mark: DONE, I didn't have problems to recreate the chart. 
 
 Find the link to chart file :point_right: [Link to Lucid charts file](https://lucid.app/lucidchart/aea4dfd7-f680-4c1a-99b9-1abad176d570/edit?viewport_loc=-311%2C-84%2C3840%2C1554%2C0_0&invitationId=inv_5bded0c2-5dd1-4840-b55c-264de7306582)
 
-<p align="center"><img src="assets/week0/Cruddur - Conceptual Diagram - Conceptual.png" alt="accessibility text"></p>
+Here it is my napking desing:
+<p align="center"><img src="assets/week0/napking.jpeg" alt="accessibility text"></p>
 
 ### Recreate Logical Architectual Diagram in Lucid Charts
 :white_check_mark: DONE, I didn't have problems to recreate the diagram. 
@@ -141,8 +143,20 @@ Created billing alarm:
 Budget configuration:
 <p align="center"><img src="assets/week0/Budget_creation.png" alt="accessibility text"></p>
 
-## Homework chanlenges
-1. Destroy your root account credentials, Set MFA, IAM role
+## Homework chanllenges
+### 1. Destroy your root account credentials, Set MFA, IAM role
+:white_check_mark: DONE,  I didn't have problems to set the MFA, IAM role.
+
+#### NFA set for root and admin user account:
+<p align="center"><img src="assets/week0/mfa.png" alt="accessibility text"></p>
+
+#### New IAM role set called "AdminRole_bootcamp":
+Role summary:
+<p align="center"><img src="assets/week0/role.png" alt="accessibility text"></p>
+
+Role configuration:
+<p align="center"><img src="assets/week0/role_config.png" alt="accessibility text"></p>
+
 2. Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue.
 3. Review all the questions of each pillars in the Well Architected Tool (No specialized lens)
 4. Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts
