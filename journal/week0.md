@@ -160,11 +160,159 @@ Role summary:
 Role configuration:
 <p align="center"><img src="assets/week0/role_config.png" alt="accessibility text"></p>
 
-2. Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue.
-3. Review all the questions of each pillars in the Well Architected Tool (No specialized lens)
-4. Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts
-5. Research the technical and service limits of specific services and how they could impact the technical path for technical flexibility. 
-6. Open a support ticket and request a service limit
+### 2. Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue.
+:white_check_mark: DONE, I was strugguling on this task because there is may ways to do it and at the first attepmt I failed becuase I wasn't adding the right aws service to be monitored and the correct target for SNS. When I found my mistake I fixed and configure it correctly, it was a good taks I learned a lot.
+
+Please find below the rule create  as "Monitor_health_issues" under "default" buses which is the only free tier and the aws pattern as "aws.health":
+<p align="center"><img src="assets/week0/Amazon EventBridge_2.png" alt="accessibility text"></p>
+
+Here belo you will find the tagets created to store and monitor the logs events and send the sns notifications:
+<p align="center"><img src="assets/week0Amazon EventBridge_1.png.png" alt="accessibility text"></p>
+
+### 4. Review all the questions of each pillars in the Well Architected Tool (No specialized lens)
+There are 6 pilars of the AWS well architected framework:
+#### :sparkle:Operational excellence
+This pilar provides an overwiew of design principles and best pratices to support deployment and workload efectily. It offers 4 best parctice areas which are mentioned below:
+##### :arrow_right:Organization
+Those questions address you to understand if you are hadnling correcly your prioritys, evalute the structure your organizzation in terms of support for bussines outcomes.
+```	
+OPS 1 > How do you determine what your priorities are? 
+OPS 2 > How do you structure your organization to support your business outcomes?
+OPS 3 > How does your organizational culture support your business outcomes?
+```
+##### :arrow_right:Prepare
+Those questions help you to know if your desing is well prepared to be easy to be understandable, relayable and scalable.
+```
+OPS 4  How do you design your workload so that you can understand its state?
+OPS 5  How do you reduce defects, ease remediation, and improve flow into production?
+OPS 6  How do you mitigate deployment risks?
+OPS 7  How do you know that you are ready to support a workload?
+```
+##### :arrow_right:Operate
+Those questions help you to understand if your desing is well cosolidated to be operative and support events.
+```
+OPS 8  How do you understand the health of your workload?
+OPS 9  How do you understand the health of your operations?
+OPS 10  How do you manage workload and operations events?
+```
+##### :arrow_right:Evolve
+Those questions help you to understand impact of your solution in the customer bussines.
+```
+OPS 11  How do you evolve operations?
+```
+#### :sparkle:Security
+This pillar focus on data protection, systems and check your desing elements to improve the security in your desing. It has 6 best practice areas mentioned below:
+##### :arrow_right:	Security foundations
+This question open the space to analize and comprehence your workload in your desing and how it can be secured.
+```
+SEC 1  How do you securely operate your workload?
+```
+##### :arrow_right:	Identity and access management
+This questions will help you with access managament for people and machines/services within and outside of your organization.
+```   
+SEC 2  How do you manage authentication for people and machines?
+SEC 3  How do you manage permissions for people and machines?
+```
+##### :arrow_right:	Detection
+```
+SEC 4  How do you detect and investigate security events?
+```
+##### :arrow_right:	Infrastructure protection
+```
+SEC 5  How do you protect your network resources?
+SEC 6  How do you protect your compute resources?
+```
+##### :arrow_right:	Data protection
+```
+SEC 7  How do you classify your data?
+SEC 8  How do you protect your data at rest?
+SEC 9  How do you protect your data in transit?
+```
+##### :arrow_right:	Incident response
+```
+SEC 10  How do you anticipate, respond to, and recover from incidents?
+```
+Reliability
+	Foundations
+	REL 1  How do you manage service quotas and constraints?
+	REL 2  How do you plan your network topology?
+
+	Workload architecture
+	REL 3  How do you design your workload service architecture?
+	REL 4  How do you design interactions in a distributed system to prevent failures?
+	REL 5  How do you design interactions in a distributed system to mitigate or withstand failures?
+
+	Change management
+	REL 6  How do you monitor workload resources?
+	REL 7  How do you design your workload to adapt to changes in demand?
+	REL 8  How do you implement change?
+
+	Failure management
+	REL 9  How do you back up data?
+	REL 10  How do you use fault isolation to protect your workload?
+	REL 11  How do you design your workload to withstand component failures?
+	REL 12  How do you test reliability?
+	REL 13  How do you plan for disaster recovery (DR)?
+
+Performance efficiency
+	Selection
+	PERF 1  How do you select the best performing architecture?
+	PERF 2  How do you select your compute solution?
+	PERF 3  How do you select your storage solution?
+	PERF 4  How do you select your database solution?
+	PERF 5  How do you configure your networking solution?
+
+	Review
+	PERF 6  How do you evolve your workload to take advantage of new releases?
+
+	Monitoring
+	PERF 7  How do you monitor your resources to ensure they are performing?
+
+	Tradeoffs
+	PERF 8  How do you use tradeoffs to improve performance?
+
+Cost optimization
+	Practice Cloud Financial Management
+	COST 1  How do you implement cloud financial management?
+
+	Expenditure and usage awareness
+	COST 2  How do you govern usage?
+	COST 3  How do you monitor usage and cost?
+	COST 4  How do you decommission resources?
+
+	Cost-effective resources
+	COST 5  How do you evaluate cost when you select services?
+	COST 6  How do you meet cost targets when you select resource type, size and number?
+	COST 7  How do you use pricing models to reduce cost?
+	COST 8  How do you plan for data transfer charges?
+
+	Manage demand and supply resources
+	COST 9  How do you manage demand, and supply resources?
+
+	Optimize over time
+	COST 10  How do you evaluate new services?
+
+Sustainability
+	Region selection
+	SUS 1 How do you select Regions to support your sustainability goals?
+
+	User behavior patterns
+	SUS 2 How do you take advantage of user behavior patterns to support your sustainability goals?
+
+	Software and architecture patterns
+	SUS 3 How do you take advantage of software and architecture patterns to support your sustainability goals?
+
+	Data patterns
+	SUS 4 How do you take advantage of data access and usage patterns to support your sustainability goals?
+
+	Hardware patterns
+	SUS 5 How do your hardware management and usage practices support your sustainability goals?
+
+	Development and deployment process
+	SUS 6 How do your development and deployment processes support your sustainability goals?
+### 5. Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts
+### 6. Research the technical and service limits of specific services and how they could impact the technical path for technical flexibility. 
+### 7. Open a support ticket and request a service limit
 
 
 
