@@ -167,7 +167,7 @@ Please find below the rule create  as "Monitor_health_issues" under "default" bu
 <p align="center"><img src="assets/week0/Amazon EventBridge_2.png" alt="accessibility text"></p>
 
 Here belo you will find the tagets created to store and monitor the logs events and send the sns notifications:
-<p align="center"><img src="assets/week0Amazon EventBridge_1.png.png" alt="accessibility text"></p>
+<p align="center"><img src="assets/week0/Amazon EventBridge_1.png" alt="accessibility text"></p>
 
 ### 4. Review all the questions of each pillars in the Well Architected Tool (No specialized lens)
 There are 6 pillars of the AWS well architected framework:
