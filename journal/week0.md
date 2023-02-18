@@ -146,7 +146,7 @@ Created billing alarm:
 Budget configuration:
 <p align="center"><img src="assets/week0/Budget_creation.png" alt="accessibility text"></p>
 
-## Homework chanllenges
+## Homework challenges
 ### 1. Destroy your root account credentials, Set MFA, IAM role
 :white_check_mark: DONE,  I didn't have problems to set the MFA, IAM role.
 
@@ -161,7 +161,7 @@ Role configuration:
 <p align="center"><img src="assets/week0/role_config.png" alt="accessibility text"></p>
 
 ### 2. Use EventBridge to hookup Health Dashboard to SNS and send notification when there is a service health issue.
-:white_check_mark: DONE, I was strugguling on this task because there is may ways to do it and at the first attepmt I failed becuase I wasn't adding the right aws service to be monitored and the correct target for SNS. When I found my mistake I fixed and configure it correctly, it was a good taks I learned a lot.
+:white_check_mark: DONE, I was struggling on this task because there is may ways to do it and at the first attempt I failed because I wasn't adding the right aws service to be monitored and the correct target for SNS. When I found my mistake I fixed and configure it correctly, it was a good tasks I learned a lot.
 
 Please find below the rule create  as "Monitor_health_issues" under "default" buses which is the only free tier and the aws pattern as "aws.health":
 <p align="center"><img src="assets/week0/Amazon EventBridge_2.png" alt="accessibility text"></p>
@@ -170,18 +170,18 @@ Here belo you will find the tagets created to store and monitor the logs events 
 <p align="center"><img src="assets/week0Amazon EventBridge_1.png.png" alt="accessibility text"></p>
 
 ### 4. Review all the questions of each pillars in the Well Architected Tool (No specialized lens)
-There are 6 pilars of the AWS well architected framework:
+There are 6 pillars of the AWS well architected framework:
 #### :sparkle:Operational excellence
-This pilar provides an overwiew of design principles and best pratices to support deployment and workload efectily. It offers 4 best parctice areas which are mentioned below:
+This pilar provides an overview of design principles and best practices to support deployment and workload effectible. It offers 4 best practice areas which are mentioned below:
 ##### :arrow_right:Organization
-Those questions address you to understand if you are hadnling correcly your prioritys, evalute the structure your organizzation in terms of support for bussines outcomes.
+Those questions address you to understand if you are handling correctly your priorities, evaluate the structure your organization in terms of support for business outcomes.
 ```	
 OPS 1 > How do you determine what your priorities are? 
 OPS 2 > How do you structure your organization to support your business outcomes?
 OPS 3 > How does your organizational culture support your business outcomes?
 ```
 ##### :arrow_right:Prepare
-Those questions help you to know if your desing is well prepared to be easy to be understandable, relayable and scalable.
+Those questions help you to know if your design is well prepared to be easy to be understandable, reliable and scalable.
 ```
 OPS 4  How do you design your workload so that you can understand its state?
 OPS 5  How do you reduce defects, ease remediation, and improve flow into production?
@@ -189,127 +189,174 @@ OPS 6  How do you mitigate deployment risks?
 OPS 7  How do you know that you are ready to support a workload?
 ```
 ##### :arrow_right:Operate
-Those questions help you to understand if your desing is well cosolidated to be operative and support events.
+Those questions help you to understand if your design is well consolidated to be operative and support events.
 ```
 OPS 8  How do you understand the health of your workload?
 OPS 9  How do you understand the health of your operations?
 OPS 10  How do you manage workload and operations events?
 ```
 ##### :arrow_right:Evolve
-Those questions help you to understand impact of your solution in the customer bussines.
+Those questions help you to understand impact of your solution in the customer business.
 ```
 OPS 11  How do you evolve operations?
 ```
 #### :sparkle:Security
-This pillar focus on data protection, systems and check your desing elements to improve the security in your desing. It has 6 best practice areas mentioned below:
-##### :arrow_right:	Security foundations
-This question open the space to analize and comprehence your workload in your desing and how it can be secured.
+This pillar focus on data protection, systems and check your design elements to improve the security in your design. It has 6 best practice areas mentioned below:
+##### :arrow_right:Security foundations
+This question open the space to analyze and comprehended your workload in your design and how it can be secured.
 ```
 SEC 1  How do you securely operate your workload?
 ```
-##### :arrow_right:	Identity and access management
-This questions will help you with access managament for people and machines/services within and outside of your organization.
+##### :arrow_right:Identity and access management
+This questions will help you with access management for people and machines/services within and outside of your organization.
 ```   
 SEC 2  How do you manage authentication for people and machines?
 SEC 3  How do you manage permissions for people and machines?
 ```
-##### :arrow_right:	Detection
+##### :arrow_right:Detection
+This question opens the space for ask your self about how you make your design able to detect and investigate any security event.
 ```
 SEC 4  How do you detect and investigate security events?
 ```
-##### :arrow_right:	Infrastructure protection
+##### :arrow_right:Infrastructure protection
+Here is reviewed how you can protect your devices and your network from security breaches.
 ```
 SEC 5  How do you protect your network resources?
 SEC 6  How do you protect your compute resources?
 ```
-##### :arrow_right:	Data protection
+##### :arrow_right:Data protection
+This questions help you to understand how your can protect your data, which secured protocols you will be using and how it will be treated.
 ```
 SEC 7  How do you classify your data?
 SEC 8  How do you protect your data at rest?
 SEC 9  How do you protect your data in transit?
 ```
-##### :arrow_right:	Incident response
+##### :arrow_right:Incident response
+This question steaks about how you or members of your organization will be able to react by any security issue.
 ```
 SEC 10  How do you anticipate, respond to, and recover from incidents?
 ```
-Reliability
-	Foundations
-	REL 1  How do you manage service quotas and constraints?
-	REL 2  How do you plan your network topology?
+#### :sparkle:Reliability
+This pillar comprehended the ability to operate and test the workload through its total lifecycle.
+##### :arrow_right:Foundations
+How service limits will be managed and how the topology will be planned.
+```
+REL 1  How do you manage service quotas and constraints?
+REL 2  How do you plan your network topology?
+```
+##### :arrow_right:Workload architecture
+How scalable is your workload and how redundant will be your design.
+```
+REL 3  How do you design your workload service architecture?
+REL 4  How do you design interactions in a distributed system to prevent failures?
+REL 5  How do you design interactions in a distributed system to mitigate or withstand failures?
+```
+##### :arrow_right:Change management
+How will be monitored the workload resources and how flexible will be the design for changes  on demand.
+```
+REL 6  How do you monitor workload resources?
+REL 7  How do you design your workload to adapt to changes in demand?
+REL 8  How do you implement change?
+```
+##### :arrow_right:Failure management
+How flexible will be your workload for failures to not impact the customer service.
+```
+REL 9  How do you back up data?
+REL 10  How do you use fault isolation to protect your workload?
+REL 11  How do you design your workload to withstand component failures?
+REL 12  How do you test reliability?
+REL 13  How do you plan for disaster recovery (DR)?
+```
+#### :sparkle:Performance efficiency
+This pillar includes the ability to use computing resources efficiently to meet system requirements, and to maintain that efficiency as demand changes and technologies evolve.
+##### :arrow_right:Selection
+With those questions you will understand better how do you select and configure your devices in your workload desing.
+```
+PERF 1  How do you select the best performing architecture?
+PERF 2  How do you select your compute solution?
+PERF 3  How do you select your storage solution?
+PERF 4  How do you select your database solution?
+PERF 5  How do you configure your networking solution?
+```
+##### :arrow_right:Review
+With this question can be analyzed how your design will take advantage of future releases (example: OS, routers, firewalls, etc)
+```
+PERF 6  How do you evolve your workload to take advantage of new releases?
+```
+##### :arrow_right:Monitoring
+Which type of systems and protocols will be used to monitor your resources.
+```
+PERF 7  How do you monitor your resources to ensure they are performing?
+```
+##### :arrow_right:Tradeoffs
+How your design will have a good performance and which are the weakness and strengths.
+```
+PERF 8  How do you use tradeoffs to improve performance?
+```
+#### :sparkle:Cost optimization
+This pillar talks about the ability to run your workload at the lowest cost.
+##### :arrow_right:Practice Cloud Financial Management
+Here you can analyze how you can realize business value and financial success as the lowest cost.
+```
+COST 1  How do you implement cloud financial management?
+```
+##### :arrow_right:Expenditure and usage awareness
+How the operative cost will be managed:
+```
+COST 2  How do you govern usage?
+COST 3  How do you monitor usage and cost?
+COST 4  How do you decommission resources?
+```
+##### :arrow_right:Cost-effective resources
+How to mitigate the cost for the selected services and which pricing model you will be using.
+```
+COST 5  How do you evaluate cost when you select services?
+COST 6  How do you meet cost targets when you select resource type, size and number?
+COST 7  How do you use pricing models to reduce cost?
+COST 8  How do you plan for data transfer charges?
+```
+##### :arrow_right:Manage demand and supply resources
+How the pricing model is used to manage the supply resources.
+```
+COST 9  How do you manage demand, and supply resources?
+```
+##### :arrow_right:Optimize over time
+When AWS launch new features, how it will be evaluated to maintain the best proficiency.
+```
+COST 10  How do you evaluate new services?
+```
+#### :sparkle:Sustainability
+This pillar includes understanding the impacts of the services used, for the entire workload lifecycle.
+##### :arrow_right:Region selection
+Which criteria is used to select the best region for your workload.
+```
+SUS 1 How do you select Regions to support your sustainability goals?
+```
+##### :arrow_right:User behavior patterns
+How the assts will be managed to maintain your goals.
+```
+SUS 2 How do you take advantage of user behavior patterns to support your sustainability goals?
+```
+##### :arrow_right:Software and architecture patterns
 
-	Workload architecture
-	REL 3  How do you design your workload service architecture?
-	REL 4  How do you design interactions in a distributed system to prevent failures?
-	REL 5  How do you design interactions in a distributed system to mitigate or withstand failures?
-
-	Change management
-	REL 6  How do you monitor workload resources?
-	REL 7  How do you design your workload to adapt to changes in demand?
-	REL 8  How do you implement change?
-
-	Failure management
-	REL 9  How do you back up data?
-	REL 10  How do you use fault isolation to protect your workload?
-	REL 11  How do you design your workload to withstand component failures?
-	REL 12  How do you test reliability?
-	REL 13  How do you plan for disaster recovery (DR)?
-
-Performance efficiency
-	Selection
-	PERF 1  How do you select the best performing architecture?
-	PERF 2  How do you select your compute solution?
-	PERF 3  How do you select your storage solution?
-	PERF 4  How do you select your database solution?
-	PERF 5  How do you configure your networking solution?
-
-	Review
-	PERF 6  How do you evolve your workload to take advantage of new releases?
-
-	Monitoring
-	PERF 7  How do you monitor your resources to ensure they are performing?
-
-	Tradeoffs
-	PERF 8  How do you use tradeoffs to improve performance?
-
-Cost optimization
-	Practice Cloud Financial Management
-	COST 1  How do you implement cloud financial management?
-
-	Expenditure and usage awareness
-	COST 2  How do you govern usage?
-	COST 3  How do you monitor usage and cost?
-	COST 4  How do you decommission resources?
-
-	Cost-effective resources
-	COST 5  How do you evaluate cost when you select services?
-	COST 6  How do you meet cost targets when you select resource type, size and number?
-	COST 7  How do you use pricing models to reduce cost?
-	COST 8  How do you plan for data transfer charges?
-
-	Manage demand and supply resources
-	COST 9  How do you manage demand, and supply resources?
-
-	Optimize over time
-	COST 10  How do you evaluate new services?
-
-Sustainability
-	Region selection
-	SUS 1 How do you select Regions to support your sustainability goals?
-
-	User behavior patterns
-	SUS 2 How do you take advantage of user behavior patterns to support your sustainability goals?
-
-	Software and architecture patterns
-	SUS 3 How do you take advantage of software and architecture patterns to support your sustainability goals?
-
-	Data patterns
-	SUS 4 How do you take advantage of data access and usage patterns to support your sustainability goals?
-
-	Hardware patterns
-	SUS 5 How do your hardware management and usage practices support your sustainability goals?
-
-	Development and deployment process
-	SUS 6 How do your development and deployment processes support your sustainability goals?
+```
+SUS 3 How do you take advantage of software and architecture patterns to support your sustainability goals?
+```
+##### :arrow_right:Data patterns
+Which methods will be used to maintain the consistency high utilization of deployed resources.
+```
+SUS 4 How do you take advantage of data access and usage patterns to support your sustainability goals?
+```
+##### :arrow_right:Hardware patterns
+How do you use and support your assets to maintain your sustainability goals.
+```
+SUS 5 How do your hardware management and usage practices support your sustainability goals?
+```
+##### :arrow_right:Development and deployment process
+How the process are created and implemented to maintain your goals.
+```
+SUS 6 How do your development and deployment processes support your sustainability goals?
+```
 ### 5. Create an architectural diagram (to the best of your ability) the CI/CD logical pipeline in Lucid Charts
 ### 6. Research the technical and service limits of specific services and how they could impact the technical path for technical flexibility. 
 ### 7. Open a support ticket and request a service limit
