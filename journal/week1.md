@@ -14,7 +14,7 @@
 I installed snyk and docker compose on my prsonal ubuntu VM and ran the docker-compose.yml as it was done from the video. Then I scanned the running docker containers to see if there is any security breaches. It was good exersice and very much stright forward procedure, I liked it becuse this is something that I had never done before.
 
 I followed this procedure form this [link](https://docs.snyk.io/snyk-cli/install-the-snyk-cli)
-```
+```bash
 # To download the packet
 curl https://static.snyk.io/cli/latest/snyk-linux
 chmod +x ./snyk
@@ -99,7 +99,7 @@ A new file called docker-compose.yml needs to be created at `/workspace/aws-boot
 <p align="center"><img src="assets/week1/Docker_compose_directory.png" alt="accessibility text"></p>
 
 Then add the information information below inside of your docker-file:
-```
+```yml
 version: "3.8"
 services:
   backend-flask:
@@ -156,7 +156,7 @@ With the help of VSC's OpenAPI extension we can easily go through the file `open
 
 To create the documentation of the notifications endpoints, we need to have clear that this endpoint will be using the `GET` method to transfer data because the frontend will be consuming only this information to be written in the webpage. Also we use the `tags` properties to group it under `activities` with other endpoint already existing, then we declare the response from the type `array` and the schema `#/components/schemas/Activity` where is already decalred in an object the answer.
 
-```
+```yml
   /api/activities/notifications:
     get:
       description: 'Return a feed of activity for all of those I follow'
@@ -229,7 +229,7 @@ As the backend API is running with `python` and its library `Flask`, we need fir
 
 In the file previously mentioned, we have to add this piece of code which basically redirects the `GET` queries with the path `/api/activities/notifications` in the URL to the service `NotificattionsActivities.run()`. Alse we import the library service `services.notificattions_activities` which allow the use of the service:
 
-```
+```py
 from services.notificattions_activities import *
 
 #-----Omitted output for brevity--------------   
@@ -242,7 +242,7 @@ def data_notifications():
 ```
 Then inside of in the directory `/workspace/aws-bootcamp-cruddur-2023/backend-flask/services/` we need to create a file called `notificattions_activities.py` where the service will code will be placed. This code has a function called `run()` which retunrs the list which contains information in list and dictionary format:
 
-```
+```py
 from datetime import datetime, timedelta, timezone
 class NotificattionsActivities:
   def run():
@@ -300,11 +300,11 @@ Once the code is placed the backend its implemented and it can be tested from br
 
 
 ### Write a React Page for Notifications
-:white_check_mark: DONE. This point was more challenging than the others because this is my first time working with react. Altthough I could follow Andrew's instraction without any issue.
+:white_check_mark: DONE. This point was more challenging than the others because this is my first time working with react. Although I could follow Andrew's instraction without any issue.
 
 From entry point file called `App.js` located in the directory `/workspace/aws-bootcamp-cruddur-2023/frontend-react-js/src`, where we will be routing the notifications service to `./pages/NotificationsActivities`:
 
-```
+```js
 import NotificationsActivities from './pages/NotificationsActivities';
 #-----Omitted output for brevity--------------   
  {
@@ -314,7 +314,7 @@ import NotificationsActivities from './pages/NotificationsActivities';
 ```
 Now we need to created the files `NotificationsActivities.js` (notifications web page) and `NotificationsActivities.css` (css styling file) in the path `/workspace/aws-bootcamp-cruddur-2023/frontend-react-js/src/pages/`. Inside this file we need to add this code which builds the webpage for notifications:
 
-```
+```js
 import './NotificationsActivities.css';
 import React from "react";
 
@@ -409,3 +409,183 @@ Then the the frontend is ready to be used and consume info from backend:
 
 * [App.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/App.js)
 * [NotificationsActivities.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/NotificationsActivities.js)
+
+### Run DynamoDB Local Container and ensure it works
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's procedure, hoever it was my first time with DynamoDB.
+
+To run DynamonDB and Postgres services, we need to update the `docker-compose.yml` file to simplify the container execution. Because both databases must run in separated containers and have access to backend and frontend network managed by docker deamon. 
+
+The following code should be added in the docker compose file. There the dynamoDB container will be created with the port 8000 open, volume is mounted in the directory path `./docker/dynamodb` at host level and `/home/dynamodblocal/data` at container, each time we login into the container the defail dir will be `/home/dynamodblocal`, and the DB will has the local user: `root`.
+
+```yml
+services: #this line can be ommitted  because is already declared in the docker-compose.yml file
+  dynamodb-local:
+    # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
+    # We needed to add user:root to get this working.
+    user: root
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+ ```
+
+This piece of code should be pased as it is seen in the this link: :point_right: [docker-compose.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml?plain=1#L20-L31). 
+
+Then the docker-compose file can be executed make sure the ports are in `open (public)` state.
+
+<p align="center"><img src="assets/week1/docker_compose_status_dynamodb.png" alt="accessibility text"></p>
+
+The port 8000 must be in open (public) state:
+
+<p align="center"><img src="assets/week1/open_port_dynamodb.png" alt="accessibility text"></p>
+
+To probe the DB reachability, AWS CLI will be needed to create a table, create an item and then list the table with the information. Those commands are taken from this repo :point_right: [100DaysOfCloud](https://github.com/100DaysOfCloud/challenge-dynamodb-local)
+
+<b>Creating a table</b>
+
+In the command below the table called `Music` is created to be used through URL: `http://localhost:8000` and it has 2 attributes `Artist` and `SongTitle`.
+
+```bash
+aws dynamodb create-table \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --attribute-definitions \
+        AttributeName=Artist,AttributeType=S \
+        AttributeName=SongTitle,AttributeType=S \
+    --key-schema AttributeName=Artist,KeyType=HASH AttributeName=SongTitle,KeyType=RANGE \
+    --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 \
+    --table-class STANDARD
+```
+
+Output:
+```
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "Artist",
+                "AttributeType": "S"
+            },
+            {
+                "AttributeName": "SongTitle",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "Music",
+        "KeySchema": [
+            {
+                "AttributeName": "Artist",
+                "KeyType": "HASH"
+            },
+            {
+                "AttributeName": "SongTitle",
+                "KeyType": "RANGE"
+            }
+        ],
+        "TableStatus": "ACTIVE",
+        "CreationDateTime": "2023-02-21T23:04:14.290000+00:00",
+        "ProvisionedThroughput": {
+            "LastIncreaseDateTime": "1970-01-01T00:00:00+00:00",
+            "LastDecreaseDateTime": "1970-01-01T00:00:00+00:00",
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:ddblocal:000000000000:table/Music"
+    }
+}
+gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ 
+```
+
+<b>Creating an item</b>
+
+In this command the information is added to `Music` table and attribute `AlbumTitle` is added with the respective information.
+
+```bash
+aws dynamodb put-item \
+    --endpoint-url http://localhost:8000 \
+    --table-name Music \
+    --item \
+        '{"Artist": {"S": "No One You Know"}, "SongTitle": {"S": "Call Me Today"}, "AlbumTitle": {"S": "Somewhat Famous"}}' \
+    --return-consumed-capacity TOTAL  
+```
+
+Output:
+
+```
+{
+    "ConsumedCapacity": {
+        "TableName": "Music",
+        "CapacityUnits": 1.0
+    }
+}
+```
+
+<b>Listing all tables</b>
+
+```bash
+aws dynamodb list-tables --endpoint-url http://localhost:8000
+```
+
+Output:
+
+```bash
+gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ aws dynamodb list-tables --endpoint-url http://localhost:8000
+{
+    "TableNames": [
+        "Music"
+    ]
+}
+```
+
+<b>Getting all records from table Music</b>
+
+```bash
+aws dynamodb scan --table-name Music --query "Items" --endpoint-url http://localhost:8000
+```
+
+Output:
+
+```bash
+gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ aws dynamodb scan --table-name Music --query "Items" --endpoint-url http://localhost:8000
+[
+    {
+        "Artist": {
+            "S": "No One You Know"
+        },
+        "SongTitle": {
+            "S": "Call Me Today"
+        },
+        "AlbumTitle": {
+            "S": "Somewhat Famous"
+        }
+    }
+]
+gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ 
+```
+
+### Run Postgres Container and ensure it works
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's procedure. I have some expiriance with MariaDB, however it was my first time with Postgres.
+
+```yml
+services:
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
+```
