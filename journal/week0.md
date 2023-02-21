@@ -2,17 +2,17 @@
 
 ## Required Homework/Tasks
 ### Watched Week 0 - Live Streamed Video
-:white_check_mark: I was present during the live trasmisstion [Link to video](https://www.youtube.com/watch?v=SG8blanhAOg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=12)
+:white_check_mark: I was present during the live transmission  [Link to video](https://www.youtube.com/watch?v=SG8blanhAOg&list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&index=12)
 
 Please find below some notes that I have taken from the video:
-#### Bussines use case of the project
-At the end of the course we will have implemented a new social media called Cruddur, which is an ephemral social network where the users can post, share temporal messages and at the same time bring the user th posibility of monetize the content that has been creted. During this time, we will be using all concepts learned during the lenssons to carry on the works by using AWS services, Github and Gitpod mainly. 
+#### Business use case of the project
+At the end of the course we will have implemented a new social media called Cruddur, which is an ephemeral social network where the users can post, share temporal messages and at the same time bring the user the possibility of monetize the content that has been created. During this time, we will be using all concepts learned during the lessons to carry on the works by using AWS services, Github and Gitpod mainly. 
 
-This platform will be using the architecture of microservices which helps to reuse services and code scalling. Where JavaScript + React will be used for frontend and Python + React will be used for backend, regarding databses it might be using SQL or NOSQL DB, the system will have its own NFQDN and security polcies will be implemented to protect the pplatform and users.
+This platform will be using the architecture of microservices which helps to reuse services and code scaling. Where JavaScript + React will be used for frontend and Python + React will be used for backend, regarding databases it might be using SQL or NOSQL DB, the system will have its own NFQDN and security policies will be implemented to protect the platform and users.
 
-There are 2 types of application archtecture:
-* Monolitic: In this the archtecture there is only one application that centralices all the works and the system relays only in it. There is no separated services for each function.
-* Microservices: It realys on a series of services deployable which acomplish specific functions or goals and the can be updated, tested, deployed and scaled. it reduces the complexity of the solution. It rellays on the stack below: 
+There are 2 types of application architecture:
+* Monolithic: In this the architecture there is only one application that centralizes all the works and the system relays only in it. There is no separated services for each function.
+* Microservices: It relays on a series of services deployable which accomplish specific functions or goals and the can be updated, tested, deployed and scaled. it reduces the complexity of the solution. It relays on the stack below: 
 <table>
     <tr>
         <td>User Unit</td>
@@ -24,43 +24,43 @@ There are 2 types of application archtecture:
         <td>Data access</td>
     </tr>
 </table>
-The Iron triangle is a model that should be taken in account to manage the project correctly, it helps to keep the balance and carry on the proyect by undrestanding the strengs and willness of the project. The triagle is based on 3 pilars: scope, cost and time.
+The Iron triangle is a model that should be taken in account to manage the project correctly, it helps to keep the balance and carry on the project by understanding the strengths and weaknesses of the project. The triangle is based on 3 pillars: scope, cost and time.
 <p align="center"><img src="assets/week0/iron_triangle.png" width="350" alt="accessibility text"></p>
 
-* Scope: Comprehence the features and funtionality (example.new service).
-* Cost: Comprehence the budget and resource. (example. how much does it cost? and there is the enough resources?).
-* Time: Comprehence the Schdule. (example: how long it will take based on complxity of the tasks, budget and resources?).
+* Scope: Comprehends the features and functionality (Example: new service).
+* Cost: Comprehends the budget and resource. (Example: how much does it cost? and there is the enough resources?).
+* Time: Comprehends the Schedule. (Example: how long it will take based on complexity of the tasks, budget and resources?).
 
-With the help of this diagram, we can unserstand the efect will have any action taken during the project and how it can be mitigated.
+With the help of this diagram, we can understand the effect will have any action taken during the project and how it can be mitigated.
 
 #### C4 Model
-It's a model used to create set of architecture diagramas at work by using the 4C's: System context diagrams, Container diagrams,  Component diagrams and Code. Each of them is a different draw that brings different description levels of the achitecture to buid.
-* System context diagrams :arrow_right: It provides the overal system context where there are reactangles and others types of shapes which represents each element of the architecture and their interaction (without going into the detail because the goal to achieve is non technical people can understand your idea)
-* Container diagram :arrow_right: It contains the individual service or application by providing high level of tecnology information based on the diagrams (example: protocols, databases, API, micro services, etc). The target in this diagram are developers and software architecters withing or out the team.
-* Component diagram :arrow_right: This diagram describes with more detail the information placed in container diagram, it will show the components that made the container up. The target udience are developers and software architects.
-* Code :arrow_right: The detailed information of each component and how implement it, its the information that will be find here. Usually UML diagrams are builded here do describe the information.
+It's a model used to create set of architecture diagrams at work by using the 4C's: System context diagrams, Container diagrams,  Component diagrams and Code. Each of them is a different draw that brings different description levels of the architecture to build.
+* System context diagrams :arrow_right: It provides the overall system context where there are rectangles and other types of shapes which represents each element of the architecture and their interaction (without going into the detail because the goal to achieve is non-technical people can understand your idea)
+* Container diagram :arrow_right: It contains the individual service or application by providing high level of technology information based on the diagrams (example: protocols, databases, API, micro services, etc). The target in this diagram are developers and software architecture withing or out the team.
+* Component diagram :arrow_right: This diagram describes with more detail the information placed in container diagram, it will show the components that made the container up. The target audience are developers and software architects.
+* Code :arrow_right: The detailed information of each component and how implement it, its the information that will be find here. Usually UML diagrams are built here do describe the information.
 
 #### Cloud architecture
 * A good architecture of a cloud should have:
     * Clear vocabulary :arrow_right: Understand customer needs.
     * The requirements should be measurable.
-    * The objective should be verfible.
-    * The requirements should be monitoreable.
-    * Clear undertanding about what can be truncable or feastable.
+    * The objective should be verifiable.
+    * The requirements should be monitorable.
+    * Clear understanding about what can be truncated or viable.
     * Address risk, assumptions and constrains.
 * Dising phases:
-    * Conceptual desing :arrow_right: first idea.
-    * Logical desing :arrow_right: General information.
-    * Physical desing  :arrow_right: Actual desing with real inforamtion.
+    * Conceptual design :arrow_right: first idea.
+    * Logical design :arrow_right: General information.
+    * Physical design   :arrow_right: Actual design with real information.
 * Tips from RRACs:
     * Ask dummy questions :arrow_right: This is to have the clearest view as possible.
     * Play be the packet :arrow_right: Recreating the possible scenarios will allow the designer reduce the range of failures in the future.
     * Document everything :arrow_right: Don't miss anything.
 * TOGAF:
     * Framework for cloud architecture.
-    * It maches within AWS services.
-    * It brings the vocabulary to work as cloud achitector.
-    * The most populat framework for EA.
+    * It matches within AWS services.
+    * It brings the vocabulary to work as cloud architect.
+    * The most popular framework for EA.
 * [Course diagram](https://lucid.app/lucidchart/6f80cd2d-7d18-4731-aadc-bdda9773c092/edit?invitationId=inv_c648fee2-f691-443d-8602-7e959b41a18d&page=u~1sbYNXU9q3#)
 
 ### Watched Chirag's Week 0 - Spend Considerations	
@@ -74,7 +74,7 @@ It's a model used to create set of architecture diagramas at work by using the 4
 
 Find the link to chart file :point_right: [Link to Lucid charts file](https://lucid.app/lucidchart/aea4dfd7-f680-4c1a-99b9-1abad176d570/edit?viewport_loc=-311%2C-84%2C3840%2C1554%2C0_0&invitationId=inv_5bded0c2-5dd1-4840-b55c-264de7306582)
 
-Here it is my napking desing:
+Here it is my napkin design:
 <p align="center"><img src="assets/week0/napking.jpeg" alt="accessibility text"></p>
 
 ### Recreate Logical Architectual Diagram in Lucid Charts
@@ -131,7 +131,7 @@ And here there is the results:
 ### Create a Billing Alarm
 :white_check_mark: DONE, I didn't have problems to create the Billing alarm.
 
-Enbaling billing alerts:
+Enabling billing alerts:
 <p align="center"><img src="assets/week0/billing_alert_2.png" alt="accessibility text"></p>
 
 SNS configuration:
@@ -166,7 +166,7 @@ Role configuration:
 Please find below the rule create  as "Monitor_health_issues" under "default" buses which is the only free tier and the aws pattern as "aws.health":
 <p align="center"><img src="assets/week0/Amazon EventBridge_2.png" alt="accessibility text"></p>
 
-Here belo you will find the tagets created to store and monitor the logs events and send the sns notifications:
+Here below you will find the targets created to store and monitor the logs events and send the sns notifications:
 <p align="center"><img src="assets/week0/Amazon EventBridge_1.png" alt="accessibility text"></p>
 
 ### 4. Review all the questions of each pillars in the Well Architected Tool (No specialized lens)
