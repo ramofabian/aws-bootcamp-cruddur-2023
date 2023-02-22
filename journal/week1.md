@@ -573,8 +573,12 @@ gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $
 ### Run Postgres Container and ensure it works
 :white_check_mark: DONE. I didn't have any issue to follow Andrew's procedure. I have some expiriance with MariaDB, however it was my first time with Postgres.
 
+Below you can find the configuration to deploy postgres DB container which uses version `13-alpine`, user and password set withing `enviroment` paramater, the port 5432 and the local volume mounted in the path `/var/lib/postgresql/data` insisde of container.
+
+<b>Note:</b> the `restart: always` is a policy that "Always restart the container if it stops. If it is manually stopped, it is restarted only when Docker daemon restarts or the container itself is manually restarted". Source: [Docker docs](https://docs.docker.com/config/containers/start-containers-automatically/)
+
 ```yml
-services:
+services: #This line can be ommitted because is already declared in the docker-compose.yml file
   db:
     image: postgres:13-alpine
     restart: always
@@ -589,3 +593,58 @@ volumes:
   db:
     driver: local
 ```
+
+This piece of code should be pasted as it is seen in the this link: :point_right: [docker-compose.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml?plain=1#L32-L52).
+
+The file `docker-compose.yml` can be executed to deploy the container, after seeing them up make sure the ports are in `open (public)` state.
+
+<p align="center"><img src="assets/week1/postgres_db.png" alt="accessibility text"></p>
+<p align="center"><img src="assets/week1/postgres_port.png" alt="accessibility text"></p>
+
+With the command `docker volume inspect aws-bootcamp-cruddur-2023_db` can be seen local volume attached to container `aws-bootcamp-cruddur-2023_db` and the local path to find the volume location.
+
+```json
+gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ docker volume inspect aws-bootcamp-cruddur-2023_db
+[
+    {
+        "CreatedAt": "2023-02-22T20:41:35Z",
+        "Driver": "local",
+        "Labels": {
+            "com.docker.compose.project": "aws-bootcamp-cruddur-2023",
+            "com.docker.compose.version": "2.10.0",
+            "com.docker.compose.volume": "db"
+        },
+        "Mountpoint": "/workspace/.docker-root/volumes/aws-bootcamp-cruddur-2023_db/_data",
+        "Name": "aws-bootcamp-cruddur-2023_db",
+        "Options": null,
+        "Scope": "local"
+    }
+]
+gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ 
+```
+
+To check the right functionality of postgres DB container, its required the installation of postgres client on Gitpod, the commands below which can be run from gitpod shell or can be included in `.gitpod.yml` like :point_right: [here](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/.gitpod.yml?plain=1#L11-L16): 
+
+```yml
+  - name: postgres
+    init: |
+      curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+      echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list
+      sudo apt update
+      sudo apt install -y postgresql-client-13 libpq-dev
+```
+
+The command `psql -h localhost -U postgres` can be used to connect via CLI: 
+
+<p align="center"><img src="assets/week1/postgres_db_cli.png" alt="accessibility text"></p>
+
+
+:point_up: Optional, the installation of postgres DB plugin can be automated by adding the following code in `.gitpod.yml`:
+
+```yml
+vscode:
+  extensions:
+    - cweijan.vscode-postgresql-client2
+```
+
+<p align="center"><img src="assets/week1/postgres_db_web.png" alt="accessibility text"></p>
