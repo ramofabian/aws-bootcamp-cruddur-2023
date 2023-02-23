@@ -649,8 +649,74 @@ vscode:
 
 <p align="center"><img src="assets/week1/postgres_db_web.png" alt="accessibility text"></p>
 
+## Homework challenges
 ### Run the dockerfile CMD as an external script
+:white_check_mark: DONE. It was quit challenging this task becuase I had never created a Dockerfile using external script. I did a lot of attempts and research to findout how to do it.
+
+For this case I have created the bash file `run_flask_server.sh` to be used as external file, then I did some changes in docker file to maket able to uploald the script, change the permissions and run it. Warning: as a prerequisite, the bash file must be in the same directory as Dockerfile.
+
+Please find below the bash script code:
+
+```bash
+#!/bin/bash
+
+#Starting the flask server with bash ad docker
+python3 -m flask run --host=0.0.0.0 --port=4567
+```
+
+Here it is the docker file code where :
+
+```yml
+FROM python:3.10-slim-buster
+
+WORKDIR /backend-flask
+
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
+COPY . .
+
+ENV FLASK_ENV=development
+
+EXPOSE ${PORT}
+# CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"] 
+#Replacing the CMD command above with the following commands and using bash script to run the command: python3 -m flask run --host=0.0.0.0 --port=4567
+ADD run_flask_server.sh /
+RUN chmod 777 /run_flask_server.sh 
+CMD ["/run_flask_server.sh"]
+```
+
+Here below can be foun part of the logs taken during docker build command execution:
+
+<p align="center"><img src="assets/week1/running_new_backend_dockerfile.png" alt="accessibility text"></p>
+<p align="center"><img src="assets/week1/running_new_backend_dockerfile2.png" alt="accessibility text"></p>
+
+Deploying the container:
+
+<p align="center"><img src="assets/week1/running_new_backend_dockerfile3.png" alt="accessibility text"></p>
+
+Access via web working:
+
+<p align="center"><img src="assets/week1/running_new_backend_dockerfile4.png" alt="accessibility text"></p>
+
 ### Push and tag a image to DockerHub (they have a free tier)
+:white_check_mark: DONE. I completed this task, I had some small issue when I added the tag name becuause I was not using correct naming convetion.
+
+To push and tag the image we need to have the image to be pushed and get logged with DockerHub account from cli with the command `docker login`.
+
+<p align="center"><img src="assets/week1/docker_login.png" alt="accessibility text"></p>
+
+Then add the tag with your account user:
+
+<p align="center"><img src="assets/week1/addig docker_tag.png" alt="accessibility text"></p>
+
+Finally pushing the image:
+
+<p align="center"><img src="assets/week1/docker_image_pushed.png" alt="accessibility text"></p>
+<p align="center"><img src="assets/week1/dockerhub.png" alt="accessibility text"></p>
+
+This  image is public and can be seen in this [link](https://hub.docker.com/r/cramos90/backend-flask)
+
 ### Use multi-stage building for a Dockerfile build
 ### Implement a healthcheck in the V3 Docker compose file
 ### Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
