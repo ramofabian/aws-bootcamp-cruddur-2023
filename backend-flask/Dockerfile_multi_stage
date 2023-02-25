@@ -1,0 +1,22 @@
+FROM python:3.10-slim-buster AS BASE
+#Base image with initiall requirements
+WORKDIR /backend-flask
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
+FROM BASE AS PRODUCTION
+#Enviroment set for production
+COPY . .
+ENV FLASK_ENV=development
+EXPOSE ${PORT}
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"] 
+
+FROM BASE AS DEVELOPMENT
+#Enviroment set for development
+COPY . .
+ENV FLASK_ENV=development
+EXPOSE ${PORT}
+#Replacing the CMD command above with the following commands and using bash script to run the command: python3 -m flask run --host=0.0.0.0 --port=4567
+ADD run_flask_server.sh /
+RUN chmod 777 /run_flask_server.sh 
+CMD ["/run_flask_server.sh"]
