@@ -666,7 +666,7 @@ python3 -m flask run --host=0.0.0.0 --port=4567
 
 Here it is the docker file code where :
 
-```yml
+```dockerfile
 FROM python:3.10-slim-buster
 
 WORKDIR /backend-flask
@@ -718,6 +718,61 @@ Finally pushing the image:
 This  image is public and can be seen in this [link](https://hub.docker.com/r/cramos90/backend-flask)
 
 ### Use multi-stage building for a Dockerfile build
+:white_check_mark: DONE. I had to do a lot of research and test to understand how to use it, because I didn't know about this docker feature. I have found it very interesting for dockerfile development and testing.
+
+<b>Reference:</b> [Docker Hub Multistage documentation](https://docs.docker.com/build/building/multi-stage/) and [DEV article](https://dev.to/pavanbelagatti/what-are-multi-stage-docker-builds-1mi9)
+
+I have created a new docker file called `Dockerfile_multi_stage` for backend taking as a base the initial `Dockerfile` for this project. This new file is split in 3 stages, the fristone is called `BASE` where the initial image `python:3.10-slim-buster` is taken as inital source, the work directory is set at `/backend-flask` and all requirements are installed.
+
+The second stage is called `PRODUCTION` and it takes as source image the `BASE` stage and add all required python scripts, system enviroments, the port  is exposed and the flask application is runned via CMD.
+
+The thrid stage, it is called `DEVELOPMENT` and is almost the same as `PRODUCTION` with the diference that there is a external bash script called `run_flask_server.sh` which is added and executed to run flask apllication and adds the posibility to run more commands from there.
+
+The file `Dockerfile_multi_stage` can be found in this :point_right: [LINK](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/Dockerfile_multi_stage) and please find below below the code:
+
+```dockerfile
+FROM python:3.10-slim-buster AS BASE
+#Base image with initiall requirements
+WORKDIR /backend-flask
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
+FROM BASE AS PRODUCTION
+#Enviroment set for production
+COPY . .
+ENV FLASK_ENV=development
+EXPOSE ${PORT}
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"] 
+
+FROM BASE AS DEVELOPMENT
+#Enviroment set for development
+COPY . .
+ENV FLASK_ENV=development
+EXPOSE ${PORT}
+#Replacing the CMD command above with the following commands and using bash script to run the command: python3 -m flask run --host=0.0.0.0 --port=4567
+ADD run_flask_server.sh /
+RUN chmod 777 /run_flask_server.sh 
+CMD ["/run_flask_server.sh"]
+```
+
+Here below some snapshots from execution till `PRODUCTION` stage, the full log output can be found in this :point_right: [LINK](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/journal/assets/week1/multi-stage_logs.log?plain=1#L4-L70):
+
+<p align="center"><img src="assets/week1/multi-stage_prod_log_1.png" alt="accessibility text"></p>
+<p align="center"><img src="assets/week1/multi-stage_prod_log_2.png" alt="accessibility text"></p>
+
+Created image:
+
+<p align="center"><img src="assets/week1/multi-stage_prod.png" alt="accessibility text"></p>
+
+Here below some snapshots from execution till `DEVELOPMENT` stage, the full log output can be found in this :point_right:  [LINK](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/journal/assets/week1/multi-stage_logs.log?plain=1#L71-L12):
+
+<p align="center"><img src="assets/week1/multi-stage_dev_log_1.png" alt="accessibility text"></p>
+<p align="center"><img src="assets/week1/multi-stage_dev_log_2.png" alt="accessibility text"></p>
+
+Created image:
+
+<p align="center"><img src="assets/week1/multi-stage_dev.png" alt="accessibility text"></p>
+
 ### Implement a healthcheck in the V3 Docker compose file
 ### Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
 ### Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
