@@ -774,6 +774,197 @@ Created image:
 <p align="center"><img src="assets/week1/multi-stage_dev.png" alt="accessibility text"></p>
 
 ### Implement a healthcheck in the V3 Docker compose file
+
+```yml
+version: "3.8"
+services:
+  backend-flask:
+    environment:
+      FRONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+      BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+    build: ./backend-flask
+    ports:
+      - "4567:4567"
+    volumes:
+      - ./backend-flask:/backend-flask
+    healthcheck:
+      test: curl --fail "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}/api/activities/home" || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  frontend-react-js:
+    environment:
+      REACT_APP_BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
+    build: ./frontend-react-js
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-react-js:/frontend-react-js
+    healthcheck:
+      test: curl --fail "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}" || exit 1
+      interval: 60s
+      retries: 5
+      start_period: 20s
+      timeout: 10s
+  dynamodb-local:
+    # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
+    # We needed to add user:root to get this working.
+    user: root
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+# the name flag is a hack to change the default prepend folder
+# name when outputting the image names
+networks: 
+  internal-network:
+    driver: bridge
+    name: cruddur
+    
+volumes:
+  db:
+    driver: local
+```
+
 ### Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
 ### Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
 ### Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes. 
+:white_check_mark: DONE. I have completed this task with some issues to install docker, because oficial documentation doesn't have the procedure for Amazon Linux distribution. So I investigated on internet and I found the way to install it, the links are in the references section below. Once Docker was installed I installed git, generated my own ssh key and added it on Github portal to allow the clone of `aws-bootcamp-cruddur-2023` repository and build the image for backend docker file and then create the container. 
+
+<b>Note:</b> I tried to make what I though proper to be modificated to run the docker-compose file and deploy backend and frontend containers. But it didn't work at all because the at the frontend side the users posts weren't seen, even if I logged in I couldn't seen it.
+
+<b>References:</b>
+- [Amazon Knowled Center - EC2 install extras libraries](https://aws.amazon.com/es/premiumsupport/knowledge-center/ec2-install-extras-library-software/)
+- [Running Docker Containers On AWS EC2](https://medium.com/bb-tutorials-and-thoughts/running-docker-containers-on-aws-ec2-9b17add53646)
+- [How to install Git](https://www.how2shout.com/linux/how-to-install-git-on-aws-ec2-amazon-linux-2/)
+
+##### EC2 instace configuration
+
+To lunch the EC2 instance, I had to perform the following activities:
+- Create the key pair under the name `AWS_test_docker` and download the key in your local host computer.
+
+<p align="center"><img src="assets/week1/EC2_key_pair.png" alt="accessibility text"></p>
+
+- Create a security group to allow all type of traffic (TCP and UDP) under the name `test_docker`.
+
+<p align="center"><img src="assets/week1/security_group.png" alt="accessibility text"></p>
+
+- Configure the EC2 instance under the following paramenters:
+  - <b>Name and tags:</b> dcoker_test
+  - <b>Image:</b> Amazon Linux
+  - <b>Instance type:</b> t2.micro
+  - <b>Firewall:</b> test_docker and enable the auto publick IP assigantion.
+  - <b>Storage:</b> 1 of 8GB
+  - <b>Key pair:</b> AWS_test_docker
+
+  <p align="center"><img src="assets/week1/EC2_image_config.png" alt="accessibility text"></p>
+  
+  <b>Note:</b> By mistake in the first attempt I configured the CE2 instance with the `default` security group, so I had to `stop` the instance and `terminate` it to then configure it properly with the security group `test_docker`.
+  
+- Instance state:
+
+<p align="center"><img src="assets/week1/EC2_image_succeded.png" alt="accessibility text"></p>
+
+Assiged IPs and DNS name:
+
+<p align="center"><img src="assets/week1/EC2_image_status.png" alt="accessibility text"></p>
+
+- Instance access from my local laptop:
+
+<p align="center"><img src="assets/week1/EC2_login.png" alt="accessibility text"></p>
+
+##### Docker and git installation
+
+- To install docker I had to run the following commands:
+
+```bash
+# Update
+sudo yum update -y
+# Install most recent package
+sudo amazon-linux-extras install docker
+# Start the service docker
+sudo service docker start
+# Add the ec2-docker user to the group
+sudo usermod -a -G docker ec2-user
+# Logout to take affect
+logout
+# Login again
+ssh -i "ec2-docker.pem" ec2-user@ec2-3-18-220-172.us-east-2.compute.amazonaws.com
+# Check the docker version
+docker --version
+```
+Logs docker service status:
+<p align="center"><img src="assets/week1/docker_service.png" alt="accessibility text"></p>
+
+Logs docker version:
+
+<p align="center"><img src="assets/week1/docker_installed.png" alt="accessibility text"></p>
+
+- To install docker I had to run the following commands:
+      
+```bash
+# Install most recent version of git
+sudo yum install git
+# Check the version
+git version
+# Create ssh key
+ssh-keygen -t rsa -b 4096 -C "xxxxx@gmail.com"
+# Take the ssh key and add it on Github
+cat .ssh/id_rsa.pub
+# Check the ssh access
+ ssh -T git@github.com
+# Clone the repo
+git clone https://github.com/ramofabian/aws-bootcamp-cruddur-2023.git
+```
+Log git version:
+
+<p align="center"><img src="assets/week1/git_version.png" alt="accessibility text"></p>
+
+Log ssh key:
+
+<p align="center"><img src="assets/week1/ssh_key.png" alt="accessibility text"></p>
+
+Log ssh connection:
+
+<p align="center"><img src="assets/week1/ssh_connection.png" alt="accessibility text"></p>
+
+Log git clone:
+
+<p align="center"><img src="assets/week1/git_clone.png" alt="accessibility text"></p>
+
+##### Build backend image
+
+To build backend image the command run the commands:
+
+``` bash
+# Build image
+docker build -t backend-flask ./backend-flask
+#Set the env variables
+export FRONTEND_URL="*"
+export BACKEND_URL="*"
+# Deploy docker container
+docker run --rm -p 4567:4567 -it  -e FRONTEND_URL -e BACKEND_URL backend-flask
+``` 
+Logs from CLI:
+<p align="center"><img src="assets/week1/running_backend_ec2.png" alt="accessibility text"></p>
+
+Logs from web browser:
+<p align="center"><img src="assets/week1/backend_output.png" alt="accessibility text"></p>
+
+<b>Full CLI Logs:</b> in this [link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/journal/assets/week1/Logs_from%20CLI.txt)
