@@ -6,8 +6,120 @@
 :white_check_mark: DONE.
 ### Remember to Commit Your Code
 :white_check_mark: DONE.
-### Watcked Chirag's Week 1 - Spending Considerations
+### Watched Chirag's Week 1 - Spending Considerations
 :white_check_mark: DONE.
+
+### Watched video "Pick the right cloud role: A beginners guide!"
+:white_check_mark: DONE.
+
+<p align="center"><img src="assets/week1/My_journey.png" alt="accessibility text"></p>
+
+#### Jobs descriptions:
+1. DevOps Engineer (AWS) [Link](https://www.linkedin.com/jobs/view/2930578343)
+  
+```
+Job requirements:
+- Strong experience with AWS, AWS Aurora, Lambdas, AWS SQS, Redis, and AWS IOT.
+- A Cloud, Containerization, Infrastructure as Code, Observability and scripting expert.
+- Engage in and improve the whole lifecycle of services from conception to inception, including system design, build, deploy and operate
+- Supports implementation of standards and best practices related to system architecture, deployment, KPI’s and operational health
+- Support services through activities such as monitoring availability, system health, and incident response
+- Improve system performance, application delivery and efficiency through, automation, process refinement, post-mortem reviews, and in-depth configuration analysis
+- Evangelize best practices for building and operating highly reliable systems
+- Serve as subject matter expert in observability and monitoring
+- Consult in system design to meet reliability and capacity requirements
+- Define and implement standards and best practices related to: System Architecture, Deployment, metrics, operational tasks
+- Automate infrastructure and configuration management
+- Seek out potential threats to security and reliability and advocate solutions
+- A practitioner and evangelist of DevOps principles
+- Proficient in the use of data to measure and optimize performance in development and production
+```
+
+For this work I will focus on:
+* AWS services and studing deeply (AWS Aurora, Lambdas, AWS SQS, Redis, and AWS IOT). --> AWS services
+* Containerization, Infrastructure as Code. --> Docker and Terraform
+* Lifecycle of services. --> Well architected framework
+* System architecture, deployment, KPI’s. --> Well architected framework
+* Monitoring availability, system health, and incident response. --> AWS clouldWhatch, kibernetes
+* System design to meet reliability and capacity requirements --> well architected framework
+* Security and reliability and advocate solutions --> AWS security services
+* Data to measure and optimize performance --> Go and databases
+ 
+ 2. DevOps Engineer (AWS) [Link](https://www.linkedin.com/jobs/view/3495622414)
+ 
+ ```
+- Experience in a DevOps Engineer, System Administrator or Developer role
+- Programming prowess (Python, Java, Ruby or Golang)
+- Experience with public cloud services (GCP/AWS/Azure)
+- Good understanding of the Linux Operating System on the administration level
+- Drive to grow as a DevOps Engineer (we value open-mindedness and a can-do attitude)
+- Solid English skills to effectively communicate with other team members
+ ```
+ 
+ For this work I will focus on:
+ * System Administration and Development --> Linux and programming
+ * Programming prowess (Python, Java, Ruby or Golang) --> programming Golang
+ * Public cloud services --> AWS
+ * Solid English skills
+ 
+ 3. DevOps Engineer working with Kubernetes [Link](https://www.linkedin.com/jobs/view/3322900840)
+ 
+ ```
+ To succeed in the role, you:
+- Are a team player with strong technical skills and are motivated by transforming the technology in close co-operation with a broad variety of stakeholders
+- Have experience working with cloud technology and have previously deployed and managed Kubernetes
+- Feel comfortable working with at least one scripting language, such as Python, Bash, or PowerShell
+- Are familiar with enterprise integration patterns and general IT security within the integration area
+- Have worked with an agile methodology in an international, English-speaking environment.
+```
+ 
+ For this work I will focus on:
+ * Team player with strong technical skills
+ * Expirience with Kubernetes.
+ * Scripting language --> Python and Bash
+ * English communication skills
+  
+ 4. Junior DevOps Engineer [Link](https://www.linkedin.com/jobs/view/3469092378)
+  
+ ```
+- Manage AWS infrastructure via Terraform
+- Build Amazon Machine Images (AMI) via Packer & Ansible
+- Define & manage Jenkins Pipelines
+- Mange our CI/CD pipeline using Git, Docker build, Jenkins, Nexus, Elastic Container Registry.
+- Configuration management through Ansible playbooks, roles, AWX (Ansible Tower)
+- Improve process through automation. Perform a task once, then automate.
+- Embrace the “Infrastructure as code” model where deployment of resources is repeatable and clearly defined. Our code is our documentation.
+- Scripting experience using Python & Bash
+- Experience building, deploying, & orchestrating containers with Docker.
+- Apache / Nginx configuration and performance tuning
+- Configure and manage CentOS / Red Hat machines in both cloud and data-center environment
+- Demonstrated expertise with the Linux Command Line Interface (CLI)
+  ```
+  For this work I will focus on:
+  * AWS infrastructure via Terraform.
+  * Use of AWS AMI service and use Ansible.
+  * Work with Jenkis Pipelines.
+  * Work with Dokcer, git and Elastic Container Registry.
+  * Scripting in Bash and Python.
+  * Nginx configuration.
+  * Work with Centos.
+ 
+ 5. DevOps Engineer – Poland (Remote) [link](https://www.linkedin.com/jobs/view/3483362937)
+ 
+ ```
+- Experience working with AWS services.
+- Building IaC with Terraform and automation.
+- Experience with scripting languages like Java, Python, PowerShell, Bash etc.
+- If you have experience with Docker or Kubernetes that is a bonus.
+- Must be Polish Native speaker
+ ```
+ For this work I will focus on:
+ * AWS services.
+ * Terraform.
+ * Python and bash.
+ * Kubernetes.
+ * Speak polish.
+ 
 ### Watched Ashish's Week 1 - Container Security Considerations
 :white_check_mark: DONE.
 
@@ -774,6 +886,12 @@ Created image:
 <p align="center"><img src="assets/week1/multi-stage_dev.png" alt="accessibility text"></p>
 
 ### Implement a healthcheck in the V3 Docker compose file
+:white_check_mark: DONE. To implement healthcheck in docker compose file I had to do the following work:
+1. Make sure that backend and frontend have curl installed.
+For this point I had to add the line `RUN apt-get update && apt-get install -y wget curl` in backend dockerfile.
+
+3. Add the health check task for those services.
+The healthcheck to run is the curl command pointing to backend and front end URL to check if the service is working. it will try to execute the command 5 times with intervals of 60 seconds.
 
 ```yml
 version: "3.8"
@@ -841,6 +959,14 @@ volumes:
   db:
     driver: local
 ```
+
+4. Run the file `docker-compose_healthcheck.yml` file and wait for the status.
+
+<p align="center"><img src="assets/week1/health_check.png" alt="accessibility text"></p>
+
+6. Run inspect command in the container to see the log.
+
+<p align="center"><img src="assets/week1/log_helathcheck.png" alt="accessibility text"></p>
 
 ### Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
 ### Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
