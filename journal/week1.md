@@ -36,11 +36,11 @@ Job requirements:
 ```
 
 For this work I will focus on:
-* AWS services and studing deeply (AWS Aurora, Lambdas, AWS SQS, Redis, and AWS IOT). --> AWS services
+* AWS services and studying deeply (AWS Aurora, Lambdas, AWS SQS, Redis, and AWS IOT). --> AWS services
 * Containerization, Infrastructure as Code. --> Docker and Terraform
 * Lifecycle of services. --> Well architected framework
 * System architecture, deployment, KPI’s. --> Well architected framework
-* Monitoring availability, system health, and incident response. --> AWS clouldWhatch, kibernetes
+* Monitoring availability, system health, and incident response. --> AWS CloudWatch, Kubernetes
 * System design to meet reliability and capacity requirements --> well architected framework
 * Security and reliability and advocate solutions --> AWS security services
 * Data to measure and optimize performance --> Go and databases
@@ -75,7 +75,7 @@ For this work I will focus on:
  
  For this work I will focus on:
  * Team player with strong technical skills
- * Expirience with Kubernetes.
+ * Experience with Kubernetes.
  * Scripting language --> Python and Bash
  * English communication skills
   
@@ -98,8 +98,8 @@ For this work I will focus on:
   For this work I will focus on:
   * AWS infrastructure via Terraform.
   * Use of AWS AMI service and use Ansible.
-  * Work with Jenkis Pipelines.
-  * Work with Dokcer, git and Elastic Container Registry.
+  * Work with Jenkins Pipelines.
+  * Work with Docker, git and Elastic Container Registry.
   * Scripting in Bash and Python.
   * Nginx configuration.
   * Work with Centos.
@@ -123,7 +123,7 @@ For this work I will focus on:
 ### Watched Ashish's Week 1 - Container Security Considerations
 :white_check_mark: DONE.
 
-I installed snyk and docker compose on my prsonal ubuntu VM and ran the docker-compose.yml as it was done from the video. Then I scanned the running docker containers to see if there is any security breaches. It was good exersice and very much stright forward procedure, I liked it becuse this is something that I had never done before.
+I installed snyk and docker compose on my personal ubuntu VM and ran the docker-compose.yml as it was done from the video. Then I scanned the running docker containers to see if there is any security breaches. It was good exercise and very much straight forward procedure, I liked it because this is something that I had never done before.
 
 I followed this procedure form this [link](https://docs.snyk.io/snyk-cli/install-the-snyk-cli)
 ```bash
@@ -141,14 +141,14 @@ snyk auth
 # Go to your to your docker directory where docker composer is placed
 cd <<your docker directory>>
 
-# Monitor de version immages
+# Monitor de version images
 snyk monitor
 
 # Scan your running container
 snyk test 
 ```
 
-Find below the evidence of the scan perfomed snyk CLI:
+Find below the evidence of the scan performed snyk CLI:
 
 <p align="center"><img src="assets/week1/snyk_test.png" alt="accessibility text"></p>
 
@@ -157,26 +157,26 @@ The same result seen from Snyk website:
 <p align="center"><img src="assets/week1/snyk_web_results.png" alt="accessibility text"></p>
 
 ### Containerize Application (Dockerfiles, Docker Compose)
-:white_check_mark: DONE. I didn't have any issues with running and bulding the dockerfiles and docker-compose.yml file because I have some expirieance already with docker. Please find below my evidences of the work done:
+:white_check_mark: DONE. I didn't have any issues with running and building the dockerfiles and docker-compose.yml file because I have some experience already with docker. Please find below my evidences of the work done:
 
 #### Backend dockerfile
-The file called "Dockerfile" inside of folder "backend-flask" was executed and the image was build with rm option which force the automatic container removal as soonas it is stopped:
+The file called "Dockerfile" inside of folder "backend-flask" was executed and the image was build with rm option which force the automatic container removal as soon as it is stopped:
 
 <p align="center"><img src="assets/week1/backend_build_image.png" alt="accessibility text"></p>
 
-Required local enviroments are were loaded and the previous created image called "backend-flask" is used to build the container attached, so the container output is prompted by the system.
+Required local env variables were loaded and the previous created image called "backend-flask" is used to build the container attached, so the container output is prompted by the system.
 
 <p align="center"><img src="assets/week1/Testing_backend_dockerfile.png" alt="accessibility text"></p>
 
-As a requisit, the port must be in public state on gitpod VSCode platform:
+As a requisite, the port must be in public state on gitpod VSCode platform:
 
 <p align="center"><img src="assets/week1/Testing_backend_dockerfile_public_ports.png" alt="accessibility text"></p>
 
-As a result, we can enter the URL and by adding the path `/api/activities/home` at the end, we will be able to see the backend response in a json fromat as shos the picture below:
+As a result, we can enter the URL and by adding the path `/api/activities/home` at the end, we will be able to see the backend response in a json format as shows the picture below:
 
 <p align="center"><img src="assets/week1/backend_we_answer.png" width="400" alt="accessibility text"></p>
 
-Then we stop the container and run it in deatch mode, so we can check it's status and logs as it is stated below:
+Then we stop the container and run it in de-attach mode, so we can check it's status and logs as it is stated below:
 
 <p align="center"><img src="assets/week1/docker_deatached_backend.png" alt="accessibility text"></p>
 
@@ -189,11 +189,11 @@ The React framework is installed with command `npm i` and the file called "Docke
   </tr>
 </table>
 
-Then the container is deployed in deatach mode and the logs are checked without seeing any problem:
+Then the container is deployed in de-attach mode and the logs are checked without seeing any problem:
 
 <td><p align="center"><img src="assets/week1/deploying_frontend_container.png" alt="accessibility text"></p></td>
 
-We make sure the port is running in publick mode:
+We make sure the port is running in public mode:
 
 <td><p align="center"><img src="assets/week1/open_port_frontend_gitpod.png" alt="accessibility text"></p></td>
 
@@ -210,7 +210,7 @@ A new file called docker-compose.yml needs to be created at `/workspace/aws-boot
 
 <p align="center"><img src="assets/week1/Docker_compose_directory.png" alt="accessibility text"></p>
 
-Then add the information information below inside of your docker-file:
+Then add the information below inside of your docker-file:
 ```yml
 version: "3.8"
 services:
@@ -240,7 +240,7 @@ networks:
     name: cruddur
 ```
 
-With the command `docker-compose up -d ` the backend and frontend images are build based on previous dockerfiles, then they are used to deploy the containers connected with an internal network called cruddur.
+With the command `docker-compose up -d ` the backend and frontend images are build based on previous dockerfiles, then they are used to deploy the containers connected with an internal network called "cruddur".
 
 <p align="center"><img src="assets/week1/Docker_compose_deploy.png" alt="accessibility text"></p>
 
@@ -249,14 +249,14 @@ The containers status and images can be seen working fine as it is displayed on 
 <p align="center"><img src="assets/week1/Docker_compose_status.png" alt="accessibility text"></p>
 
 ### Document the Notification Endpoint for the OpenAI Document
-:white_check_mark: DONE. I didn't have any issue when I followed Adrew's video instructions, the procedure is pretty much stright forward. Although I'm not so familiar with APIs programming, I have use them but never programmed one. 
+:white_check_mark: DONE. I didn't have any issue when I followed Adrew's video instructions, the procedure is pretty much straight forward. Although I'm not so familiar with APIs programming, I have use them but never programmed one. 
 
 So I did some small research about API, endpoints and Openapi below:
 <table><tr><td>
   
-<b>API:</b> It is an Application Programming Interface which allows two systems to communicate with one another. It porvides the lenguague and contract for how two systimes interact, providing documentation and specifications about how the information can be transfered; it uses by using <b>HTTP</b> protocol for transfering data with the methods `GET`, `POST`, `PUT`, `UPDATE`, `DELETE`.
+<b>API:</b> It is an Application Programming Interface which allows two systems to communicate with one another. It provides the language and contract for how two systems interact, providing documentation and specifications about how the information can be transferred; it uses by using <b>HTTP</b> protocol for transferring data with the methods `GET`, `POST`, `PUT`, `UPDATE`, `DELETE`.
 
-<b>Endpoint:</b> It is one comunnication channel and each endpoint is a location from which APIs can access the resouces they need to carry out their function.
+<b>Endpoint:</b> It is one communication channel and each endpoint is a location from which APIs can access the resources they need to carry out their function.
 
 <b>OPENAPI:</b> It's an standard used to describe REST API endpoints, this description can be used for humans and machines to discover the capabilities of some API without reading the documentations.
 
@@ -264,9 +264,9 @@ So I did some small research about API, endpoints and Openapi below:
 
 </td></tr></table>
 
-With the help of VSC's OpenAPI extension we can easily go through the file `openapi-3.0.yml` located in the directory path `/workspace/aws-bootcamp-cruddur-2023/backend-flask`. This file contains almost all documentation for backend API in format yaml and using OpenAPI sintaxis.  
+With the help of VSC's OpenAPI extension we can easily go through the file `openapi-3.0.yml` located in the directory path `/workspace/aws-bootcamp-cruddur-2023/backend-flask`. This file contains almost all documentation for backend API in format yaml and using OpenAPI syntaxis.  
 
-To create the documentation of the notifications endpoints, we need to have clear that this endpoint will be using the `GET` method to transfer data because the frontend will be consuming only this information to be written in the webpage. Also we use the `tags` properties to group it under `activities` with other endpoint already existing, then we declare the response from the type `array` and the schema `#/components/schemas/Activity` where is already decalred in an object the answer.
+To create the documentation of the notifications endpoints, we need to have clear that this endpoint will be using the `GET` method to transfer data because the frontend will be consuming only this information to be written in the webpage. Also we use the `tags` properties to group it under `activities` with other endpoint already existing, then we declare the response from the type `array` and the schema `#/components/schemas/Activity` where is already declared in an object the answer.
 
 ```yml
   /api/activities/notifications:
@@ -277,7 +277,7 @@ To create the documentation of the notifications endpoints, we need to have clea
       parameters: []
       responses:
         '200':
-          description: "Returns an array of acitivities"
+          description: "Returns an array of activities"
           content:
             application/json:
               schema:
@@ -335,11 +335,11 @@ Here below is showed how the from documentation this new endpoint was documented
 
 
 ### Write a Flask Backend Endpoint for Notifications
-:white_check_mark: DONE. I didn't have any problem with Andrews video, I completed completed this point with his instructions in the video. 
+:white_check_mark: DONE. I didn't have any problem with Andrews video, I completed this point with his instructions in the video. 
 
 As the backend API is running with `python` and its library `Flask`, we need first to create the route for notifications webpage. This is done in the file `app.py` which is located in `/workspace/aws-bootcamp-cruddur-2023/backend-flask`.
 
-In the file previously mentioned, we have to add this piece of code which basically redirects the `GET` queries with the path `/api/activities/notifications` in the URL to the service `NotificattionsActivities.run()`. Alse we import the library service `services.notificattions_activities` which allow the use of the service:
+In the file previously mentioned, we have to add this piece of code which basically redirects the `GET` queries with the path `/api/activities/notifications` in the URL to the service `NotificattionsActivities.run()`. Also we import the library service `services.notificattions_activities` which allow the use of the service:
 
 ```py
 from services.notificattions_activities import *
@@ -352,7 +352,7 @@ def data_notifications():
   return data, 200
   
 ```
-Then inside of in the directory `/workspace/aws-bootcamp-cruddur-2023/backend-flask/services/` we need to create a file called `notificattions_activities.py` where the service will code will be placed. This code has a function called `run()` which retunrs the list which contains information in list and dictionary format:
+Then inside of in the directory `/workspace/aws-bootcamp-cruddur-2023/backend-flask/services/` we need to create a file called `notificattions_activities.py` where the service will code will be placed. This code has a function called `run()` which returns the list which contains information in list and dictionary format:
 
 ```py
 from datetime import datetime, timedelta, timezone
@@ -412,7 +412,7 @@ Once the code is placed the backend its implemented and it can be tested from br
 
 
 ### Write a React Page for Notifications
-:white_check_mark: DONE. This point was more challenging than the others because this is my first time working with react. Although I could follow Andrew's instraction without any issue.
+:white_check_mark: DONE. This point was more challenging than the others because this is my first time working with react. Although I could follow Andrew's instruction without any issue.
 
 From entry point file called `App.js` located in the directory `/workspace/aws-bootcamp-cruddur-2023/frontend-react-js/src`, where we will be routing the notifications service to `./pages/NotificationsActivities`:
 
@@ -513,7 +513,7 @@ export default function NotificationsFeedPage() {
 }
 ```
 
-Then the the frontend is ready to be used and consume info from backend:
+Then the frontend is ready to be used and consume info from backend:
 
 <p align="center"><img src="assets/week1/Cruddur_notifications.png" alt="accessibility text"></p>
 
@@ -523,14 +523,14 @@ Then the the frontend is ready to be used and consume info from backend:
 * [NotificationsActivities.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/NotificationsActivities.js)
 
 ### Run DynamoDB Local Container and ensure it works
-:white_check_mark: DONE. I didn't have any issue to follow Andrew's procedure, hoever it was my first time with DynamoDB.
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's procedure, however it was my first time with DynamoDB.
 
-To run DynamonDB and Postgres services, we need to update the `docker-compose.yml` file to simplify the container execution. Because both databases must run in separated containers and have access to backend and frontend network managed by docker deamon. 
+To run DynamonDB and Postgres services, we need to update the `docker-compose.yml` file to simplify the container execution. Because both databases must run in separated containers and have access to backend and frontend network managed by docker daemon. 
 
-The following code should be added in the docker compose file. There the dynamoDB container will be created with the port 8000 open, volume is mounted in the directory path `./docker/dynamodb` at host level and `/home/dynamodblocal/data` at container, each time we login into the container the defail dir will be `/home/dynamodblocal`, and the DB will has the local user: `root`.
+The following code should be added in the docker compose file. There the dynamoDB container will be created with the port 8000 open, volume is mounted in the directory path `./docker/dynamodb` at host level and `/home/dynamodblocal/data` at container, each time we login into the container the defult directory will be `/home/dynamodblocal`, and the DB will has the local user: `root`.
 
 ```yml
-services: #this line can be ommitted  because is already declared in the docker-compose.yml file
+services: #this line can be omitted  because is already declared in the docker-compose.yml file
   dynamodb-local:
     # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
     # We needed to add user:root to get this working.
@@ -683,14 +683,14 @@ gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $
 ```
 
 ### Run Postgres Container and ensure it works
-:white_check_mark: DONE. I didn't have any issue to follow Andrew's procedure. I have some expiriance with MariaDB, however it was my first time with Postgres.
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's procedure. I have some experience with MariaDB, however it was my first time with Postgres.
 
-Below you can find the configuration to deploy postgres DB container which uses version `13-alpine`, user and password set withing `enviroment` paramater, the port 5432 and the local volume mounted in the path `/var/lib/postgresql/data` insisde of container.
+Below you can find the configuration to deploy postgres DB container which uses version `13-alpine`, user and password set withing `environment` parameter, the port 5432 and the local volume mounted in the path `/var/lib/postgresql/data` inside of container.
 
 <b>Note:</b> the `restart: always` is a policy that "Always restart the container if it stops. If it is manually stopped, it is restarted only when Docker daemon restarts or the container itself is manually restarted". Source: [Docker docs](https://docs.docker.com/config/containers/start-containers-automatically/)
 
 ```yml
-services: #This line can be ommitted because is already declared in the docker-compose.yml file
+services: #This line can be omitted because is already declared in the docker-compose.yml file
   db:
     image: postgres:13-alpine
     restart: always
@@ -763,9 +763,9 @@ vscode:
 
 ## Homework challenges
 ### Run the dockerfile CMD as an external script
-:white_check_mark: DONE. It was quit challenging this task becuase I had never created a Dockerfile using external script. I did a lot of attempts and research to findout how to do it.
+:white_check_mark: DONE. It was quit challenging this task because I had never created a Dockerfile using external script. I did a lot of attempts and research to find out how to do it.
 
-For this case I have created the bash file `run_flask_server.sh` to be used as external file, then I did some changes in docker file to maket able to uploald the script, change the permissions and run it. Warning: as a prerequisite, the bash file must be in the same directory as Dockerfile.
+For this case I have created the bash file `run_flask_server.sh` to be used as external file, then I did some changes in docker file to make it able to upload the script, change the permissions and run it. Warning: as a prerequisite, the bash file must be in the same directory as Dockerfile.
 
 Please find below the bash script code:
 
@@ -798,7 +798,7 @@ RUN chmod 777 /run_flask_server.sh
 CMD ["/run_flask_server.sh"]
 ```
 
-Here below can be foun part of the logs taken during docker build command execution:
+Here below can be found part of the logs taken during docker build command execution:
 
 <p align="center"><img src="assets/week1/running_new_backend_dockerfile.png" alt="accessibility text"></p>
 <p align="center"><img src="assets/week1/running_new_backend_dockerfile2.png" alt="accessibility text"></p>
@@ -812,7 +812,7 @@ Access via web working:
 <p align="center"><img src="assets/week1/running_new_backend_dockerfile4.png" alt="accessibility text"></p>
 
 ### Push and tag a image to DockerHub (they have a free tier)
-:white_check_mark: DONE. I completed this task, I had some small issue when I added the tag name becuause I was not using correct naming convetion.
+:white_check_mark: DONE. I completed this task, I had some small issue when I added the tag name because I was not using correct naming convention.
 
 To push and tag the image we need to have the image to be pushed and get logged with DockerHub account from cli with the command `docker login`.
 
@@ -834,13 +834,13 @@ This  image is public and can be seen in this [link](https://hub.docker.com/r/cr
 
 <b>Reference:</b> [Docker Hub Multistage documentation](https://docs.docker.com/build/building/multi-stage/) and [DEV article](https://dev.to/pavanbelagatti/what-are-multi-stage-docker-builds-1mi9)
 
-I have created a new docker file called `Dockerfile_multi_stage` for backend taking as a base the initial `Dockerfile` for this project. This new file is split in 3 stages, the fristone is called `BASE` where the initial image `python:3.10-slim-buster` is taken as inital source, the work directory is set at `/backend-flask` and all requirements are installed.
+I have created a new docker file called `Dockerfile_multi_stage` for backend taking as a base the initial `Dockerfile` for this project. This new file is split in 3 stages, the first one is called `BASE` where the initial image `python:3.10-slim-buster` is taken as initial source, the work directory is set at `/backend-flask` and all requirements are installed.
 
-The second stage is called `PRODUCTION` and it takes as source image the `BASE` stage and add all required python scripts, system enviroments, the port  is exposed and the flask application is runned via CMD.
+The second stage is called `PRODUCTION` and it takes as source image the `BASE` stage and add all required python scripts, system env variables, the port  is exposed and the flask application is runned via CMD.
 
-The thrid stage, it is called `DEVELOPMENT` and is almost the same as `PRODUCTION` with the diference that there is a external bash script called `run_flask_server.sh` which is added and executed to run flask apllication and adds the posibility to run more commands from there.
+The third stage, it is called `DEVELOPMENT` and is almost the same as `PRODUCTION` with the difference that there is a external bash script called `run_flask_server.sh` which is added and executed to run flask application and adds the possibility to run more commands from there.
 
-The file `Dockerfile_multi_stage` can be found in this :point_right: [LINK](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/Dockerfile_multi_stage) and please find below below the code:
+The file `Dockerfile_multi_stage` can be found in this :point_right: [LINK](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/Dockerfile_multi_stage) and please find below the code:
 
 ```dockerfile
 FROM python:3.10-slim-buster AS BASE
@@ -886,101 +886,65 @@ Created image:
 <p align="center"><img src="assets/week1/multi-stage_dev.png" alt="accessibility text"></p>
 
 ### Implement a healthcheck in the V3 Docker compose file
-:white_check_mark: DONE. To implement healthcheck in docker compose file I had to do the following work:
+:white_check_mark: DONE. To implement health check in docker compose file I had to do the following work:
 1. Make sure that backend and frontend have curl installed.
-For this point I had to add the line `RUN apt-get update && apt-get install -y wget curl` in backend dockerfile.
+For this point I had to add the line `RUN apt-get update && apt-get install -y wget curl` in backend dockerfile. [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/Dockerfile?plain=1#L7)
 
-3. Add the health check task for those services.
+2. Add the health check task for those services.
 The healthcheck to run is the curl command pointing to backend and front end URL to check if the service is working. it will try to execute the command 5 times with intervals of 60 seconds.
+
+* For Backend the added fragment is below:
 
 ```yml
 version: "3.8"
 services:
   backend-flask:
-    environment:
-      FRONTEND_URL: "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-      BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-    build: ./backend-flask
-    ports:
-      - "4567:4567"
-    volumes:
-      - ./backend-flask:/backend-flask
     healthcheck:
       test: curl --fail "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}/api/activities/home" || exit 1
       interval: 60s
       retries: 5
       start_period: 20s
       timeout: 10s
+```
+To see the full code go to this [link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose_helath_check.yml?plain=1#L15-L20)
+
+* For Frontend the added fragment is below:
+
+```yml
+version: "3.8"
+services:
   frontend-react-js:
-    environment:
-      REACT_APP_BACKEND_URL: "https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"
-    build: ./frontend-react-js
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend-react-js:/frontend-react-js
     healthcheck:
       test: curl --fail "https://3000-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}" || exit 1
       interval: 60s
       retries: 5
       start_period: 20s
       timeout: 10s
-  dynamodb-local:
-    # https://stackoverflow.com/questions/67533058/persist-local-dynamodb-data-in-volumes-lack-permission-unable-to-open-databa
-    # We needed to add user:root to get this working.
-    user: root
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-    image: "amazon/dynamodb-local:latest"
-    container_name: dynamodb-local
-    ports:
-      - "8000:8000"
-    volumes:
-      - "./docker/dynamodb:/home/dynamodblocal/data"
-    working_dir: /home/dynamodblocal
-  db:
-    image: postgres:13-alpine
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    ports:
-      - '5432:5432'
-    volumes: 
-      - db:/var/lib/postgresql/data
-
-# the name flag is a hack to change the default prepend folder
-# name when outputting the image names
-networks: 
-  internal-network:
-    driver: bridge
-    name: cruddur
-    
-volumes:
-  db:
-    driver: local
 ```
 
-4. Run the file `docker-compose_healthcheck.yml` file and wait for the status.
+To see the full code go to this [link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose_helath_check.yml?plain=1#L29-L34)
+
+3. Run the file `docker-compose_healthcheck.yml` file and wait for the status.
 
 <p align="center"><img src="assets/week1/health_check.png" alt="accessibility text"></p>
 
-6. Run inspect command in the container to see the log.
+4. Run inspect command in the container to see the log.
 
 <p align="center"><img src="assets/week1/log_helathcheck.png" alt="accessibility text"></p>
 
 ### Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
 ### Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
 ### Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes. 
-:white_check_mark: DONE. I have completed this task with some issues to install docker, because oficial documentation doesn't have the procedure for Amazon Linux distribution. So I investigated on internet and I found the way to install it, the links are in the references section below. Once Docker was installed I installed git, generated my own ssh key and added it on Github portal to allow the clone of `aws-bootcamp-cruddur-2023` repository and build the image for backend docker file and then create the container. 
+:white_check_mark: DONE. I have completed this task with some issues to install docker, because official documentation doesn't have the procedure for Amazon Linux distribution. So I investigated on internet and I found the way to install it, the links are in the references section below. Once Docker was installed I installed git, generated my own ssh key and added it on Github portal to allow the clone of `aws-bootcamp-cruddur-2023` repository and build the image for backend docker file and then create the container. 
 
-<b>Note:</b> I tried to make what I though proper to be modificated to run the docker-compose file and deploy backend and frontend containers. But it didn't work at all because the at the frontend side the users posts weren't seen, even if I logged in I couldn't seen it.
+<b>Note:</b> I tried to make what I though proper to be modified to run the docker-compose file and deploy backend and frontend containers. But it didn't work at all because the at the frontend side the users posts weren't seen, even if I logged in I couldn't seen it.
 
 <b>References:</b>
 - [Amazon Knowled Center - EC2 install extras libraries](https://aws.amazon.com/es/premiumsupport/knowledge-center/ec2-install-extras-library-software/)
 - [Running Docker Containers On AWS EC2](https://medium.com/bb-tutorials-and-thoughts/running-docker-containers-on-aws-ec2-9b17add53646)
 - [How to install Git](https://www.how2shout.com/linux/how-to-install-git-on-aws-ec2-amazon-linux-2/)
 
-##### EC2 instace configuration
+##### EC2 instance configuration
 
 To lunch the EC2 instance, I had to perform the following activities:
 - Create the key pair under the name `AWS_test_docker` and download the key in your local host computer.
@@ -991,11 +955,11 @@ To lunch the EC2 instance, I had to perform the following activities:
 
 <p align="center"><img src="assets/week1/security_group.png" alt="accessibility text"></p>
 
-- Configure the EC2 instance under the following paramenters:
-  - <b>Name and tags:</b> dcoker_test
+- Configure the EC2 instance under the following parameters:
+  - <b>Name and tags:</b> docker_test
   - <b>Image:</b> Amazon Linux
   - <b>Instance type:</b> t2.micro
-  - <b>Firewall:</b> test_docker and enable the auto publick IP assigantion.
+  - <b>Firewall:</b> test_docker and enable the auto public IP assignation.
   - <b>Storage:</b> 1 of 8GB
   - <b>Key pair:</b> AWS_test_docker
 
@@ -1007,7 +971,7 @@ To lunch the EC2 instance, I had to perform the following activities:
 
 <p align="center"><img src="assets/week1/EC2_image_succeded.png" alt="accessibility text"></p>
 
-Assiged IPs and DNS name:
+Assigned IPs and DNS name:
 
 <p align="center"><img src="assets/week1/EC2_image_status.png" alt="accessibility text"></p>
 
