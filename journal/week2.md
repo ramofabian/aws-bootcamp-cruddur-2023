@@ -134,9 +134,11 @@ class HomeActivities:
 
 <p align="center"><img src="assets/week2/honey_website_span.png" alt="accessibility text"></p>
 
-6. From Honeycomb website queries can be run to analize the collected data, all of the can be perfomred form 'New query button':
+7. From Honeycomb website queries can be run to analize the collected data, all of the can be perfomred form 'New query button':
 
 <p align="center"><img src="assets/week2/honey_query.png" alt="accessibility text"></p>
+
+<b>References:</b> [Honeycomb documentation](https://docs.honeycomb.io/getting-data-in/opentelemetry/python/#sampling) and [Open Telemtry](https://opentelemetry.io/docs/)
 
 ### Instrument AWS X-Ray	
 ### Configure custom logger to send to CloudWatch Logs	
