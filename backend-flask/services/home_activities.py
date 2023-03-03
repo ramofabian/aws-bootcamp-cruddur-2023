@@ -4,7 +4,11 @@ from opentelemetry import trace
 tracer = trace.get_tracer(__name__)
 
 class HomeActivities:
+  #loggger turned off for spend reasons on Cloudwatch
+  #def run(logger):
   def run():
+    #loggger turned off for spend reasons on Cloudwatch
+    #logger.info('Hello Cloudwatch! from  /api/activities/home')
     with tracer.start_as_current_span("home-activities-mock-data"):
       span = trace.get_current_span()
       now = datetime.now(timezone.utc).astimezone()
