@@ -4,6 +4,7 @@
 :white_check_mark: DONE.
 ### Watch Chirag Week 2 - Spending Considerations 
 ### Watched Ashish's Week 2 - Observability Security Considerations	
+:white_check_mark: DONE.
 ### Instrument Honeycomb with OTEL
 :white_check_mark: DONE. It was hard for me because it's the first time I use tracing, I had issues during the implmentation but I could fix them up in the way.
 
@@ -303,6 +304,7 @@ Subsegment metadata:
 
 <p align="center"><img src="assets/week2/x-ray_trace_2.png" alt="accessibility text"></p>
 
+<b>References:</b> [AWS documentation for x-ray](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html) and [Git repo for x-ray sdk](https://github.com/aws/aws-xray-sdk-python)
 
 ### Configure custom logger to send to CloudWatch Logs	
 ### Integrate Rollbar and capture and error
