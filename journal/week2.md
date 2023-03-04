@@ -101,7 +101,10 @@ FlaskInstrumentor().instrument_app(app)
 RequestsInstrumentor().instrument()
 ```
 
-Note: This code can seen in this :point_right: [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L17-L45)
+<b>Note:</b> This code can seen in the following links
+  - Imported libraries :point_right: [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L17-L25)
+  - Initialize tracing and an exporter :point_right: [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L45-L58)
+  - Initialize automatic instrumentation :point_right: [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L65-L68)
 
 5. Run the `docker-compose.yml` file and if the information is being collected in honeycomb, the prompt should show the logs after any action from browser and from Honeycomb webseid we should see the data plotted.
 
@@ -161,7 +164,7 @@ To instrument AWS X-Ray in backend side, the following steps were performed:
 
 1. The python packet `aws-xray-sdk` is added to `requirements.txt` file. :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/requirements.txt?plain=1#L10).
 
-2. Add the following code in `app.py`. :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L27-L49).
+2. Add the following code in `app.py`. 
 
 ```python
 from aws_xray_sdk.core import xray_recorder
@@ -172,7 +175,7 @@ xray_recorder.configure(service='Backend-flask', dynamic_naming=xray_url)
 XRayMiddleware(app, xray_recorder)
 ```
 
-- Add this line `@xray_recorder.capture('activities_home')` in `/api/activities/home` endpoint as it's shown below to create the segment 'activities_home'. [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L102-L106).
+- Add this line `@xray_recorder.capture('activities_home')` in `/api/activities/home` endpoint as it's shown below to create the segment 'activities_home'. 
 
 ```python
 @app.route("/api/activities/home", methods=['GET'])
@@ -182,7 +185,7 @@ def data_home():
   return data, 200
 ```
 
-- Add this line `@xray_recorder.capture('activities_users')` in `/api/activities/home` endpoint as it's shown below to create the segment 'activities_users'. [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L113-L120).
+- Add this line `@xray_recorder.capture('activities_users')` in `/api/activities/home` endpoint as it's shown below to create the segment 'activities_users'.
 
 ```python
 @app.route("/api/activities/@<string:handle>", methods=['GET'])
@@ -195,7 +198,7 @@ def data_handle(handle):
     return model['data'], 200
 ```
 
-3. Add the following code in `backend-flask/services/user_activities.py` to create a subsegment called 'moc-data'. [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/user_activities.py).
+3. Add the following code in `backend-flask/services/user_activities.py` to create a subsegment called 'moc-data'.
 
 ```python
 # X-Ray -----------------
@@ -212,7 +215,7 @@ from aws_xray_sdk.core import xray_recorder
     xray_recorder.end_subsegment()
 ```
 
-4. Setup AWS X-Ray Resources by adding the the file `xray.json` in this directory `aws/json/`. This file should contains the following below. :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/json/xray.json).
+4. Setup AWS X-Ray Resources by adding the the file `xray.json` in this directory `aws/json/`. This file should contains the following below. 
 ```json
 {
   "SamplingRule": {
@@ -277,7 +280,7 @@ aws xray create-sampling-rule --cli-input-json file://aws/json/xray.json
       - 2000:2000/udp
 ```
 
-- Adding `aws-xray-deamon` enviroment variables in backend service. :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml?plain=1#L10-L11).
+- Adding `aws-xray-deamon` enviroment variables in backend service. 
 
 ```yml
 AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
@@ -304,7 +307,112 @@ Subsegment metadata:
 
 <p align="center"><img src="assets/week2/x-ray_trace_2.png" alt="accessibility text"></p>
 
+<b>Link to files:</b>
+  * `docker-compose.yml` :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml).
+  * `xray.json` :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/json/xray.json).
+  * `app.py` :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py).
+  * `user_activities.py` :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/user_activities.py).
+
 <b>References:</b> [AWS documentation for x-ray](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html) and [Git repo for x-ray sdk](https://github.com/aws/aws-xray-sdk-python)
 
 ### Configure custom logger to send to CloudWatch Logs	
+:white_check_mark: DONE. This task was quite easy to follow up, I didn't have any issue to follow Andrew's video.
+
+To configure custom logger in backend and send this data to AWS CloudWatch, the steps below were performed:
+
+1. Add the pyhton packet `watchtower` within `requrements.txt`, this file is located in `aws-bootcamp-cruddur-2023/backend-flask/`. [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/requirements.txt?plain=1#L11).
+
+2. In the file `app.py` located in `aws-bootcamp-cruddur-2023/backend-flask/` and add the following code:
+
+- Import libraries
+
+```python
+# CloudWatch logs -----------------
+import watchtower
+import logging
+from time import strftime
+```
+
+- Configure the logger to send the information to log group called `cruddur`, it was created in x-ray procedure:
+
+```python
+# Configuring Logger to Use CloudWatch ---
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+cw_handler = watchtower.CloudWatchLogHandler(log_group='cruddur')
+LOGGER.addHandler(console_handler)
+LOGGER.addHandler(cw_handler)
+LOGGER.info("Start logging")
+```
+
+- Adding new endpoint to log the anser after any request
+
+```python
+@app.after_request
+def after_request(response):
+    timestamp = strftime('[%Y-%b-%d %H:%M]')
+    LOGGER.error('%s %s %s %s %s %s', timestamp, request.remote_addr, request.method, request.scheme, request.full_path, response.status)
+    return response
+```
+
+3. Implementing logs within an endpoint
+- Adding logs in the endpoint `/activities/home`:
+
+From `app.py` add the paramter `logger=LOGGER` to send the object inside of `HomeActivities.run()` function:
+
+```python
+@app.route("/api/activities/home", methods=['GET'])
+xray_recorder.capture('activities_home')
+def data_home():
+  data = HomeActivities.run(logger=LOGGER)
+  return data, 200
+```
+
+In `aws-bootcamp-cruddur-2023/backend-flask/services/home_activities.py` modify the `run()` function as is shown below:
+
+```python 
+class HomeActivities:
+  def run(logger): #add the 'logger' input parameter
+    logger.info('Hello Cloudwatch! from  /api/activities/home') # Add this line
+```
+
+4. Add the eviremoment variables in `docker-compose.yml` within backend service: 
+
+```yml
+AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
+AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+```
+
+5. Run `docker-compose.yml` to deploy the docker containers and see the logs from AWS ClouldWatch:
+
+- Deploy the containers
+ 
+```bash
+docker-compose up -d
+```
+- Open the backend and frontend URL and interact with them from webbrowser to generate logs:
+
+  * Group log `cruddur` seen from CloudWatch console:
+
+<p align="center"><img src="assets/week2/cloudwatch_log_group.png" alt="accessibility text"></p>
+
+  * Received logs from application seen from CloudWatch console:
+
+<p align="center"><img src="assets/week2/cloudwatch_log_list.png" alt="accessibility text"></p>
+
+  * Log entry information:
+  
+<p align="center"><img src="assets/week2/cloudwatch_log_entry.png" alt="accessibility text"></p>
+
+<b>Notes:</b> 
+* Due to spending consideration on AWS CloudWatch and X-Ray services, I have disabled the functions to avoid any possible charge from AWS. Although, it can be activated any time!!
+* Please find below files:
+  * `app.py` 👉 [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py) 
+  * `home_activities.py` 👉 [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py)
+  * `docker-compose.yml` 👉 [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml)
+
+<b>References:</b> [Watchtower official documentation](https://kislyuk.github.io/watchtower/), [Watchtower python reference](https://pypi.org/project/watchtower/)
+
 ### Integrate Rollbar and capture and error
