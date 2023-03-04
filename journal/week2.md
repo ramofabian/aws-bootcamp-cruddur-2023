@@ -416,3 +416,122 @@ docker-compose up -d
 <b>References:</b> [Watchtower official documentation](https://kislyuk.github.io/watchtower/), [Watchtower python reference](https://pypi.org/project/watchtower/)
 
 ### Integrate Rollbar and capture and error
+:white_check_mark: DONE. This task was quite easy to follow up, I didn't have any issue to follow Andrew's video.
+
+<b>Rollbar</b> is a cloud-based bug tracking and monitoring solution that caters to organizations of all sizes. Rollbar supports multiple programming languages and frameworks like JavaScript, Python, .NET, Drupal, Wordpress and Pyramid. The solution can also be deployed on premises at the user end. <b>Source: </b>[softwareadvice](https://www.softwareadvice.com/continuous-integration/rollbar-profile/)
+  
+To integrate Rollbar and cature an error, I followed the next steps:
+
+1. Add the following python packets to `requirements.txt` file. 👉 [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/requirements.txt?plain=1#L13-L14)
+
+```txt
+blinker
+rollbar
+```
+
+2. Set Rollbar access token in Gitpod enviroment variable.
+
+```bash
+export ROLLBAR_ACCESS_TOKEN=""
+gp env ROLLBAR_ACCESS_TOKEN=""
+```
+
+Variable seen from gitpod:
+
+<p align="center"><img src="assets/week2/rollbar_env_gitpod.png" alt="accessibility text"></p>
+
+3. Add the enviroment vatiable created in previous step into `backend-flask` service for `docker-compose.yml`
+
+```yml
+ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
+```
+
+4. Import for Rollbar into backend-flask application:
+
+- Import libraries in `backend-flask/app.py`:
+
+```python
+import rollbar
+import rollbar.contrib.flask
+from flask import got_request_exception
+```
+
+- In `backend-flask/app.py` initialize Rollbar module (this fragment should be allocated before line `app = Flask(__name__)`).
+
+```python
+rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
+@app.before_first_request
+def init_rollbar():
+    """init rollbar module"""
+    rollbar.init(
+        # access token
+        rollbar_access_token,
+        # environment name
+        'production',
+        # server root directory, makes tracebacks prettier
+        root=os.path.dirname(os.path.realpath(__file__)),
+        # flask already sets up logging
+        allow_logging_basic_config=False)
+
+    # send exceptions from `app` to rollbar, using flask's signal system.
+    got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
+ ```
+
+- Add a new endpoint in  `backend-flask/app.py` to test Rollbar conection.
+
+```python
+@app.route('/rollbar/test')
+def rollbar_test():
+    rollbar.report_message('Hello World!', 'warning')
+    return "Hello World!"
+```
+
+5. Execute the file `docker-compose.yml` to deploy the applications.
+
+```bash
+docker-compose up -d
+docker-compose ps -a
+```
+
+<p align="center"><img src="assets/week2/rollbar_contianers.png" alt="accessibility text"></p>
+
+6. Open the backend URL in the browser and add at the end the route `/rollbar/test` and see if the warning messages has arrived in Rollbar `FirstProject`.
+
+- From we browser:
+
+<p align="center"><img src="assets/week2/rollbar_first_test.png" alt="accessibility text"></p>
+
+- From Rollbar website `Items` tab:
+
+ <p align="center"><img src="assets/week2/rollbar_first_test1.png" alt="accessibility text"></p>
+ 
+ - By clicking on the warning recently arrived the information below was seen:
+ 
+ <p align="center"><img src="assets/week2/rollbar_first_test2.png" alt="accessibility text"></p>
+
+7. Generating a real error from backend and displaying it on Rollbar.
+
+- From `backend-flask/services/home_activities.py` remove the `return` and keep the variable `results`.
+- Open the backend URL and add at the end the route `/api/activities/home`, the error below is seen:
+
+ <p align="center"><img src="assets/week2/rollbar_second_test.png" alt="accessibility text"></p>
+ 
+ - From Rollbar/itmes the same error should be visible:
+ 
+<p align="center"><img src="assets/week2/rollbar_second_test1.png" alt="accessibility text"></p>
+
+- More details seen from Rollbar:
+
+<p align="center"><img src="assets/week2/rollbar_second_test2.png" alt="accessibility text"></p>
+
+- More information:
+
+<p align="center"><img src="assets/week2/rollbar_second_test3.png" alt="accessibility text" width="400"></p>
+
+<b>Notes:</b> 
+* Please find below files:
+  * `app.py` 👉 [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py) 
+  * `home_activities.py` 👉 [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py)
+  * `docker-compose.yml` 👉 [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml)
+
+<b>References:</b> [pyrollbar github](https://github.com/rollbar/pyrollbar), [pyrollbar documentation](https://docs.rollbar.com/docs/python)
