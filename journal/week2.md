@@ -535,3 +535,92 @@ docker-compose ps -a
   * `docker-compose.yml` 👉 [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml)
 
 <b>References:</b> [pyrollbar github](https://github.com/rollbar/pyrollbar), [pyrollbar documentation](https://docs.rollbar.com/docs/python)
+
+## Homework challenges
+### Add custom instrumentation to Honeycomb to add more attributes eg. UserId, Add a custom span
+:white_check_mark: DONE. 
+
+I have added custom instrumentation for notifications activities endpoint located in this directory: `/backend-flask/services/notificattions_activities.py`. There the following work has been perfomed:
+
+1. 4 span levels have been created, each of them has its own attributes
+2. In the last span called `Result_content` the user_ID has been added.
+3. The record of exections has been implemented in the span `Result_content` to show how to change the span status and create the event with the message.
+
+///python
+class NotificattionsActivities:
+  def run():
+    with tracer.start_as_current_span("Notificattions_Activities") as outer_span: # --> Second span
+      with tracer.start_as_current_span("Result") as inner_span: # --> Third span
+        now = datetime.now(timezone.utc).astimezone()
+        outer_span.set_attribute("now", now.isoformat()) # --> Second span attribute set
+        results = [{
+          'uuid': '68f126b0-1ceb-4a33-88be-d90fa7109eee',
+          'handle':  'Benji',
+          'message': 'I\'m a dog',
+          'created_at': (now - timedelta(days=2)).isoformat(),
+          'expires_at': (now + timedelta(days=5)).isoformat(),
+          'likes_count': 5,
+          'replies_count': 1,
+          'reposts_count': 0,
+          'replies': [{
+            'uuid': '26e12864-1c26-5c3a-9658-97a10f8fea67',
+            'reply_to_activity_uuid': '68f126b0-1ceb-4a33-88be-d90fa7109eee',
+            'handle':  'Worf',
+            'message': 'This post has no honor!',
+            'likes_count': 0,
+            'replies_count': 0,
+            'reposts_count': 0,
+            'created_at': (now - timedelta(days=2)).isoformat()
+          }],
+        },
+        {
+          'uuid': '66e12864-8c26-4c3a-9658-95a10f8fea67',
+          'handle':  'Worf',
+          'message': 'I am out of prune juice',
+          'created_at': (now - timedelta(days=7)).isoformat(),
+          'expires_at': (now + timedelta(days=9)).isoformat(),
+          'likes': 0,
+          'replies': []
+        },
+        {
+          'uuid': '248959df-3079-4947-b847-9e0892d1bab4',
+          'handle':  'Garek',
+          'message': 'My dear doctor, I am just simple tailor',
+          'created_at': (now - timedelta(hours=1)).isoformat(),
+          'expires_at': (now + timedelta(hours=12)).isoformat(),
+          'likes': 0,
+          'replies': []
+        }
+        ]
+        inner_span.set_attribute("Result_lent", len(results)) # --> Third span attribute set
+        #adding custom span
+        with tracer.start_as_current_span("Result_content") as inner_inner_span: # --> Forth span set
+          inner_inner_span.set_attribute("user_id", results[0]['uuid']) # --> Forth span attribute set as UUID for user
+          inner_inner_span.set_attribute("user_handle", results[0]['handle']) # --> Forth span attribute set as handle for user
+          #Custom span for catching errors
+          try:   # --> Forth span attribute set to catch an error, sent the event and change the status to error
+            print(error)
+          except Exception as ex:
+            inner_inner_span.set_status(Status(StatusCode.ERROR))
+            inner_inner_span.record_exception(ex) 
+        return results
+  ///
+
+- Trace information collected with the `user_id` sent and `user_handle` as well:
+
+<p align="center"><img src="assets/week2/honeycom_custom_span_1.png" alt="accessibility text" width="400"></p>
+
+- Collected trace information with the event generated:
+
+<p align="center"><img src="assets/week2/honeycom_custom_span_2.png" alt="accessibility text" width="400"></p>
+
+<b>References:</b> [Honeycomb open telemetry](https://docs.honeycomb.io/getting-data-in/opentelemetry/python/), [open telemetry documentation](https://opentelemetry.io/docs/instrumentation/python/manual/)
+
+### Run custom queries in Honeycomb and save them later eg. Latency by UserID, Recent Traces
+:white_check_mark: DONE. 
+
+Based on the span previusly created I have created this query to see the heatmap of user ID interactions and span status code: [Link to template](https://ui.honeycomb.io/ramillos/environments/bootcamp/datasets/backend-flask?query=%7B%22time_range%22%3A7200%2C%22granularity%22%3A0%2C%22breakdowns%22%3A%5B%5D%2C%22calculations%22%3A%5B%7B%22op%22%3A%22HEATMAP%22%2C%22column%22%3A%22app.result_uuid%22%7D%2C%7B%22op%22%3A%22HEATMAP%22%2C%22column%22%3A%22status_code%22%7D%5D%2C%22orders%22%3A%5B%5D%2C%22havings%22%3A%5B%5D%2C%22limit%22%3A1000%7D)
+
+Please find below the picture of the gathered results:
+
+<p align="center"><img src="assets/week2/honey_query_custom.png" alt="accessibility text" width="400"></p>

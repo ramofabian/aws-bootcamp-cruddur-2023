@@ -52,5 +52,10 @@ class HomeActivities:
         'replies': []
       }
       ]
-      span.set_attribute("app.result_length", len(results))   
-      return results
+      span.set_attribute("app.result_length", len(results))
+      #adding custom span
+      with tracer.start_as_current_span("results") as span1:
+        # span1 = trace.get_current_span()   
+        span1.set_attribute("result_uuid", results[0]['uuid'])
+        span1.set_attribute("result_handle", results[0]['handle'])
+        return results
