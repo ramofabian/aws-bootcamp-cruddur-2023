@@ -6,23 +6,23 @@
 ### Watched Ashish's Week 2 - Observability Security Considerations	
 :white_check_mark: DONE.
 ### Instrument Honeycomb with OTEL
-:white_check_mark: DONE. It was hard for me because it's the first time I use tracing, I had issues during the implmentation but I could fix them up in the way.
+:white_check_mark: DONE. It was hard for me because it's the first time I use tracing, I had issues during the implementation but I could fix them up in the way.
 
 1. From Honeycomb
 
-- Creating new enviroment in Honey enviroment  called "bootcamp"
+- Creating new environment in Honey environment  called "bootcamp"
 
 <p align="center"><img src="assets/week2/bootcamp_environment.png" alt="accessibility text"></p>
 
-- Getting enviroment API key:
+- Getting environment API key:
 
 <p align="center"><img src="assets/week2/honey_api_key.png" alt="accessibility text"></p>
 
-- These are the priviledges for `bootcamp` enviroment, it can be seen from this [link](https://honeycomb-whoami.glitch.me/trace) and adding the API key.
+- These are the privileges for `bootcamp` environment, it can be seen from this [link](https://honeycomb-whoami.glitch.me/trace) and adding the API key.
 
 <p align="center"><img src="assets/week2/honey_env_priviledges.png" alt="accessibility text"></p>
 
-2. Save Honeycomb variables on gitpod and docker-compose file
+2. Save Honeycomb variables on Gitpod and docker-compose file
 
 - CLI variables:
 
@@ -51,7 +51,7 @@ services:
       - ./backend-flask:/backend-flask
 ```
 
-3. Adding addtional Hoenycomb python packets.
+3. Adding additional Hoenycomb python packets.
 
 The following commands should be added under backend `requirements.txt` file, like is present in this :point_right: [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/requirements.txt?plain=1#L4-L8):
 
@@ -106,9 +106,9 @@ RequestsInstrumentor().instrument()
   - Initialize tracing and an exporter :point_right: [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L45-L58)
   - Initialize automatic instrumentation :point_right: [Link](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py?plain=1#L65-L68)
 
-5. Run the `docker-compose.yml` file and if the information is being collected in honeycomb, the prompt should show the logs after any action from browser and from Honeycomb webseid we should see the data plotted.
+5. Run the `docker-compose.yml` file and if the information is being collected in honeycomb, the prompt should show the logs after any action from browser and from Honeycomb website we should see the data plotted.
 
-- Logging from CLI, the traing messages are seen in json format:
+- Logging from CLI, the tracing messages are seen in json format:
 
 <p align="center"><img src="assets/week2/tracing_cli.png" alt="accessibility text"></p>
 
@@ -138,7 +138,7 @@ class HomeActivities:
 
 <p align="center"><img src="assets/week2/honey_website_span.png" alt="accessibility text"></p>
 
-7. From Honeycomb website queries can be run to analize the collected data, all of the can be perfomred form 'New query button':
+7. From Honeycomb website queries can be run to analyze the collected data, all of the can be performed form 'New query button':
 
 <p align="center"><img src="assets/week2/honey_query.png" alt="accessibility text"></p>
 
@@ -150,11 +150,11 @@ class HomeActivities:
 <table>
   
   <b>Definitions:</b>
-  * <b>AWS X-Ray:</b> It's an Amazon service which gathers data based on requests made to its application (API), it also has tools to query, filter and get information regarding collected information. The gathered information is usefull to identify problems and identify optimization oportunites.
+  * <b>AWS X-Ray:</b> It's an Amazon service which gathers data based on requests made to its application (API), it also has tools to query, filter and get information regarding collected information. The gathered information is useful to identify problems and identify optimization opportunites.
   
   * Services send data to X-Ray as <b>segments</b>, it groups them according to common information in `traces`.
   
-  * The `segments` can contains constrained information about subtasks as <b>subsegments</b>. It provides more detailled information about the service subprocess.
+  * The `segments` can contains constrained information about subtasks as <b>subsegments</b>. It provides more detailed information about the service subprocess.
   
   * The <b>traces</b> tracks the path of some specific request and collects all segments and subsegments by a single request.
 
@@ -198,7 +198,7 @@ def data_handle(handle):
     return model['data'], 200
 ```
 
-3. Add the following code in `backend-flask/services/user_activities.py` to create a subsegment called 'moc-data'.
+3. Add the following code in `backend-flask/services/user_activities.py` to create a subsegment called 'mock-data'.
 
 ```python
 # X-Ray -----------------
@@ -215,7 +215,7 @@ from aws_xray_sdk.core import xray_recorder
     xray_recorder.end_subsegment()
 ```
 
-4. Setup AWS X-Ray Resources by adding the the file `xray.json` in this directory `aws/json/`. This file should contains the following below. 
+4. Setup AWS X-Ray Resources by adding the file `xray.json` in this directory `aws/json/`. This file should contains the following below. 
 ```json
 {
   "SamplingRule": {
@@ -280,14 +280,14 @@ aws xray create-sampling-rule --cli-input-json file://aws/json/xray.json
       - 2000:2000/udp
 ```
 
-- Adding `aws-xray-deamon` enviroment variables in backend service. 
+- Adding `aws-xray-deamon` environment variables in backend service. 
 
 ```yml
 AWS_XRAY_URL: "*4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}*"
 AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
 ```
 
-8. Run `docker-compose.yml` file, open `xray-daemon` console, open the frontend URL on browser and interact between home page and Andrew's profile many times to triger traces from backend to AWS X-Ray. 
+8. Run `docker-compose.yml` file, open `xray-daemon` console, open the frontend URL on browser and interact between home page and Andrew's profile many times to trigger traces from backend to AWS X-Ray. 
 
 - The logs below should be seen from CLI:
 
@@ -297,7 +297,7 @@ AWS_XRAY_DAEMON_ADDRESS: "xray-daemon:2000"
 
 <p align="center"><img src="assets/week2/x_ray_trace.png" alt="accessibility text"></p>
 
-- Making click on one of the traces the `segment` and `subsegment` previusly created and its metadata:
+- Making click on one of the traces the `segment` and `subsegment` previously created and its metadata:
 
 Subsegment overview info:
 
@@ -320,7 +320,7 @@ Subsegment metadata:
 
 To configure custom logger in backend and send this data to AWS CloudWatch, the steps below were performed:
 
-1. Add the pyhton packet `watchtower` within `requrements.txt`, this file is located in `aws-bootcamp-cruddur-2023/backend-flask/`. [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/requirements.txt?plain=1#L11).
+1. Add the python packet `watchtower` within `requrements.txt`, this file is located in `aws-bootcamp-cruddur-2023/backend-flask/`. [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/requirements.txt?plain=1#L11).
 
 2. In the file `app.py` located in `aws-bootcamp-cruddur-2023/backend-flask/` and add the following code:
 
@@ -346,7 +346,7 @@ LOGGER.addHandler(cw_handler)
 LOGGER.info("Start logging")
 ```
 
-- Adding new endpoint to log the anser after any request
+- Adding new endpoint to log the answer after any request
 
 ```python
 @app.after_request
@@ -359,7 +359,7 @@ def after_request(response):
 3. Implementing logs within an endpoint
 - Adding logs in the endpoint `/activities/home`:
 
-From `app.py` add the paramter `logger=LOGGER` to send the object inside of `HomeActivities.run()` function:
+From `app.py` add the parameter `logger=LOGGER` to send the object inside of `HomeActivities.run()` function:
 
 ```python
 @app.route("/api/activities/home", methods=['GET'])
@@ -377,7 +377,7 @@ class HomeActivities:
     logger.info('Hello Cloudwatch! from  /api/activities/home') # Add this line
 ```
 
-4. Add the eviremoment variables in `docker-compose.yml` within backend service: 
+4. Add the enviroment variables in `docker-compose.yml` within backend service: 
 
 ```yml
 AWS_DEFAULT_REGION: "${AWS_DEFAULT_REGION}"
@@ -392,7 +392,7 @@ AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
 ```bash
 docker-compose up -d
 ```
-- Open the backend and frontend URL and interact with them from webbrowser to generate logs:
+- Open the backend and frontend URL and interact with them from web browser to generate logs:
 
   * Group log `cruddur` seen from CloudWatch console:
 
@@ -420,7 +420,7 @@ docker-compose up -d
 
 <b>Rollbar</b> is a cloud-based bug tracking and monitoring solution that caters to organizations of all sizes. Rollbar supports multiple programming languages and frameworks like JavaScript, Python, .NET, Drupal, Wordpress and Pyramid. The solution can also be deployed on premises at the user end. <b>Source: </b>[softwareadvice](https://www.softwareadvice.com/continuous-integration/rollbar-profile/)
   
-To integrate Rollbar and cature an error, I followed the next steps:
+To integrate Rollbar and capture an error, I followed the next steps:
 
 1. Add the following python packets to `requirements.txt` file. 👉 [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/requirements.txt?plain=1#L13-L14)
 
@@ -429,7 +429,7 @@ blinker
 rollbar
 ```
 
-2. Set Rollbar access token in Gitpod enviroment variable.
+2. Set Rollbar access token in Gitpod environment variable.
 
 ```bash
 export ROLLBAR_ACCESS_TOKEN=""
@@ -440,7 +440,7 @@ Variable seen from gitpod:
 
 <p align="center"><img src="assets/week2/rollbar_env_gitpod.png" alt="accessibility text"></p>
 
-3. Add the enviroment vatiable created in previous step into `backend-flask` service for `docker-compose.yml`
+3. Add the environment variable created in previous step into `backend-flask` service for `docker-compose.yml`
 
 ```yml
 ROLLBAR_ACCESS_TOKEN: "${ROLLBAR_ACCESS_TOKEN}"
@@ -477,7 +477,7 @@ def init_rollbar():
     got_request_exception.connect(rollbar.contrib.flask.report_exception, app)
  ```
 
-- Add a new endpoint in  `backend-flask/app.py` to test Rollbar conection.
+- Add a new endpoint in  `backend-flask/app.py` to test Rollbar connection.
 
 ```python
 @app.route('/rollbar/test')
@@ -540,13 +540,13 @@ docker-compose ps -a
 ### Add custom instrumentation to Honeycomb to add more attributes eg. UserId, Add a custom span
 :white_check_mark: DONE. 
 
-I have added custom instrumentation for notifications activities endpoint located in this directory: `/backend-flask/services/notificattions_activities.py`. There the following work has been perfomed:
+I have added custom instrumentation for notifications activities endpoint located in this directory: `/backend-flask/services/notificattions_activities.py`. There the following work has been performed:
 
 1. 4 span levels have been created, each of them has its own attributes
 2. In the last span called `Result_content` the user_ID has been added.
-3. The record of exections has been implemented in the span `Result_content` to show how to change the span status and create the event with the message.
+3. The record of executions has been implemented in the span `Result_content` to show how to change the span status and create the event with the message.
 
-///python
+```python
 class NotificattionsActivities:
   def run():
     with tracer.start_as_current_span("Notificattions_Activities") as outer_span: # --> Second span
@@ -604,23 +604,23 @@ class NotificattionsActivities:
             inner_inner_span.set_status(Status(StatusCode.ERROR))
             inner_inner_span.record_exception(ex) 
         return results
-  ///
+  ```
 
 - Trace information collected with the `user_id` sent and `user_handle` as well:
 
-<p align="center"><img src="assets/week2/honeycom_custom_span_1.png" alt="accessibility text" width="400"></p>
+<p align="center"><img src="assets/week2/honeycom_custom_span_1.png" alt="accessibility text"></p>
 
 - Collected trace information with the event generated:
 
-<p align="center"><img src="assets/week2/honeycom_custom_span_2.png" alt="accessibility text" width="400"></p>
+<p align="center"><img src="assets/week2/honeycom_custom_span_2.png" alt="accessibility text"></p>
 
 <b>References:</b> [Honeycomb open telemetry](https://docs.honeycomb.io/getting-data-in/opentelemetry/python/), [open telemetry documentation](https://opentelemetry.io/docs/instrumentation/python/manual/)
 
 ### Run custom queries in Honeycomb and save them later eg. Latency by UserID, Recent Traces
 :white_check_mark: DONE. 
 
-Based on the span previusly created I have created this query to see the heatmap of user ID interactions and span status code: [Link to template](https://ui.honeycomb.io/ramillos/environments/bootcamp/datasets/backend-flask?query=%7B%22time_range%22%3A7200%2C%22granularity%22%3A0%2C%22breakdowns%22%3A%5B%5D%2C%22calculations%22%3A%5B%7B%22op%22%3A%22HEATMAP%22%2C%22column%22%3A%22app.result_uuid%22%7D%2C%7B%22op%22%3A%22HEATMAP%22%2C%22column%22%3A%22status_code%22%7D%5D%2C%22orders%22%3A%5B%5D%2C%22havings%22%3A%5B%5D%2C%22limit%22%3A1000%7D)
+Based on the span previously created I have created this query to see the heatmap of user ID interactions and span status code: [Link to template](https://ui.honeycomb.io/ramillos/environments/bootcamp/datasets/backend-flask?query=%7B%22time_range%22%3A7200%2C%22granularity%22%3A0%2C%22breakdowns%22%3A%5B%5D%2C%22calculations%22%3A%5B%7B%22op%22%3A%22HEATMAP%22%2C%22column%22%3A%22app.result_uuid%22%7D%2C%7B%22op%22%3A%22HEATMAP%22%2C%22column%22%3A%22status_code%22%7D%5D%2C%22orders%22%3A%5B%5D%2C%22havings%22%3A%5B%5D%2C%22limit%22%3A1000%7D)
 
 Please find below the picture of the gathered results:
 
-<p align="center"><img src="assets/week2/honey_query_custom.png" alt="accessibility text" width="400"></p>
+<p align="center"><img src="assets/week2/honey_query_custom.png" alt="accessibility text" ></p>
