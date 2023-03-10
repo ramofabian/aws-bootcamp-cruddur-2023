@@ -194,6 +194,174 @@ Sigin with correct credentials and the user has been validated:
 * [SigninPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/SigninPage.js)
 
 ### Implement Custom Signup Page
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
+
+To implment the signup page I have followed the next instructions:
+1. Go to `SignupPage.js` page located in this directory `aws-bootcamp-cruddur-2023/frontend-react-js/src/pages/` and add the following code:
+
+In this code the form attributes are retrived from web form and sent to Cognito via `aws-amplofy`:
+
+```js
+// Cognito
+import { Auth } from 'aws-amplify';
+
+// cognito signup
+  const onsubmit = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    console.log(name);
+    console.log(email);
+    console.log(username);
+    console.log(password);
+    try {
+        const { user } = await Auth.signUp({
+          username: email,
+          password: password,
+          attributes: {
+              name: name,
+              email: email,
+              preferred_username: username,
+          },
+          autoSignIn: { // optional - enables auto sign in after user is confirmed
+              enabled: true,
+          }
+        });
+        console.log(user);
+        window.location.href = `/confirm?email=${email}`
+    } catch (error) {
+        console.log(error);
+        setErrors(error.message)
+    }
+    return false
+  }
+
+```
+
+New user creation and pending for code confirmation:
+
+<p align="center"><img src="assets/week3/user_not_verified.png" alt="accessibility text"></p>
+
+Duplicated images:
+
+<p align="center"><img src="assets/week3/account_already_exists.png" alt="accessibility text"></p>
+
+<b>Link to file:</b>
+* [SignupPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/SignupPage.js)
+
 ### Implement Custom Confirmation Page
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
+
+To implment the confirmation page I have followed the next instructions:
+
+1. Add the following code in `ConfirmationPage.js` located in directory `frontend-react-js/src/pages/`
+
+```js
+// cognito
+import { Auth } from 'aws-amplify';
+
+const resend_code = async (event) => {
+    setErrors('')
+    try {
+      await Auth.resendSignUp(email);
+      console.log('code resent successfully');
+      setCodeSent(true)
+    } catch (err) {
+      // does not return a code
+      // does cognito always return english
+      // for this to be an okay match?
+      console.log(err)
+      if (err.message == 'Username cannot be empty'){
+        setErrors("You need to provide an email in order to send Resend Activiation Code")   
+      } else if (err.message == "Username/client id combination not found."){
+        setErrors("Email is invalid or cannot be found.")   
+      }
+    }
+    
+ const onsubmit = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    try {
+      await Auth.confirmSignUp(email, code);
+      window.location.href = "/"
+      console.log(email + " " + code)
+    } catch (error) {
+      console.log(error)
+      setErrors(error.message)
+    }
+    return false
+  }
+```
+
+2. Code sent:
+
+<p align="center"><img src="assets/week3/conde_sent.png" alt="accessibility text"></p>
+
+3. Code confirmation:
+
+<p align="center"><img src="assets/week3/code_confirmation.png" alt="accessibility text"></p>
+
+4. Account confirmed:
+
+<p align="center"><img src="assets/week3/account_confirmed.png" alt="accessibility text"></p>
+
+5. Sign in with the new account:
+
+<p align="center"><img src="assets/week3/sign_in_good.png" alt="accessibility text"></p>
+
+<b>Link to file:</b>
+* [ConfirmationPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/ConfirmationPage.js)
+
 ### Implement Custom Recovery Page
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
+
+To implment the recovery page I have followed the next instructions:
+
+1. Add the following code in `RecoverPage.js` page located in `frontend-react-js/src/pages/`
+
+```js
+// Cognito
+import { Auth } from 'aws-amplify';
+
+const onsubmit_send_code = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    Auth.forgotPassword(username)
+    .then((data) => setFormState('confirm_code') )
+    .catch((err) => setErrors(err.message) );
+    return false
+}
+
+// cognito
+const onsubmit_confirm_code = async (event) => {
+    event.preventDefault();
+    setErrors('')
+    if (password == passwordAgain){
+      Auth.forgotPasswordSubmit(username, code, password)
+      .then((data) => setFormState('success'))
+      .catch((err) => setErrors(err.message) );
+    } else {
+      setErrors('Passwords do not match')
+    }
+    return false
+  }
+```
+2. Adding email in recovery password page:
+
+<p align="center"><img src="assets/week3/recovery_1.png" alt="accessibility text"></p>
+
+3. Email received:
+
+<p align="center"><img src="assets/week3/recovery_2.png" alt="accessibility text"></p>
+
+4. Code and new password set:
+
+<p align="center"><img src="assets/week3/recovery_3.png" alt="accessibility text"></p>
+
+5. New password saved confirmation:
+
+<p align="center"><img src="assets/week3/recovery_4.png" alt="accessibility text"></p>
+
+<b>Link to file:</b>
+* [RecoverPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/RecoverPage.js)
+
 ### Watch about different approaches to verifying JWTs
