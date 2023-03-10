@@ -365,3 +365,115 @@ const onsubmit_confirm_code = async (event) => {
 * [RecoverPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/RecoverPage.js)
 
 ### Watch about different approaches to verifying JWTs
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
+
+To implment the JWT on the server side I have followed the next instructions:
+
+1. Add the following code in `HomeFeedPage.js` page in the directory `/frontend-react-js/src/pages/`:
+
+```js
+const res = await fetch(backend_url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        },
+        method: "GET"
+      });
+```
+
+2. Go to backend and add the following code in `app.py` file:
+
+```py
+#JWTs for frontend integration with cognito -------------------------
+cors = CORS(
+  app, 
+  resources={r"/api/*": {"origins": origins}},
+  headers=['Content-Type', 'Authorization'], 
+  expose_headers='Authorization',
+  methods="OPTIONS,GET,HEAD,POST"
+)
+
+#get access token from frontend -------------------------
+@app.route("/api/activities/home", methods=['GET'])
+#@xray_recorder.capture('activities_home') # X-ray turned off for spend reasons on Cloudwatch
+def data_home():
+  app.logger.info('AUTH HEADER-------') 
+  app.logger.info(request.headers.get('Authorization'))
+  data = HomeActivities.run()
+  #loggger turned off for spend reasons on Cloudwatch
+  #data = HomeActivities.run(logger=LOGGER)
+  return data, 200
+```
+
+3. Install python packet `Flask-AWSCognito` with the command `pip install -r requirements.txt`.
+4. Go to `docker-compose.yml` file and add env variables in backend service.
+
+```yml
+AWS_COGNITO_USER_POOL_ID: "eu-central-1_b8JxxxoLP"
+AWS_COGNITO_USER_POOL_CLIENT_ID: "1qjcgh0p91vqgxxxxxk6ra8q"
+```
+
+5. Add the following code from app.py to set
+
+```py
+#AWS Cognito service side ---------------------
+from lib.cognito_jwt_token import CognitoJwtToken, extract_access_token, TokenVerifyError
+
+app = Flask(__name__)
+
+#AWS Cognito service side ---------------------
+cognito_jwt_token = CognitoJwtToken(
+  user_pool_id=os.getenv("AWS_COGNITO_USER_POOL_ID"), 
+  user_pool_client_id=os.getenv("AWS_COGNITO_USER_POOL_CLIENT_ID"),
+  region=os.getenv("AWS_DEFAULT_REGION")
+)
+
+@app.route("/api/activities/home", methods=['GET'])
+def data_home():
+  access_token = extract_access_token(request.headers)
+  try:
+    claims = cognito_jwt_token.verify(access_token)
+    # authenicatied request
+    app.logger.debug("authenicated")
+    app.logger.debug(claims)
+    app.logger.debug(claims['username'])
+    data = HomeActivities.run(cognito_user_id=claims['username'])
+  except TokenVerifyError as e:
+    # unauthenicatied request
+    app.logger.debug(e)
+    app.logger.debug("unauthenicated")
+    data = HomeActivities.run()
+  return data, 200
+ ```
+ 
+ 6. Add the following code on `home_activities.py` from directory `backend-flask/services/`:
+ 
+ ```py
+ def run(cognito_user_id=None):
+  #--- ommiting code for simplicity
+  if cognito_user_id != None:
+        extracrud = {
+        'uuid': '248959df-3079-4947-b847-9e0892d1bab4',
+        'handle':  'Lore',
+        'message': 'My dear brother, it the humas are the problem',
+        'created_at': (now - timedelta(hours=1)).isoformat(),
+        'expires_at': (now + timedelta(hours=12)).isoformat(),
+        'likes': 0,
+        'replies': []
+        }
+        results.insert(0, extracrud)
+   return results
+ ```
+ 
+ 6. Add the following code on `ProfileInfo.js` from directory `frontend-react-js/src/components/`:
+ 
+ ```js
+ const signOut = async () => {
+    try {
+        await Auth.signOut({ global: true });
+        window.location.href = "/"
+        localStorage.removeItem() //New line to remove local storage
+    } catch (error) {
+        console.log('error signing out: ', error);
+    }
+  }
+ ```
