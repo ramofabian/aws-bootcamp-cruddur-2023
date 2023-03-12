@@ -364,7 +364,7 @@ const onsubmit_confirm_code = async (event) => {
 <b>Link to file:</b>
 * [RecoverPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/RecoverPage.js)
 
-### Watch about different approaches to verifying JWTs
+#### JWTs server side
 :white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
 
 To implment the JWT on the server side I have followed the next instructions:
@@ -412,7 +412,7 @@ AWS_COGNITO_USER_POOL_ID: "eu-central-1_b8JxxxoLP"
 AWS_COGNITO_USER_POOL_CLIENT_ID: "1qjcgh0p91vqgxxxxxk6ra8q"
 ```
 
-5. Add the following code from app.py to set
+5. Add the following code in `app.py` file:
 
 ```py
 #AWS Cognito service side ---------------------
@@ -471,9 +471,25 @@ def data_home():
     try {
         await Auth.signOut({ global: true });
         window.location.href = "/"
-        localStorage.removeItem() //New line to remove local storage
+        localStorage.removeItem("access_token") //New line to remove local storage
     } catch (error) {
         console.log('error signing out: ', error);
     }
   }
  ```
+ Logs seen during web browser interation
+ 
+ <p align="center"><img src="assets/week3/jwts_server_side.png" alt="accessibility text"></p>
+
+<b>Link to files:</b>
+* [HomeFeedPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/HomeFeedPage.js)
+* [app.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py)
+* [requirements.txt](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/requirements.txt)
+* [home_activities.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/home_activities.py)
+* [ProfileInfo.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/ProfileInfo.js)
+
+### Watch about different approaches to verifying JWTs
+:white_check_mark: DONE.
+
+### Watch Improving UI Contrast and Implementing CSS Variables for Theming
+:white_check_mark: DONE.
