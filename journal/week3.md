@@ -492,4 +492,16 @@ def data_home():
 :white_check_mark: DONE.
 
 ### Watch Improving UI Contrast and Implementing CSS Variables for Theming
-:white_check_mark: DONE.
+:white_check_mark: DONE. I have some adjustes to UI to make it more readable.
+
+- Home page:
+
+ <p align="center"><img src="assets/week3/ui_style_1.png" alt="accessibility text"></p>
+
+- Home page after sign in:
+
+ <p align="center"><img src="assets/week3/ui_style_2.png" alt="accessibility text"></p>
+
+- Notifications:
+                      
+ <p align="center"><img src="assets/week3/ui_style_3.png" alt="accessibility text"></p>
