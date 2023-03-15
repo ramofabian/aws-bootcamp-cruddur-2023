@@ -1,17 +1,17 @@
 # Week 3 — Decentralized Authentication
 ## Mandatory tasks
-### Watched Ashish's Week 3 - Decenteralized Authentication	
+### Watched Ashish's Week 3 - Decentralized Authentication	
 :white_check_mark: DONE.
 ### Watch Chirag Week 3 - Spending Considerations	
 ### Setup Cognito User Pool	
-:white_check_mark: DONE. I had some issues with the user pool and I had to recreated it a couple times, becuase I had missed some features to make it work properly.
+:white_check_mark: DONE. I had some issues with the user pool and I had to recreated it a couple times, because I had missed some features to make it work properly.
 
 The following parameters were used create the user pool correctly via web from AWS Cognito for ours Cruddur application:
 ```
 * User pool name: cruddur-user-pool
 * provider option: Cognito user pool (default)
 * Cognito user pool sign-in: email
-* Multi-factor autenticator: No MFA
+* Multi-factor authenticator: No MFA
 * User account recovery: Enable self-service account recovery and email only
 * Required attributes: name and preferred_username
 * Email: Send email with Cognito
@@ -47,9 +47,9 @@ The following parameters were used create the user pool correctly via web from A
 ### Implement Custom Signin Page
 :white_check_mark: DONE.  I didn't have issues to follow Andrew's video, it was really interesting task because I haven used Amplify before.
 
-To connect frontend with AWS Cognito we are using `Amplify` (<b>Definition:</b> It is an open-source solution that lets frontend developers builds, ship and host full stack applications on AWS). The following procedure was performed to implment custom signin page:
+To connect frontend with AWS Cognito we are using `Amplify` (<b>Definition:</b> It is an open-source solution that lets frontend developers builds, ship and host full stack applications on AWS). The following procedure was performed to implement custom signin page:
 
-1. Run the command `npm i aws-amplify --save` to install the dependecy in `npm` and automatically save it on `aws-bootcamp-cruddur-2023/frontend-react-js/package.json` for future works in the comming weeks.
+1. Run the command `npm i aws-amplify --save` to install the dependency in `npm` and automatically save it on `aws-bootcamp-cruddur-2023/frontend-react-js/package.json` for future works in the coming weeks.
 2. Add the following code in the file `/aws-bootcamp-cruddur-2023/frontend-react-js/src/App.js` to configure `amplify` and hook up our cognito pool to our frontend code:
 
 ```js
@@ -73,7 +73,7 @@ Amplify.configure({
 });
 ```
 
-3. Add the following envariable variables in to frontend service in `docker-compose.yml` file:
+3. Add the following environment variables in to frontend service in `docker-compose.yml` file:
 
 ```yml
 REACT_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}"
@@ -82,7 +82,7 @@ REACT_APP_AWS_USER_POOLS_ID: "eu-central-1_b8xxxxoLP"
 REACT_APP_CLIENT_ID: "1qjcgh0pxxxxxxxxxxd8k6ra8q"
 ```
 
-4. Go to `HomeFeedPage.js` file and add the following code to enable autentication on this page and don't forget comment or remove the cookies code:
+4. Go to `HomeFeedPage.js` file and add the following code to enable authentication on this page and don't forget comment or remove the cookies code:
 
 ```js
 // congnito ------------------
@@ -173,7 +173,7 @@ import { Auth } from 'aws-amplify';
 
 <p align="center"><img src="assets/week3/sigin_error_message.png" alt="accessibility text"></p>
 
-The folllowing command is used to force some account to be in authorized state:
+The following command is used to force some account to be in authorized state:
 
 ```bash
 aws cognito-idp admin-set-user-password --user-pool-id <<user_pool_id>> --username <<user_name>> --password <<pass>> --permanent
@@ -181,7 +181,7 @@ aws cognito-idp admin-set-user-password --user-pool-id <<user_pool_id>> --userna
 
 <p align="center"><img src="assets/week3/force user.png" alt="accessibility text"></p>
 
-Sigin with correct credentials and the user has been validated:
+Sign in with correct credentials and the user has been validated:
 
 <p align="center"><img src="assets/week3/sigin_correct.png" alt="accessibility text"></p>
 
@@ -196,10 +196,10 @@ Sigin with correct credentials and the user has been validated:
 ### Implement Custom Signup Page
 :white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
 
-To implment the signup page I have followed the next instructions:
+To implement the signup page I have followed the next instructions:
 1. Go to `SignupPage.js` page located in this directory `aws-bootcamp-cruddur-2023/frontend-react-js/src/pages/` and add the following code:
 
-In this code the form attributes are retrived from web form and sent to Cognito via `aws-amplofy`:
+In this code the form attributes are retrieved from web form and sent to Cognito via `aws-amplofy`:
 
 ```js
 // Cognito
@@ -251,7 +251,7 @@ Duplicated images:
 ### Implement Custom Confirmation Page
 :white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
 
-To implment the confirmation page I have followed the next instructions:
+To implement the confirmation page I have followed the next instructions:
 
 1. Add the following code in `ConfirmationPage.js` located in directory `frontend-react-js/src/pages/`
 
@@ -314,7 +314,7 @@ const resend_code = async (event) => {
 ### Implement Custom Recovery Page
 :white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
 
-To implment the recovery page I have followed the next instructions:
+To implement the recovery page I have followed the next instructions:
 
 1. Add the following code in `RecoverPage.js` page located in `frontend-react-js/src/pages/`
 
@@ -367,7 +367,7 @@ const onsubmit_confirm_code = async (event) => {
 #### JWTs server side
 :white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
 
-To implment the JWT on the server side I have followed the next instructions:
+To implement the JWT on the server side I have followed the next instructions:
 
 1. Add the following code in `HomeFeedPage.js` page in the directory `/frontend-react-js/src/pages/`:
 
@@ -477,7 +477,7 @@ def data_home():
     }
   }
  ```
- Logs seen during web browser interation
+ Logs seen during web browser interaction
  
  <p align="center"><img src="assets/week3/jwts_server_side.png" alt="accessibility text"></p>
 
@@ -492,7 +492,7 @@ def data_home():
 :white_check_mark: DONE.
 
 ### Watch Improving UI Contrast and Implementing CSS Variables for Theming
-:white_check_mark: DONE. I have some adjustes to UI to make it more readable.
+:white_check_mark: DONE. I have some adjustments to UI to make it more readable.
 
 - Home page:
 
