@@ -47,4 +47,13 @@
   padding: 12px 0px;
   margin-top: 12px;
   font-size: 16px;
+  border-radius: 999px;
+}
+
+.join-content a.subaction:hover{
+  background: #313237;
+}
+
+.join-content a.action:hover{
+  background: #2021246c;
 }

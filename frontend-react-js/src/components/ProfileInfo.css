@@ -15,10 +15,11 @@
   align-items: center;
   position: relative;
   z-index: 2;
+  background: #000;
 }
 
 .profile-info:hover {
-  background: rgba(255,255,255,0.08);
+  background: #313237;
 }
 
 .profile-info .profile-avatar{
