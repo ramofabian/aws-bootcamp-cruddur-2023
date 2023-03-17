@@ -5,4 +5,5 @@ NO_COLOR='\033[0m'
 LABEL="db-connect"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
+# Connect to cruddur DB
 psql $CONNECTION_URL
