@@ -426,7 +426,7 @@ export DB_SG_RULE_ID="sgr-01c87b74c88097a21"
 gp env DB_SG_RULE_ID="sgr-01c87b74c88097a21"
 ```
 
-Create the file `rds-update-sg-rule` with the following code which will change the IP:
+Create the file `rds-update-sg-rule` with the following code which will change the IP and fix the permissions with the command `chmod u+x backend-flask/bin/rds-update-sg-rule`:
 
 ```bash
 #! /usr/bin/bash
@@ -447,6 +447,10 @@ aws ec2 modify-security-group-rules \
     --group-id $DB_SG_ID \
     --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
 ```
+
+Execution logs:
+
+<p align="center"><img src="assets/week4/rds_ip_auto.png" alt="accessibility text"></p>
 
 ### Create Congito Trigger to insert user into database
 ### Create new activities with a database insert
