@@ -48,7 +48,23 @@ The following scripts were created to help the tool and developer during DB crea
 
 <b>Note:</b> In this phase the the postgres DB must be running to make the proper tests.
 
-1. New folder `db` will be created within `aws-bootcamp-cruddur-2023/backend-flask/` to allocate db schemas. Once the dicrectory is creted the following files must be created with the information below:
+1. Add environment variables to connect to DBs via URL string:
+
+```bash
+# For RDS
+export PROD_CONNECTION_URL=postgresql://cruddurroot:<<password>>@cruddur-db-instance.XXXXX.eu-XXXX.rds.amazonaws.com:5432/cruddur
+gp env PROD_CONNECTION_URL=postgresql://cruddurroot:<<password>>@cruddur-db-instance.XXXXX.eu-XXXX.rds.amazonaws.com:5432/cruddur
+
+# For local db
+export CONNECTION_URL=postgresql://postgres:password@localhost:5432/cruddur
+gp env CONNECTION_URL=postgresql://postgres:password@localhost:5432/cruddur
+```
+
+Saved variable on Gitpod:
+
+<p align="center"><img src="assets/week4/connection_url_db.png" alt="accessibility text" width="500"></p>
+
+2. New folder `db` will be created within `aws-bootcamp-cruddur-2023/backend-flask/` to allocate db schemas. Once the dicrectory is creted the following files must be created with the information below:
 - `schema.sql`: This file contains the code in `SQL` syntax to install `uuid-ossp` plugin, create tables: `users` and `activities` as `public and drop it if it those exists.
 
 ```sql
@@ -93,7 +109,7 @@ VALUES
   )
 ```
 
-2. The folder `bin` will be created within `aws-bootcamp-cruddur-2023/backend-flask/` to allocate db bash scripts to manage the DB. Once the dicrectory is creted the following files must be created with the information below:
+3. The folder `bin` will be created within `aws-bootcamp-cruddur-2023/backend-flask/` to allocate db bash scripts to manage the DB. Once the dicrectory is creted the following files must be created with the information below:
 - `db-connect`: Bash script used to login `cruddur` DB.
 
 ```bash
@@ -257,6 +273,110 @@ Recently added information:
 <p align="center"><img src="assets/week4/added_info.png" alt="accessibility text"></p>
 
 ### Install Postgres Driver in Backend Application
+:white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
+
+To install Postgres Diver in the backed side, the following steps where followed:
+
+1. Add `Psycopg` packets: `psycopg[binary]` and `psycopg[pool]` for postgres driver in  python `requirements.txt` file located in `backend-flask` folder.
+
+2. In `backend-flask/lib/` directory create a new python file called `db.py` and add the following information:
+
+This file will handle the 
+
+```python
+from psycopg_pool import ConnectionPool
+import os
+
+#Loading env variables
+connection_url = os.getenv("CONNECTION_URL")
+pool = ConnectionPool(connection_url)
+
+def query_wrap_object(template):
+  sql = f'''
+  (SELECT COALESCE(row_to_json(object_row),'{{}}'::json) FROM (
+  {template}
+  ) object_row);
+  '''
+  return sql
+
+def query_wrap_array(template):
+  sql = f'''
+  (SELECT COALESCE(array_to_json(array_agg(row_to_json(array_row))),'[]'::json) FROM (
+  {template}
+  ) array_row);
+  '''
+  return sql
+```
+
+3. In `backend-flask/services/home_activities.py` endpoint we will add the folling code:
+
+<b>Notes:</b>
+* To run the code below the legacy `return` variable must be commented or removed.
+* This new code will get logged in local posgres db, get the needed info and returns the outpur in json format.
+
+```python
+from datetime import datetime, timedelta, timezone
+from opentelemetry import trace
+
+# posgres driver psycopg --------------------------------
+from lib.db import pool, query_wrap_array
+
+tracer = trace.get_tracer(__name__)
+
+class HomeActivities:
+  #loggger turned off for spend reasons on Cloudwatch
+  #def run(logger):
+  def run(cognito_user_id=None):
+    #loggger turned off for spend reasons on Cloudwatch
+    #logger.info('Hello Cloudwatch! from  /api/activities/home')
+    with tracer.start_as_current_span("home-activities-mock-data"):
+      span = trace.get_current_span()
+      now = datetime.now(timezone.utc).astimezone()
+      span.set_attribute("app.now", now.isoformat())  
+      results = []
+      # SQL query
+      sql = query_wrap_array("""
+      SELECT
+        activities.uuid,
+        users.display_name,
+        users.handle,
+        activities.message,
+        activities.replies_count,
+        activities.reposts_count,
+        activities.likes_count,
+        activities.reply_to_activity_uuid,
+        activities.expires_at,
+        activities.created_at
+      FROM public.activities
+      LEFT JOIN public.users ON users.uuid = activities.user_uuid
+      ORDER BY activities.created_at DESC
+      """)
+      #initializing connection pool and cursor to fetch only the first element in activities table return the output in json format
+      with pool.connection() as conn:
+        with conn.cursor() as cur:
+          cur.execute(sql)
+          # this will return a tuple
+          # the first field being the data
+          results = cur.fetchone()
+      return results[0]
+```
+4. In `docker-compose.yml` file add the environment variable `CONNECTION_URL` withing `backend-flask` service with the value of local DB URL string.
+
+```yml
+services:
+  backend-flask:
+    environment:
+      CONNECTION_URL: "postgresql://postgres:password@db:5432/cruddur"
+```
+
+Information seen at frontend:
+
+<p align="center"><img src="assets/week4/db_info_in_frontend.png" alt="accessibility text"></p>
+
+Information seen at backend:
+
+<p align="center"><img src="assets/week4/db_info_in_backend.png" alt="accessibility text"></p>
+
 ### Connect Gitpod to RDS Instance
 ### Create Congito Trigger to insert user into database
 ### Create new activities with a database insert
