@@ -256,6 +256,18 @@ source "$bin_path/db-schema-load"
 source "$bin_path/db-seed"
 ```
 
+- Fix bash scripts permitions from `/workspace/aws-bootcamp-cruddur-2023` directory:
+
+``` bash
+chmod u+x backend-flask/bin/db-connect
+chmod u+x backend-flask/bin/db-create
+chmod u+x backend-flask/bin/db-drop
+chmod u+x backend-flask/bin/db-schema-load
+chmod u+x backend-flask/bin/db-seed
+chmod u+x backend-flask/bin/db-sessions
+chmod u+x backend-flask/bin/db-setup
+```
+
 Executing `db-setup` script:
 
 <p align="center"><img src="assets/week4/db-setup.png" alt="accessibility text"></p>
@@ -378,5 +390,63 @@ Information seen at backend:
 <p align="center"><img src="assets/week4/db_info_in_backend.png" alt="accessibility text"></p>
 
 ### Connect Gitpod to RDS Instance
+:white_check_mark: DONE.
+
+1. Start RDS db `cruddur-db-instance`
+
+Started with warmings when the status is active
+<p align="center"><img src="assets/week4/dd_rds_start_failed.png" alt="accessibility text"></p>
+
+No errors seein the events report:
+<p align="center"><img src="assets/week4/dd_rds_start_faileld2.png" alt="accessibility text"></p>
+
+3. Get Gipod public IP
+
+```bash
+GITPOD_IP=$(curl ifconfig.me)
+echo $GITPOD_IP
+```
+
+4. add new inbound rule withing DB security group
+
+<p align="center"><img src="assets/week4/security_group_inbound.png" alt="accessibility text"></p>
+
+<p align="center"><img src="assets/week4/rds_security_group.png" alt="accessibility text"></p>
+
+5. from Gitpod CLI connect to RDS DB with the command `psql $PROD_CONNECTION_URL`
+
+<p align="center"><img src="assets/week4/psql_prod_con.png" alt="accessibility text"></p>
+
+6. Since Gitpod IP is changing each time we login and to avoid the manual acle modification, the following script will be used to automatically change the IP
+
+```bash
+export DB_SG_ID="sg-0ca4df3a54879ef92"
+gp env DB_SG_ID="sg-0ca4df3a54879ef92"
+export DB_SG_RULE_ID="sgr-01c87b74c88097a21"
+gp env DB_SG_RULE_ID="sgr-01c87b74c88097a21"
+```
+
+Create the file `rds-update-sg-rule` with the following code which will change the IP:
+
+```bash
+#! /usr/bin/bash
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="reds-update-sg-rule"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+# # Getting gitpod IP
+# GITPOD_IP=$(curl ifconfig.me)
+# echo "Gitpod IP: $GITPOD_IP"
+
+echo "Result:"
+
+# command to update the the rule
+aws ec2 modify-security-group-rules \
+    --group-id $DB_SG_ID \
+    --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
+```
+
 ### Create Congito Trigger to insert user into database
 ### Create new activities with a database insert
