@@ -390,7 +390,9 @@ Information seen at backend:
 <p align="center"><img src="assets/week4/db_info_in_backend.png" alt="accessibility text"></p>
 
 ### Connect Gitpod to RDS Instance
-:white_check_mark: DONE.
+:white_check_mark: DONE. I didn't any issue to follow Andrews instructions, it is the first time I did such work like this and I found it very interesting and applicable in projects at work.
+
+The steps to connect Gtpod to RDS instance are below:
 
 1. Start RDS db `cruddur-db-instance`
 
@@ -452,5 +454,124 @@ Execution logs:
 
 <p align="center"><img src="assets/week4/rds_ip_auto.png" alt="accessibility text"></p>
 
+7. In `docker-compose.yml` commend the dev connection URL line and add one more for production DB, as its shown below: 
+
+```yml
+version: "3.8"
+services:
+  backend-flask:
+    environment:
+      CONNECTION_URL: "${PROD_CONNECTION_URL}"
+      # CONNECTION_URL: "postgresql://postgres:password@db:5432/cruddur" 
+```
+
+8. Make `docker-compose up -d` to start docker containers and execute the following scripts to test RDS DB connectivity and upload the schema:
+
+```bash
+#Upload schema
+./backend-flask/bin/db-schema-load prod
+
+#Checking tables are prsent
+./backend-flask/bin/db-connect prod
+\dt
+\q
+```
+
+Logs of loaded schema:
+
+<p align="center"><img src="assets/week4/rds_prod_connection_and_schema.png" alt="accessibility text"></p>
+
+No erros should be seen from backend and frontend:
+
+<p align="center"><img src="assets/week4/rds_backed_logs.png" alt="accessibility text"></p>
+
 ### Create Congito Trigger to insert user into database
+:white_check_mark: DONE.
+
+1. Create lambda function in AWS console called with the following parameters:
+
+```
+- Name: cruddur-post-confirmation-2
+- RuntimeInfo: Python 3.8
+- Architecture: x86_64
+- Advanced settings:
+  - Enable VPC
+    - Select: VPC, subnets, security groups (This is going to save time and avoid any additional policy creation)
+```
+
+<p align="center"><img src="assets/week4/lambda_vpc.png" alt="accessibility text"></p>
+
+Once the lambda function is created 
+
+<p align="center"><img src="assets/week4/lambda_function_created.png" alt="accessibility text"></p>
+
+2. Add pyhton script and click on deplopy
+
+```python
+# lambda function to save new users in RDS database
+import json
+import psycopg2
+import os
+
+def lambda_handler(event, context):
+    user = event['request']['userAttributes']
+    print('Atributes')
+    print(user)
+
+    user_display_name    = user['name']
+    user_email           = user['email']
+    user_handle          = user['preferred_username']
+    user_cognito_user_id = user['sub']
+    try:
+        print("Entering to try")
+  
+        sql = f"""
+        INSERT INTO users (display_name, email, handle, cognito_user_id)
+        VALUES('{user_display_name}', '{user_email}', '{user_handle}', '{user_cognito_user_id}')
+        """
+        print('SQL Statement ---------')
+        print(sql)
+
+        conn = psycopg2.connect(os.getenv('PROD_CONNECTION_URL'))
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit() 
+
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        
+    finally:
+        if conn is not None:
+            cur.close()
+            conn.close()
+            print('Database connection closed.')
+
+    return event
+```
+
+3. Add connection URL as environment variable:
+
+<p align="center"><img src="assets/week4/lambda_env_variables.png" alt="accessibility text"></p>
+
+4. Add a layer with python library with `psycopg2`:
+
+<p align="center"><img src="assets/week4/lambda_layer.png" alt="accessibility text"></p>
+
+5. Go to user pools and add the lambda trigger to save the new users within RDS DB:
+
+<p align="center"><img src="assets/week4/lambda_trigger.png" alt="accessibility text"></p>
+
+6. Create a new user, check the cloudwatch logs and RDS DB:
+
+- Logs seen from cloudwatch:
+
+<p align="center"><img src="assets/week4/lambda_logs.png" alt="accessibility text"></p>
+
+- Created user trigered by Cognito to lambda to be stored in RDS DB:
+
+<p align="center"><img src="assets/week4/lambda_created_user.png" alt="accessibility text"></p>
+
+- Cognito new user:
+<p align="center"><img src="assets/week4/cognito_newuser.png" alt="accessibility text"></p>
+
 ### Create new activities with a database insert

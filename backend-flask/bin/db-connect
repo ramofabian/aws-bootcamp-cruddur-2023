@@ -5,5 +5,14 @@ NO_COLOR='\033[0m'
 LABEL="db-connect"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
+#Check if the conection URL is prod or dev
+if [ "$1" = "prod" ]; then
+    CON_URL=$PROD_CONNECTION_URL
+    echo "This is production enviroment."
+else
+    CON_URL=$CONNECTION_URL
+    echo "This is dev enviroment."
+fi
+
 # Connect to cruddur DB
-psql $CONNECTION_URL
+psql $CON_URL
