@@ -433,12 +433,12 @@ Create the file `rds-update-sg-rule` with the following code which will change t
 
 CYAN='\033[1;36m'
 NO_COLOR='\033[0m'
-LABEL="reds-update-sg-rule"
+LABEL="rds-update-sg-rule"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 # # Getting gitpod IP
 # GITPOD_IP=$(curl ifconfig.me)
-# echo "Gitpod IP: $GITPOD_IP"
+echo "Gitpod IP: $GITPOD_IP"
 
 echo "Result:"
 
