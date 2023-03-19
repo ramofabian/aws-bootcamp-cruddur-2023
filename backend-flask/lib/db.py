@@ -1,6 +1,7 @@
 from psycopg_pool import ConnectionPool
 import os, sys
 import re
+from flask import current_app as app
 
 # Before class Db
 # #Loading env variables
@@ -31,26 +32,36 @@ class Db():
     connection_url = os.getenv("CONNECTION_URL")
     self.pool = ConnectionPool(connection_url)
 
+  def load_sql(self, name):
+    template_path = os.path.join(app.root_path, 'db', 'sql', name +'.sql')
+    with open(template_path,'r') as f:
+      template_content = f.read()
+      return template_content
+  
+  def print_sql(self, title, sql):
+    cyan = '\033[96m]'
+    no_color = '\033[0m'
+    print(f'{cyan}SQL STATEMENT [{title}]-----------{no_color}')
+    print(sql+'\n')
+
+
   def query_commit_id(self, sql, params):
     #Function returns the last query
-    print("SQL STATEMENT [commit with returning]-----------")
-    print(sql)
+    self.print_sql('commit with returning', sql)
     #Be sure to check for RETURNING in uppercase
     pattern = r"\bRETURNING\b"
     is_returning_id = re.search(pattern, sql)
-
     try:
         print("SQL STATEMENT [list]-----------")
-        conn = self.pool.connection()
-        cur = conn.cursor()
-        cur.execute(sql, params)
-        if is_returning_id:
-          print("Fund match!")
-          returning_id = cur.fetchone()[0]
-        conn.commit() 
-        conn.close()
-        if is_returning_id:
-          return returning_id
+        with self.pool.connection() as conn:
+          with conn.cursor() as cur:
+            cur.execute(sql, params)
+            if is_returning_id:
+              print("Fund match!")
+              returning_id = cur.fetchone()[0]
+            conn.commit() 
+            if is_returning_id:
+              return returning_id
     except Exception as err:
       # pass exception to function
       self.print_psycopg2_exception(err)
