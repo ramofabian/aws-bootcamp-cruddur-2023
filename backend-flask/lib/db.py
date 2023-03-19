@@ -1,5 +1,6 @@
 from psycopg_pool import ConnectionPool
-import os
+import os, sys
+import re
 
 # Before class Db
 # #Loading env variables
@@ -30,16 +31,44 @@ class Db():
     connection_url = os.getenv("CONNECTION_URL")
     self.pool = ConnectionPool(connection_url)
 
-  def query_commit(self):
+  def query_commit_id(self, sql, params):
+    #Function returns the last query
+    print("SQL STATEMENT [commit with returning]-----------")
+    print(sql)
+    #Be sure to check for RETURNING in uppercase
+    pattern = r"\bRETURNING\b"
+    is_returning_id = re.search(pattern, sql)
+
+    try:
+        print("SQL STATEMENT [list]-----------")
+        conn = self.pool.connection()
+        cur = conn.cursor()
+        cur.execute(sql, params)
+        if is_returning_id:
+          print("Fund match!")
+          returning_id = cur.fetchone()[0]
+        conn.commit() 
+        conn.close()
+        if is_returning_id:
+          return returning_id
+    except Exception as err:
+      # pass exception to function
+      self.print_psycopg2_exception(err)
+      # rollback the previous transaction before starting another
+      # conn.rollback()
+        
+
+  def query_commit(self, sql):
     #Function to commit  data such as an insert
     try:
+        print("SQL STATEMENT [list]-----------")
         conn = self.pool.connection()
         cur = conn.cursor()
         cur.execute(sql)
         conn.commit() 
     except Exception as err:
       # pass exception to function
-      print_psycopg2_exception(err)
+      self.print_psycopg2_exception(err)
       # rollback the previous transaction before starting another
       # conn.rollback()
     finally:
