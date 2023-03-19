@@ -575,3 +575,141 @@ def lambda_handler(event, context):
 <p align="center"><img src="assets/week4/cognito_newuser.png" alt="accessibility text"></p>
 
 ### Create new activities with a database insert
+:white_check_mark: DONE.
+
+1. We have to refactor `db.py` library to have all functions associated to a class, the following code should be added:
+
+```python
+from psycopg_pool import ConnectionPool
+import os
+
+class Db():
+  def __init__(self):
+    self.init_pool()
+
+  def init_pool(self):
+    connection_url = os.getenv("CONNECTION_URL")
+    self.pool = ConnectionPool(connection_url)
+
+  def query_commit(self):
+    #Function to commit  data such as an insert
+    try:
+        conn = self.pool.connection()
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit() 
+    except Exception as err:
+      # pass exception to function
+      print_psycopg2_exception(err)
+      # rollback the previous transaction before starting another
+      # conn.rollback()
+    finally:
+        conn.close()
+    
+  def query_array_json(self, sql):
+    #Function to launch a query and return and array of json objects
+    print("SQL STATEMENT [list]-----------")
+    print(sql + '\n')
+    wrapped_sql = self.query_wrap_array(sql)    
+    with self.pool.connection() as conn:
+      with conn.cursor() as cur:
+        cur.execute(wrapped_sql)
+        # this will return a tuple
+        # the first field being the data
+        results = cur.fetchone()
+    return results[0]
+
+  def query_object_json(self, sql):
+    #Function to launch a query and return it in a json object
+    print("SQL STATEMENT [object]-----------")
+    print(sql + '\n')
+    wrapped_sql = self.query_wrap_object(sql)    
+    with self.pool.connection() as conn:
+      with conn.cursor() as cur:
+        cur.execute(wrapped_sql)
+        # this will return a tuple
+        # the first field being the data
+        results = cur.fetchone()
+        return results[0]
+
+  def query_wrap_object(self, template):
+    #Function to wrap the SQL query to make the DB returns a json array
+    sql = f'''
+    (SELECT COALESCE(row_to_json(object_row),'{{}}'::json) FROM (
+    {template}
+    ) object_row);
+    '''
+    return sql
+
+  def query_wrap_array(self, template):
+    #Function to wrap the SQL query to make the DB returns a json array
+    sql = f'''
+    (SELECT COALESCE(array_to_json(array_agg(row_to_json(array_row))),'[]'::json) FROM (
+    {template}
+    ) array_row);
+    '''
+    return sql
+
+  def print_psycopg2_exception(self, err):
+    # get details about the exception
+    err_type, err_obj, traceback = sys.exc_info()
+
+    # get the line number when exception occured
+    line_num = traceback.tb_lineno
+
+    # print the connect() error
+    print ("\npsycopg2 ERROR:", err, "on line number:", line_num)
+    print ("psycopg2 traceback:", traceback, "-- type:", err_type)
+
+    # psycopg2 extensions.Diagnostics object attribute
+    print ("\nextensions.Diagnostics:", err.diag)
+
+    # print the pgcode and pgerror exceptions
+    print ("pgerror:", err.pgerror)
+    print ("pgcode:", err.pgcode, "\n")
+
+#Initialize function
+db = Db()
+```
+
+2. Adapting the code in `home_activities.py` file use the class `db`
+
+```python
+
+from datetime import datetime, timedelta, timezone
+from opentelemetry import trace
+
+# posgres driver psycopg --------------------------------
+# from lib.db import pool, query_wrap_array
+from lib.db import db
+
+tracer = trace.get_tracer(__name__)
+
+class HomeActivities:
+  #loggger turned off for spend reasons on Cloudwatch
+  #def run(logger):
+  def run(cognito_user_id=None):
+    #loggger turned off for spend reasons on Cloudwatch
+    #logger.info('Hello Cloudwatch! from  /api/activities/home')
+    with tracer.start_as_current_span("home-activities-mock-data"):
+      span = trace.get_current_span()
+      now = datetime.now(timezone.utc).astimezone()
+      span.set_attribute("app.now", now.isoformat())  
+      results = db.query_array_json("""
+      SELECT
+        activities.uuid,
+        users.display_name,
+        users.handle,
+        activities.message,
+        activities.replies_count,
+        activities.reposts_count,
+        activities.likes_count,
+        activities.reply_to_activity_uuid,
+        activities.expires_at,
+        activities.created_at
+      FROM public.activities
+      LEFT JOIN public.users ON users.uuid = activities.user_uuid
+      ORDER BY activities.created_at DESC
+      """)
+      return results
+```
