@@ -575,6 +575,42 @@ def lambda_handler(event, context):
 - Cognito new user:
 <p align="center"><img src="assets/week4/cognito_newuser.png" alt="accessibility text"></p>
 
+7. Automating the Gitpod IP provisioning withing RDS DB security group:
+- Create the file bash script `rds-update-sg-rule` in `backend-flask/bin/` directory with the following code:
+  ```bash
+  #! /usr/bin/bash
+
+    CYAN='\033[1;36m'
+    NO_COLOR='\033[0m'
+    LABEL="rds-update-sg-rule"
+    printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+    # # Getting gitpod IP
+    # GITPOD_IP=$(curl ifconfig.me)
+    echo "Gitpod IP: $GITPOD_IP"
+
+    echo "Result:"
+
+    # command to update the the rule
+    aws ec2 modify-security-group-rules \
+        --group-id $DB_SG_ID \
+        --security-group-rules "SecurityGroupRuleId=$DB_SG_RULE_ID,SecurityGroupRule={Description=GITPOD,IpProtocol=tcp,FromPort=5432,ToPort=5432,CidrIpv4=$GITPOD_IP/32}"
+  ```
+- In `.gitpod.yml` file add the following code below `postgres` task:
+
+  ```yml
+  command: |
+      export GITPOD_IP=$(curl ifconfig.me)
+      source "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds-update-sg-rule"
+  ```
+- Execution logs from Gitpod:
+
+<p align="center"><img src="assets/week4/sg_automation.png" alt="accessibility text"></p>
+
+- Execution logs from AWS console:
+
+<p align="center"><img src="assets/week4/sg_automation2.png" alt="accessibility text"></p>
+
 ### Create new activities with a database insert
 :white_check_mark: DONE. This task was very complex to follow but I end up undertanding it.
 
