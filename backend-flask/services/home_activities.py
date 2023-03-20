@@ -16,10 +16,22 @@ class HomeActivities:
     with tracer.start_as_current_span("home-activities-mock-data"):
       span = trace.get_current_span()
       now = datetime.now(timezone.utc).astimezone()
-      span.set_attribute("app.now", now.isoformat())  
-      sql = db.template('activities','home')
-      results = db.query_array_json(sql) 
-      return results
+      span.set_attribute("app.now", now.isoformat()) 
+      if cognito_user_id == None:
+        results = {
+        'uuid': '248959df-3079-4947-b847-9e0892d1baj9',
+        'handle':  'Lore',
+        'message': 'My dear brother, it the humas are the problem',
+        'created_at': (now - timedelta(hours=1)).isoformat(),
+        'expires_at': (now + timedelta(hours=12)).isoformat(),
+        'likes': 0,
+        'replies': []
+        }
+        return [results]
+      else: 
+        sql = db.template('activities','home')
+        results = db.query_array_json(sql) 
+        return results
       
       #before Db class
       # sql = query_wrap_array("""

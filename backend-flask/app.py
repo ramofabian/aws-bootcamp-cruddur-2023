@@ -219,7 +219,7 @@ def data_search():
 @cross_origin()
 def data_activities():
   # app.logger.debug(request.json)
-  user_handle  = 'benjiramos'
+  user_handle  = request.json['user_handle']
   message = request.json['message']
   ttl = request.json['ttl']
   model = CreateActivity.run(message, user_handle, ttl)
