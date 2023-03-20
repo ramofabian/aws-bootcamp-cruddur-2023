@@ -32,8 +32,17 @@ class Db():
     connection_url = os.getenv("CONNECTION_URL")
     self.pool = ConnectionPool(connection_url)
 
-  def load_sql(self, name):
-    template_path = os.path.join(app.root_path, 'db', 'sql', name +'.sql')
+  def template(self, *args):
+    pathing = list((app.root_path,'db', 'sql',) + args)
+    pathing[-1] = pathing[-1] + ".sql"
+    # template_path = os.path.join(app.root_path, 'db', 'sql', 'activity', name +'.sql')
+    template_path = os.path.join(*pathing) 
+    
+    green = '\033[92m'
+    no_color = '\033[0m'
+    print("pathing:")
+    print(f'{green}Load SQL Template: {template_path} {no_color}') 
+    
     with open(template_path,'r') as f:
       template_content = f.read()
       return template_content
@@ -85,27 +94,25 @@ class Db():
     finally:
         conn.close()
     
-  def query_array_json(self, sql):
+  def query_array_json(self, sql, params={}):
     #Function to launch a query and return and array of json objects
-    print("SQL STATEMENT [list]-----------")
-    print(sql + '\n')
+    self.print_sql('list', sql)
     wrapped_sql = self.query_wrap_array(sql)    
     with self.pool.connection() as conn:
       with conn.cursor() as cur:
-        cur.execute(wrapped_sql)
+        cur.execute(wrapped_sql, params)
         # this will return a tuple
         # the first field being the data
         results = cur.fetchone()
     return results[0]
 
-  def query_object_json(self, sql):
+  def query_object_json(self, sql, params={}):
     #Function to launch a query and return it in a json object
-    print("SQL STATEMENT [object]-----------")
-    print(sql + '\n')
+    self.print_sql('object', sql)
     wrapped_sql = self.query_wrap_object(sql)    
     with self.pool.connection() as conn:
       with conn.cursor() as cur:
-        cur.execute(wrapped_sql)
+        cur.execute(wrapped_sql, params)
         # this will return a tuple
         # the first field being the data
         results = cur.fetchone()
