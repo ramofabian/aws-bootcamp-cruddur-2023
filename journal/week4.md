@@ -46,7 +46,7 @@ We leave the instance temporally stop to avoid any possible charge while it is n
 
 The following scripts were created to help the tool and developer during DB creation:
 
-<b>Note:</b> In this phase the the postgres DB must be running to make the proper tests.
+<b>Note:</b> In this phase the postgres DB must be running to make the proper tests.
 
 1. Add environment variables to connect to DBs via URL string:
 
@@ -64,7 +64,7 @@ Saved variable on Gitpod:
 
 <p align="center"><img src="assets/week4/connection_url_db.png" alt="accessibility text" width="500"></p>
 
-2. New folder `db` will be created within `aws-bootcamp-cruddur-2023/backend-flask/` to allocate db schemas. Once the dicrectory is creted the following files must be created with the information below:
+2. New folder `db` will be created within `aws-bootcamp-cruddur-2023/backend-flask/` to allocate db schemas. Once the directory is created the following files must be created with the information below:
 - `schema.sql`: This file contains the code in `SQL` syntax to install `uuid-ossp` plugin, create tables: `users` and `activities` as `public and drop it if it those exists.
 
 ```sql
@@ -109,7 +109,7 @@ VALUES
   )
 ```
 
-3. The folder `bin` will be created within `aws-bootcamp-cruddur-2023/backend-flask/` to allocate db bash scripts to manage the DB. Once the dicrectory is creted the following files must be created with the information below:
+3. The folder `bin` will be created within `aws-bootcamp-cruddur-2023/backend-flask/` to allocate db bash scripts to manage the DB. Once the directory is created the following files must be created with the information below:
 - `db-connect`: Bash script used to login `cruddur` DB.
 
 ```bash
@@ -120,8 +120,17 @@ NO_COLOR='\033[0m'
 LABEL="db-connect"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
+#Check if the conection URL is prod or dev
+if [ "$1" = "prod" ]; then
+    CON_URL=$PROD_CONNECTION_URL
+    echo "This is production enviroment."
+else
+    CON_URL=$CONNECTION_URL
+    echo "This is dev enviroment."
+fi
+
 # Connect to cruddur DB
-psql $CONNECTION_URL
+psql $CON_URL
 ```
 
 - `db-create`: Bash script used to create `cruddur` DB.
@@ -256,9 +265,9 @@ source "$bin_path/db-schema-load"
 source "$bin_path/db-seed"
 ```
 
-- Fix bash scripts permitions from `/workspace/aws-bootcamp-cruddur-2023` directory:
+- Fix bash scripts permissions from `/workspace/aws-bootcamp-cruddur-2023` directory:
 
-``` bash
+```bash
 chmod u+x backend-flask/bin/db-connect
 chmod u+x backend-flask/bin/db-create
 chmod u+x backend-flask/bin/db-drop
@@ -283,6 +292,16 @@ Tables recently created:
 Recently added information:
 
 <p align="center"><img src="assets/week4/added_info.png" alt="accessibility text"></p>
+
+<b>Link to files:</b>
+- [db-connect](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/backend-flask/bin/db-connect)
+- [db-create](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/backend-flask/bin/db-create)
+- [db-drop](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/backend-flask/bin/db-drop)
+- [db-seed](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/backend-flask/bin/db-seed)
+- [db-sessions](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/backend-flask/bin/db-sessions)
+- [db-setup](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/backend-flask/bin/db-setup)
+- [schema.sql](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/backend-flask/db/schema.sql)
+- [seed.sql](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/backend-flask/db/seed.sql)
 
 ### Install Postgres Driver in Backend Application
 :white_check_mark: DONE. I didn't have any issue to follow Andrew's instructions.
@@ -320,11 +339,11 @@ def query_wrap_array(template):
   return sql
 ```
 
-3. In `backend-flask/services/home_activities.py` endpoint we will add the folling code:
+3. In `backend-flask/services/home_activities.py` endpoint we will add the following code:
 
 <b>Notes:</b>
 * To run the code below the legacy `return` variable must be commented or removed.
-* This new code will get logged in local posgres db, get the needed info and returns the outpur in json format.
+* This new code will get logged in local posgres db, get the needed info and returns the output in json format.
 
 ```python
 from datetime import datetime, timedelta, timezone
@@ -392,14 +411,14 @@ Information seen at backend:
 ### Connect Gitpod to RDS Instance
 :white_check_mark: DONE. I didn't any issue to follow Andrews instructions, it is the first time I did such work like this and I found it very interesting and applicable in projects at work.
 
-The steps to connect Gtpod to RDS instance are below:
+The steps to connect Gitpod to RDS instance are below:
 
 1. Start RDS db `cruddur-db-instance`
 
 Started with warmings when the status is active
 <p align="center"><img src="assets/week4/dd_rds_start_failed.png" alt="accessibility text"></p>
 
-No errors seein the events report:
+No errors seen in the events report:
 <p align="center"><img src="assets/week4/dd_rds_start_faileld2.png" alt="accessibility text"></p>
 
 3. Get Gipod public IP
@@ -415,7 +434,7 @@ echo $GITPOD_IP
 
 <p align="center"><img src="assets/week4/rds_security_group.png" alt="accessibility text"></p>
 
-5. from Gitpod CLI connect to RDS DB with the command `psql $PROD_CONNECTION_URL`
+5. From Gitpod CLI connect to RDS DB with the command `psql $PROD_CONNECTION_URL`
 
 <p align="center"><img src="assets/week4/psql_prod_con.png" alt="accessibility text"></p>
 
@@ -485,7 +504,7 @@ No erros should be seen from backend and frontend:
 
 <p align="center"><img src="assets/week4/rds_backed_logs.png" alt="accessibility text"></p>
 
-### Create Congito Trigger to insert user into database
+### Create Congnito Trigger to insert user into database
 :white_check_mark: DONE.
 
 1. Create lambda function in AWS console called with the following parameters:
@@ -505,7 +524,7 @@ Once the lambda function is created
 
 <p align="center"><img src="assets/week4/lambda_function_created.png" alt="accessibility text"></p>
 
-2. Add pyhton script and click on deplopy
+2. Add python script and click on `deploy` button, this code can be found in `cruddur-post-confirmation.py` file wihting `bakend-flask` folder:
 
 ```python
 # lambda function to save new users in RDS database
@@ -562,13 +581,13 @@ def lambda_handler(event, context):
 
 <p align="center"><img src="assets/week4/lambda_trigger.png" alt="accessibility text"></p>
 
-6. Create a new user, check the cloudwatch logs and RDS DB:
+6. Create a new user, check the `CloudWatch` logs and RDS DB:
 
-- Logs seen from cloudwatch:
+- Logs seen from CloudWatch:
 
 <p align="center"><img src="assets/week4/lambda_logs.png" alt="accessibility text"></p>
 
-- Created user trigered by Cognito to lambda to be stored in RDS DB:
+- Created user triggered by Cognito to lambda to be stored in RDS DB:
 
 <p align="center"><img src="assets/week4/lambda_created_user.png" alt="accessibility text"></p>
 
@@ -611,8 +630,13 @@ def lambda_handler(event, context):
 
 <p align="center"><img src="assets/week4/sg_automation2.png" alt="accessibility text"></p>
 
+<b>Link to files:</b>
+- [cruddur-post-confirmation.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/lambdas/cruddur-post-confirmation.py)
+- [rds-update-sg-rule](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/rds-update-sg-rule)
+- [.gitpod.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/.gitpod.yml)
+
 ### Create new activities with a database insert
-:white_check_mark: DONE. This task was very complex to follow but I end up undertanding it.
+:white_check_mark: DONE. This task was very complex to follow but I end up understanding it.
 
 1. We have to refactor the `db.py` library to have all functions associated to a class, the following code should be added to add new users to RDS DB, save new post in DB and get the info from there:
 
@@ -890,7 +914,7 @@ class CreateActivity:
     return modelObject
 ```
 
-5. Adding `user_handler` in the front end to send the `POST` request to backacend when any user does the post of a message:
+5. Adding `user_handler` in the front end to send the `POST` request to backend when any user does the post of a message:
 - Frontend:
   - In `HomeFeed Page.js` add `user_handle={user}` within `ActivityForm` compoment:
     
@@ -911,7 +935,7 @@ class CreateActivity:
           ttl: ttl
         }),
     ```
-- Backendend:
+- Backend:
   - In `app.y` under `/api/activities` route add the line: `user_handle  = request.json['user_handle']`:
 
     ```py
@@ -931,15 +955,15 @@ class CreateActivity:
     ```
 6. Post a message:
 
-generating the message:
+- Generating the message:
 
 <p align="center"><img src="assets/week4/creat_activities.png" alt="accessibility text"></p>
 
-Message saved and displayed:
+- Message saved and displayed:
 
 <p align="center"><img src="assets/week4/creat_activities2.png" alt="accessibility text"></p>
 
-Usuarios seen from DB CLI:
+- Users seen from DB CLI:
 
 <p align="center"><img src="assets/week4/created_users.png" alt="accessibility text"></p>
 
@@ -947,4 +971,15 @@ List of activities seen from DB:
 
 <p align="center"><img src="assets/week4/cli_saved_activities.png" alt="accessibility text"></p>
 
-<b>References:</b>
+<b>References:</b> [psycopg documentation](https://www.psycopg.org/)
+
+<b>Link to files:</b>
+- [db.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/lib/db.py)
+- [create.sql](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/db/sql/activities/create.sql)
+- [home.sql](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/db/sql/activities/home.sql)
+- [object.sql](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/db/sql/activities/object.sql)
+- [home_activities.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/home_activities.py)
+- [create_activity.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/create_activity.py)
+- [HomeFeed Page.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/HomeFeedPage.js)
+- [ActivityForm.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/ActivityForm.js)
+- [app.y](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py)
