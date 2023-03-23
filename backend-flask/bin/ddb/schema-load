@@ -13,8 +13,9 @@ if len(sys.argv) == 2:
 
 ddb = boto3.client('dynamodb', **attrs)
 
-table_name = 'cruddur-message'
+table_name = 'cruddur-messages'
 
+# Creating table
 response = ddb.create_table(
     TableName=table_name,
     AttributeDefinitions=[
@@ -66,11 +67,13 @@ response = ddb.create_table(
 )
 print(response)
 
+# command to get the table  via boro3
 # response = ddb.describe_table(
 #     TableName=table_name
 # )
 # print(response)
 
+# command to to delete via boro3
 # response = ddb.delete_table(
 #     TableName=table_name
 # )

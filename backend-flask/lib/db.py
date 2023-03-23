@@ -47,16 +47,17 @@ class Db():
       template_content = f.read()
       return template_content
   
-  def print_sql(self, title, sql):
+  def print_sql(self, title, sql, inpar={}):
     cyan = '\033[96m]'
     no_color = '\033[0m'
     print(f'{cyan}SQL STATEMENT [{title}]-----------{no_color}')
-    print(sql+'\n')
+    print(sql)
+    print('params:', inpar,'\n')
 
 
   def query_commit_id(self, sql, params):
     #Function returns the last query
-    self.print_sql('commit with returning', sql)
+    self.print_sql('commit with returning', sql, params)
     #Be sure to check for RETURNING in uppercase
     pattern = r"\bRETURNING\b"
     is_returning_id = re.search(pattern, sql)
@@ -96,7 +97,7 @@ class Db():
     
   def query_array_json(self, sql, params={}):
     #Function to launch a query and return and array of json objects
-    self.print_sql('list', sql)
+    self.print_sql('list', sql, params)
     wrapped_sql = self.query_wrap_array(sql)    
     with self.pool.connection() as conn:
       with conn.cursor() as cur:
@@ -108,7 +109,7 @@ class Db():
 
   def query_object_json(self, sql, params={}):
     #Function to launch a query and return it in a json object
-    self.print_sql('object', sql)
+    self.print_sql('object', sql, params)
     wrapped_sql = self.query_wrap_object(sql)    
     with self.pool.connection() as conn:
       with conn.cursor() as cur:
