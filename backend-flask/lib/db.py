@@ -79,21 +79,21 @@ class Db():
       # conn.rollback()
         
 
-  def query_commit(self, sql):
-    #Function to commit  data such as an insert
-    try:
-        print("SQL STATEMENT [list]-----------")
-        conn = self.pool.connection()
-        cur = conn.cursor()
-        cur.execute(sql)
-        conn.commit() 
-    except Exception as err:
-      # pass exception to function
-      self.print_psycopg2_exception(err)
-      # rollback the previous transaction before starting another
-      # conn.rollback()
-    finally:
-        conn.close()
+  # def query_commit(self, sql):
+  #   #Function to commit  data such as an insert
+  #   try:
+  #       print("SQL STATEMENT [list]-----------")
+  #       conn = self.pool.connection()
+  #       cur = conn.cursor()
+  #       cur.execute(sql)
+  #       conn.commit() 
+  #   except Exception as err:
+  #     # pass exception to function
+  #     self.print_psycopg2_exception(err)
+  #     # rollback the previous transaction before starting another
+  #     # conn.rollback()
+  #   finally:
+  #       conn.close()
     
   def query_array_json(self, sql, params={}):
     #Function to launch a query and return and array of json objects

@@ -7,7 +7,7 @@ LABEL="db-setup"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 #find bind folder
-bin_path=$(find /workspace/aws-bootcamp-cruddur-2023/backend-flask/ -type d -name bin)
+bin_path=$(find /workspace/aws-bootcamp-cruddur-2023/backend-flask/bin/ -type d -name db)
 echo $bin_path
 
 #Execute the bash scripts
@@ -15,3 +15,4 @@ source "$bin_path/drop"
 source "$bin_path/create"
 source "$bin_path/schema-load"
 source "$bin_path/seed"
+python "$bin_path/update_cognito_user_id"
