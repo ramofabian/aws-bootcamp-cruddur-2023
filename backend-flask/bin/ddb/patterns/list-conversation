@@ -31,7 +31,7 @@ def get_my_user_uuid():
         users.handle = %(handle)s
     """
     uuid = db.query_array_json(sql,{
-    'handle':  'andrewbrown'
+    'handle':  'benjiramos'
     })
     return uuid[0]['uuid']
 
@@ -49,6 +49,7 @@ query_params = {
   'ReturnConsumedCapacity': 'TOTAL' # to see the spending
 }
 
+print(query_params)
 # query the table
 response = dynamodb.query(**query_params)
 

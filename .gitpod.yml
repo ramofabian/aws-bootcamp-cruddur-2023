@@ -41,3 +41,6 @@ ports:
   - name: xray-daemon
     port: 2000
     visibility: public
+  - name: DynamoDB
+    port: 8000
+    visibility: public

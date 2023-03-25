@@ -118,6 +118,15 @@ class Db():
         # the first field being the data
         results = cur.fetchone()
         return results[0]
+  
+  def query_value(self, sql, params={}):
+    #Function to launch a query and return and array of json objects
+    self.print_sql('value', sql, params)  
+    with self.pool.connection() as conn:
+      with conn.cursor() as cur:
+        cur.execute(sql, params)
+        json = cur.fetchone()
+        return json[0]
 
   def query_wrap_object(self, template):
     #Function to wrap the SQL query to make the DB returns a json array
