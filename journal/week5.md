@@ -200,7 +200,7 @@ Execution log:
 <p align="center"><img src="assets/week5/dynamodb_scan_table.png" alt="accessibility text"></p>
 
 ### Implement Pattern Scripts for Read and List Conversations
-:white_check_mark: DONE. This part was hard to follow up, because I got lost in many part of it. Although, I could make it :)
+:white_check_mark: DONE. This part was hard to follow up, because I got lost in many parts of it. Although, I could make it :)
 
 #### Implementing get-conversation script
 To implement the Scan script, we have to create `get-conversation` python script and place it in `backend-flask/bin/ddb/patterns`. This script connects to dynamoDB, makes a query to get the info of some determinated message group ID within a determinated period of time and parses this information.
@@ -267,9 +267,9 @@ Link to file: [get-converstations](https://github.com/ramofabian/aws-bootcamp-cr
 
 Execution log:
 
-<p align="center"><img src="assets/week5/dynamodb_get_conversation.png" alt="accessibility text"></p>
+<p align="center"><img src="assets/week5/dynamodb_get_conversation.png" alt="accessibility text" width="500"></p>
 
-<p align="center"><img src="assets/week5/dynamodb_get_conversation2.png" alt="accessibility text"></p>
+<p align="center"><img src="assets/week5/dynamodb_get_conversation2.png" alt="accessibility text" width="500"></p>
 
 #### Implementing get-conversation script
 To implement the Scan script, we have to create `list-conversation` python script and place it in `backend-flask/bin/ddb/patterns`. This script connects to dynamoDB, makes a query to get the info of some determinated group message ID within and consumed capacity.
