@@ -28,7 +28,7 @@ query_params = {
   'ExpressionAttributeValues': {
     ':pk': {'S': f"MSG#{message_group_uuid}"},                                   # partition key == MSG#{message_group_uuid}
     ':start_date': {'S': "2023-03-01T00:00:00.000000+00:00"},
-    ':end_date': {'S': "2023-03-23T23:38:15.735541+00:00"},
+    ':end_date': {'S': "2023-03-30T23:38:15.735541+00:00"},
     # ':year': {'S': '2023'}
   },
   'ReturnConsumedCapacity': 'TOTAL'
@@ -36,8 +36,6 @@ query_params = {
 
 # query the table
 response = dynamodb.query(**query_params)
-
-
 
 # print the items returned by the query
 print(json.dumps(response, sort_keys=True, indent=2))
