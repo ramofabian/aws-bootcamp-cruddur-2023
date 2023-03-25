@@ -4,6 +4,7 @@ import boto3
 import sys
 import json
 import os
+import datetime
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 parent_path = os.path.abspath(os.path.join(current_path, '..', '..', '..'))
@@ -38,13 +39,15 @@ def get_my_user_uuid():
 my_user_uuid = get_my_user_uuid()
 print(f"my-uuid: {my_user_uuid}\n")
 
+current_year = str(datetime.datetime.now().year)
 # define the query parameters
 query_params = {
   'TableName': table_name,
-  'KeyConditionExpression': 'pk = :pk',
+  'KeyConditionExpression': 'pk = :pk AND begins_with(sk,:year)',
   'ScanIndexForward': False,
   'ExpressionAttributeValues': {
-    ':pk': {'S': f"GRP#{my_user_uuid}"}
+    ':pk': {'S': f"GRP#{my_user_uuid}"},
+    ':year': {'S': f'{current_year}'}
   },
   'ReturnConsumedCapacity': 'TOTAL' # to see the spending
 }

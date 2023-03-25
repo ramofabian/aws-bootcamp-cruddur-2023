@@ -17,14 +17,16 @@ class Ddb:
 
   def list_message_groups(client, my_user_uuid):
     #Get list of message groupes
+    current_year = str(datetime.now().year)
     table_name = 'cruddur-messages'
     query_params = {
       'TableName': table_name,
-      'KeyConditionExpression': 'pk = :pk',
+      'KeyConditionExpression': 'pk = :pk AND begins_with(sk,:year)',
       'ScanIndexForward': False,
       'Limit': 20,
       'ExpressionAttributeValues': {
-        ':pk': {'S': f"GRP#{my_user_uuid}"}
+        ':pk': {'S': f"GRP#{my_user_uuid}"},
+        ':year': {'S': f'{current_year}'}
       }
     }
     print('query-params:', query_params)

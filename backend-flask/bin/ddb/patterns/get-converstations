@@ -18,18 +18,20 @@ table_name = 'cruddur-messages'
 
 message_group_uuid = "5ae290ed-55d1-47a0-bc6d-fe2bc2700399"
 
+current_year = str(datetime.datetime.now().year)
+
 # define the query parameters
 query_params = {
   'TableName': table_name,
-#   'KeyConditionExpression': 'pk = :pk AND begins_with(sk,:year)',              # filter paramater
-  'KeyConditionExpression': 'pk = :pk AND sk between :start_date AND :end_date', # filter paramater
+  'KeyConditionExpression': 'pk = :pk AND begins_with(sk,:year)',              # filter paramater
+  # 'KeyConditionExpression': 'pk = :pk AND sk between :start_date AND :end_date', # filter paramater
   'ScanIndexForward': False,                                                     # send in desending direction
   'Limit': 20,                                                                   # Limt of items to be returned
   'ExpressionAttributeValues': {
     ':pk': {'S': f"MSG#{message_group_uuid}"},                                   # partition key == MSG#{message_group_uuid}
-    ':start_date': {'S': "2023-03-01T00:00:00.000000+00:00"},
-    ':end_date': {'S': "2023-03-30T23:38:15.735541+00:00"},
-    # ':year': {'S': '2023'}
+    # ':start_date': {'S': "2023-03-01T00:00:00.000000+00:00"},
+    # ':end_date': {'S': "2023-03-30T23:38:15.735541+00:00"},
+    ':year': {'S': f'{current_year}'}
   },
   'ReturnConsumedCapacity': 'TOTAL'
 }
