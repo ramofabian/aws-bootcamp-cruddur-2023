@@ -9,7 +9,7 @@
 
 To implement the schema load script, it is requiered the following steps:
 1. Switch on the containers and make sure dynamoDB  container is working.
-2. Create `schema-load` python script.
+2. Create `schema-load` python script and place it in `backend-flask/bin/ddb/`. This script will connect to local or remote DynamoDB database, then it will create a tacble called `cruddur-messages`.
 
 ```python
 #!/usr/bin/env python3
@@ -21,15 +21,17 @@ attrs = {
     'endpoint_url': 'http://localhost:8000'
 }
 
+# Checking if the prod word was entered as a arg
 if len(sys.argv) == 2:
     if "prod" in sys.argv[1]:
         attrs = {}
 
+# Start conection to dynamoDB
 ddb = boto3.client('dynamodb', **attrs)
 
 table_name = 'cruddur-messages'
 
-# Creating table
+# Creating table the 'cruddur-messages'
 response = ddb.create_table(
     TableName=table_name,
     AttributeDefinitions=[
@@ -61,7 +63,7 @@ response = ddb.create_table(
 print(response)
 ```
 
-3. Create `list-tables` script to see if the table has been cretaed.
+3. Create `list-tables` bash script to see if the table has been cretaed, it should be placed it in side of `backend-flask/bin/ddb/`.
 
 ```bash
 #! /usr/bin/bash
@@ -85,7 +87,7 @@ aws dynamodb list-tables $ENDPOINT_URL \
 --output table
 ```
 
-4. Create `drop` script to make the table removal.
+4. Create `drop` bash script to make the table removal and place it in side of `backend-flask/bin/ddb/`.
 
 ```bash
 #! /usr/bin/bash
@@ -119,9 +121,28 @@ aws dynamodb delete-table $ENDPOINT_URL \
 --table-name $TABLE_NAME
 ```
 
+5. Execution logs:
+5.1. Executing `schema-load`:
+
 <p align="center"><img src="assets/week5/dynamodb_loading_schema.png" alt="accessibility text"></p>
 
+5.2. Executing `list-tables`:
+
+<p align="center"><img src="assets/week5/dynamodb_show_tables.png" alt="accessibility text"></p>
+
+5.3. Executing `drop`:
+
+<p align="center"><img src="assets/week5/dynamodb_dropping_table.png" alt="accessibility text"></p>
+
+<b>Link to files:</b>
+- [schema-load](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/ddb/schema-load)
+- [list-tables](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/ddb/list-tables)
+- [drop](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/ddb/drop)
+
 ### Implement Seed Script
+:white_check_mark: DONE. I didn't have any issue to follow Andre's instructions.
+
+To implement the schema load script, it is requiered the following steps:
 ### Implement Scan Script
 ### Implement Pattern Scripts for Read and List Conversations
 ### Implement Update Cognito ID Script for Postgres Database
