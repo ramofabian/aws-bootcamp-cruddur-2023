@@ -271,7 +271,7 @@ Execution log:
 
 <p align="center"><img src="assets/week5/dynamodb_get_conversation2.png" alt="accessibility text" width="500"></p>
 
-#### Implementing get-conversation script
+#### Implementing list-conversation script
 To implement the Scan script, we have to create `list-conversation` python script and place it in `backend-flask/bin/ddb/patterns`. This script connects to dynamoDB, makes a query to get the info of some determinated group message ID within and consumed capacity.
 
 ```python
