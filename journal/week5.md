@@ -372,10 +372,39 @@ After execution:
 
 ### Implement (Pattern A) Listing Messages in Message Group into Application
 :white_check_mark: DONE.
-`backend-flask/lib/ddb.py`
+The pattern A describes the needed paramteres to list messages within message group as it is shown in the picture below:
+
+<p align="center"><img src="assets/week5/patter_a.png" alt="accessibility text" width="500"></p>
+
+To implment the pattern A, the following changes were done in backend and frontend side:
+- Make sure that local DynamoDB is running with the `schema` and `seed` informationation already loaded
+- From backend side:
+    -  `ddb.py` was adapted to list conversations from old to new and add mor conditions to return messages which were created this year. Also the function `list_message_groups` was adedd to extract and return the list of messages.
+    -  `app.py` was adapted to receive the http request with user uuid and route it to `message_groups.py` service.
+    -   `message_groups.py` and `messages.py` service was adapted to return the list of messages with: display name, created at and message information.
+
+- From fronted side:
+    - `frontend-react-js/src/App.js` the endpoint MessageGroupPage was modifed from `handle` to accept `message_group_uuid`
+    - `MessageGroupItem.js`, `MessageGroupPage.js` were modifed to accept `message_group_uuid` and make the request .
+
+Execution log:
+
+<p align="center"><img src="assets/week5/list_conversation.png" alt="accessibility text" ></p>
+
+<b>Link to files:</b>
+- [ddb.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/lib/ddb.py)
+- [app.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py)
+- [messages.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/messages.py)
+- [message_groups.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/message_groups.py)
+- [App.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/App.js)
+- [MessageGroupItem.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/MessageGroupItem.js)
+- [MessageGroupPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/MessageGroupPage.js)
 
 ### Implement (Pattern B) Listing Messages Group into Application
 :white_check_mark: DONE.
+
+<p align="center"><img src="assets/week5/group_message_list.png" alt="accessibility text" width="500"></p>
+
 ### Implement (Pattern C) Listing Messages Group into Application
 :white_check_mark: DONE.
 ### Implement (Pattern D) Listing Messages Group into Application
