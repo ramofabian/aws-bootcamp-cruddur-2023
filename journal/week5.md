@@ -341,8 +341,43 @@ Execution log:
 <p align="center"><img src="assets/week5/dynamodb_list_conversation2.png" alt="accessibility text" width="500"></p>
 
 ### Implement Update Cognito ID Script for Postgres Database
+:white_check_mark: DONE.
+To implement the update cognito ID script for postgres DB,  the following files were added or modified:
+- This is a new scritp that lists Cognito user pools: `backend-flask/bin/cognito/list-users`. It can be used to check Congnito user information. :point_right: [Link to File](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/cognito/list-users)
+- The file `backend-flask/db/seed.sql` was modified to add current Cognito's users (picture below). :point_right: [link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/db/seed.sql)
+
+<p align="center"><img src="assets/week5/update_seed_sql.png" alt="accessibility text" width="500"></p>
+
+- This is new script that gathers the user's UUID from Cognito and set this information in pogress DB: `backend-flask/bin/db/update_cognito_user_id` :point_right: [link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/db/update_cognito_user_id)
+- This script `backend-flask/bin/db/setup` was adapted to add the script `update_cognito_user_id` in the execution list. :point_right: [Link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/db/setup)
+
+<b>Execution:</b>
+- `list-users`: In the picture below the handle and UUID is being displayed after the script execution:
+
+<p align="center"><img src="assets/week5/update_cognito_id.png" alt="accessibility text" width="500"></p>
+
+- `update_cognito_user_id`:
+
+Before the script execution:
+
+<p align="center"><img src="assets/week5/users_list_pre.png" alt="accessibility text" width="500"></p>
+
+Once the script is executed:
+
+<p align="center"><img src="assets/week5/update_db_execution.png" alt="accessibility text" width="500"></p>
+
+After execution:
+
+<p align="center"><img src="assets/week5/update_db_post_execution.png" alt="accessibility text" width="500"></p>
+
 ### Implement (Pattern A) Listing Messages in Message Group into Application
+:white_check_mark: DONE.
+`backend-flask/lib/ddb.py`
+
 ### Implement (Pattern B) Listing Messages Group into Application
+:white_check_mark: DONE.
 ### Implement (Pattern C) Listing Messages Group into Application
+:white_check_mark: DONE.
 ### Implement (Pattern D) Listing Messages Group into Application
+:white_check_mark: DONE.
 ### Implement (Pattern E) Listing Messages Group into Application
