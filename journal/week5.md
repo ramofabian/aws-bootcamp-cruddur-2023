@@ -2,6 +2,10 @@
 ## Mandatory tasks
 ### Watched Week 5 - Data Modelling (Live Stream)
 :white_check_mark: DONE.
+
+DynamoDB Model :point_right: [link to file](https://lucid.app/lucidchart/8f58a19d-3821-4529-920f-5bb802d6c6a3/edit?invitationId=inv_e47bc316-9caa-4aee-940f-161e01e22715&page=0_0#)
+
+DynamoDB Data Model :point_right: [link to file](https://docs.google.com/spreadsheets/d/1LrTC_y2X_YBEthFNlnwbo8TgxGlpHV3TCpM6XeVyiGg/edit#gid=0)
 ### Watched Ashish's Week 5 - DynamoDB Considerations
 :white_check_mark: DONE.
 ### Implement Schema Load Script
@@ -377,15 +381,14 @@ The pattern A describes the needed paramteres to list messages within message gr
 <p align="center"><img src="assets/week5/patter_a.png" alt="accessibility text" width="500"></p>
 
 To implment the pattern A, the following changes were done in backend and frontend side:
-- Make sure that local DynamoDB is running with the `schema` and `seed` informationation already loaded
 - From backend side:
+    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` informationation already loaded
     -  `ddb.py` was adapted to list conversations from old to new and add mor conditions to return messages which were created this year. Also the function `list_message_groups` was adedd to extract and return the list of messages.
-    -  `app.py` was adapted to receive the http request with user uuid and route it to `message_groups.py` service.
+    -  `app.py` was adapted to receive the http request with user uuid and route it to `messages.py` service.
     -   `message_groups.py` and `messages.py` service was adapted to return the list of messages with: display name, created at and message information.
-
 - From fronted side:
     - `frontend-react-js/src/App.js` the endpoint MessageGroupPage was modifed from `handle` to accept `message_group_uuid`
-    - `MessageGroupItem.js`, `MessageGroupPage.js` were modifed to accept `message_group_uuid` and make the request .
+    - `MessageGroupItem.js`, `MessageGroupPage.js` were modifed to accept `message_group_uuid` and make the request.
 
 Execution log:
 
@@ -402,11 +405,76 @@ Execution log:
 
 ### Implement (Pattern B) Listing Messages Group into Application
 :white_check_mark: DONE.
+The pattern B describes the required input and output paramaeters required to display the message groups from message tab.
+
+<p align="center"><img src="assets/week5/patter_b.png" alt="accessibility text"></p>
+
+To implment the pattern B, the following changes were done in backend and frontend side:
+- From backend side:
+    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` informationation already loaded.
+    - Save in gitpod and `docker-compose.yml` the local environment variable `AWS_ENDPOINT_URL` where Dynamo.
+    -  `ddb.py` lib was created in `backend-flask/lib` directory with functions: `client` and `list_message_groups` which supports the connection with `boto3` to local `DynamoDB`.
+    -  `app.py` was adapted to validate the autentication sent by frontend to backend and extract `cognito user id` and route it to`message_groups.py` service.
+    -   `uuid_from_cognito_user_id.sql` this file was created to be used to extract `cognito user id` from postgres DB.
+    -   `message_groups.py` service was adapted to return the list of messages groups with: display name, created at and message information.
+- From fronted side:
+    - `HomeFeedPage.js`, `MessageGroupsPage.js`, `MessageGroupPage.js`, `MessageForm.js` were adapted to make the `GET` request with the `access token` and display the information received from backend side.
+
+Execution log:
 
 <p align="center"><img src="assets/week5/group_message_list.png" alt="accessibility text" width="500"></p>
 
+<b>Link to files:</b>
+- [ddb.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/lib/ddb.py)
+- [app.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py)
+- [messages.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/messages.py)
+- [message_groups.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/message_groups.py)
+- [docker-compose.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml)
+- [MessageGroupItem.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/MessageGroupItem.js)
+- [MessageGroupPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/MessageGroupPage.js)
+- [HomeFeedPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/HomeFeedPage.js)
+- [MessageGroupsPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/MessageGroupsPage.js)
+
 ### Implement (Pattern C) Listing Messages Group into Application
 :white_check_mark: DONE.
+
+Pattern C is created to describe the needed paramaters to create new message groups.
+
+<p align="center"><img src="assets/week5/patter_c.png" alt="accessibility text" width="500"></p>
+
+Execution log:
+
+<p align="center"><img src="assets/week5/new_chat.png" alt="accessibility text" width="500"></p>
+
 ### Implement (Pattern D) Listing Messages Group into Application
 :white_check_mark: DONE.
+
+Pattern D is created to describe the needed paramaters to create new message within message group.
+
+<p align="center"><img src="assets/week5/patter_d.png" alt="accessibility text" width="500"></p>
+
+To implment the pattern D, the following changes were done in backend and frontend side:
+- From backend side:
+    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` informationation already loaded.
+    - Save in gitpod and `docker-compose.yml` the local environment variable `AWS_ENDPOINT_URL` where Dynamo.
+    -  `ddb.py` lib was adapted with function`create_message` which supports the connection with `boto3` to local `DynamoDB` to sabe the messages there.
+    -  `app.py` was adapted to validate the autentication sent by frontend to backend and extract `cognito user id` and route it to`create_message.py` service.
+    -   `create_message_users.sql` this file was created to be used to save messages from frontend into local DynamoDB.
+    -   `create_message.py` service was adapted to save the message within local no-estructured DB (DynamoDB).
+- From fronted side:
+    - `MessageForm.js` were adapted to pass the message with `user_uuid`, `message_group_uuid`, `message` to backend side, once there it should be added into DynamoDB
+
+Execution log:
+
+<p align="center"><img src="assets/week5/add_message.png" alt="accessibility text" width="500"></p>
+
+<b>Link to files:</b>
+- [ddb.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/lib/ddb.py)
+- [app.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py)
+- [create_message.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/create_message.py)
+- [create_message_users.sql](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/db/sql/users/create_message_users.sql)
+- [MessageGroupItem.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/MessageGroupItem.js)
+- [MessageForm.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/MessageForm.js)
+
+
 ### Implement (Pattern E) Listing Messages Group into Application
