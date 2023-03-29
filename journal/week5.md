@@ -11,7 +11,7 @@ DynamoDB Data Model :point_right: [link to file](https://docs.google.com/spreads
 ### Implement Schema Load Script
 :white_check_mark: DONE. I didn't have any issue to follow Andre's instructions.
 
-To implement the schema load script, it is requiered the following steps:
+To implement the schema load script, the following steps are required:
 1. Add `boto3` lib into `requirements.txt` within `backend-flask` folder. Then run the command `pip install -r requirements.txt`.
 2. Switch on the containers and make sure dynamoDB  container is working.
 2. Create `schema-load` python script and place it in `backend-flask/bin/ddb/`. This script will connect to local or remote DynamoDB database, then it will create a table called `cruddur-messages`.
@@ -147,15 +147,15 @@ aws dynamodb delete-table $ENDPOINT_URL \
 ### Implement Seed Script
 :white_check_mark: DONE. I didn't have any issue to follow Andre's instructions.
 
-To implement the Seed script, we have to create `seed` python script and place it in `backend-flask/bin/ddb/`. This script has hardcoded a conversation which is parsed which it saves into local DynamoDB table by using the the `patterm C` (new conversation). 
+To implement the Seed script, we have to create `seed` python script and place it in `backend-flask/bin/ddb/`. This script has hardcoded a conversation which is parsed which it saves into local DynamoDB table by using the `patterm C` (new conversation). 
 
 <p align="center"><img src="assets/week5/db_model.png" alt="accessibility text"></p>
 
 To carry on this work the script performs the following instructions:
 1. Extract `handles` from postgres DB.
 2. Create Message groups in `cruddur-messages` table by using the `pattern C` from DB model.
-3. Prase the conversations.
-4. Create the Mesasses and associate it to Message group in `cruddur-messages`.
+3. Parse the conversations.
+4. Create the messages and associate it to Message group in `cruddur-messages`.
 
 Link to file: [seed](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/ddb/seed)
 
@@ -207,7 +207,7 @@ Execution log:
 :white_check_mark: DONE. This part was hard to follow up, because I got lost in many parts of it. Although, I could make it :)
 
 #### Implementing get-conversation script
-To implement the Scan script, we have to create `get-conversation` python script and place it in `backend-flask/bin/ddb/patterns`. This script connects to dynamoDB, makes a query to get the info of some determinated message group ID within a determinated period of time and parses this information.
+To implement the Scan script, we have to create `get-conversation` python script and place it in `backend-flask/bin/ddb/patterns`. This script connects to dynamoDB, makes a query to get the info of some message group ID within a determined period of time and parses this information.
 
 ```python
 #!/usr/bin/env python3
@@ -276,7 +276,7 @@ Execution log:
 <p align="center"><img src="assets/week5/dynamodb_get_conversation2.png" alt="accessibility text" width="500"></p>
 
 #### Implementing list-conversation script
-To implement the Scan script, we have to create `list-conversation` python script and place it in `backend-flask/bin/ddb/patterns`. This script connects to dynamoDB, makes a query to get the info of some determinated group message ID within and consumed capacity.
+To implement the Scan script, we have to create `list-conversation` python script and place it in `backend-flask/bin/ddb/patterns`. This script connects to dynamoDB, makes a query to get the info of some determined group message ID within and consumed capacity.
 
 ```python
 #!/usr/bin/env python3
@@ -347,7 +347,7 @@ Execution log:
 ### Implement Update Cognito ID Script for Postgres Database
 :white_check_mark: DONE.
 To implement the update cognito ID script for postgres DB,  the following files were added or modified:
-- This is a new scritp that lists Cognito user pools: `backend-flask/bin/cognito/list-users`. It can be used to check Congnito user information. :point_right: [Link to File](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/cognito/list-users)
+- This is a new script that lists Cognito user pools: `backend-flask/bin/cognito/list-users`. It can be used to check Congnito user information. :point_right: [Link to File](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/cognito/list-users)
 - The file `backend-flask/db/seed.sql` was modified to add current Cognito's users (picture below). :point_right: [link to file](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/db/seed.sql)
 
 <p align="center"><img src="assets/week5/update_seed_sql.png" alt="accessibility text" width="500"></p>
@@ -376,19 +376,19 @@ After execution:
 
 ### Implement (Pattern A) Listing Messages in Message Group into Application
 :white_check_mark: DONE.
-The pattern A describes the needed paramteres to list messages within message group as it is shown in the picture below:
+The pattern A describes the needed parameters to list messages within message group as it is shown in the picture below:
 
 <p align="center"><img src="assets/week5/patter_a.png" alt="accessibility text" width="500"></p>
 
-To implment the pattern A, the following changes were done in backend and frontend side:
+To implement the pattern A, the following changes were done in backend and frontend side:
 - From backend side:
-    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` informationation already loaded
-    -  `ddb.py` was adapted to list conversations from old to new and add mor conditions to return messages which were created this year. Also the function `list_message_groups` was adedd to extract and return the list of messages.
+    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` information already loaded
+    -  `ddb.py` was adapted to list conversations from old to new and add mor conditions to return messages which were created this year. Also the function `list_message_groups` was added to extract and return the list of messages.
     -  `app.py` was adapted to receive the http request with user uuid and route it to `messages.py` service.
     -   `message_groups.py` and `messages.py` service was adapted to return the list of messages with: display name, created at and message information.
 - From fronted side:
     - `frontend-react-js/src/App.js` the endpoint MessageGroupPage was modifed from `handle` to accept `message_group_uuid`
-    - `MessageGroupItem.js`, `MessageGroupPage.js` were modifed to accept `message_group_uuid` and make the request.
+    - `MessageGroupItem.js`, `MessageGroupPage.js` were modified to accept `message_group_uuid` and make the request.
 
 Execution log:
 
@@ -405,24 +405,24 @@ Execution log:
 
 ### Implement (Pattern B) Listing Messages Group into Application
 :white_check_mark: DONE.
-The pattern B describes the required input and output paramaeters required to display the message groups from message tab.
+The pattern B describes the required input and output parameters required to display the message groups from message tab.
 
 <p align="center"><img src="assets/week5/patter_b.png" alt="accessibility text"></p>
 
-To implment the pattern B, the following changes were done in backend and frontend side:
+To implement the pattern B, the following changes were done in backend and frontend side:
 - From backend side:
-    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` informationation already loaded.
+    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` information already loaded.
     - Save in gitpod and `docker-compose.yml` the local environment variable `AWS_ENDPOINT_URL` where Dynamo.
     -  `ddb.py` lib was created in `backend-flask/lib` directory with functions: `client` and `list_message_groups` which supports the connection with `boto3` to local `DynamoDB`.
-    -  `app.py` was adapted to validate the autentication sent by frontend to backend and extract `cognito user id` and route it to`message_groups.py` service.
-    -   `uuid_from_cognito_user_id.sql` this file was created to be used to extract `cognito user id` from postgres DB.
-    -   `message_groups.py` service was adapted to return the list of messages groups with: display name, created at and message information.
+    - `app.py` was adapted to validate the authentication sent by frontend to backend and extract `cognito user id` and route it to`message_groups.py` service.
+    - `uuid_from_cognito_user_id.sql` this file was created to be used to extract `cognito user id` from postgres DB.
+    - `message_groups.py` service was adapted to return the list of messages groups with: display name, created at and message information.
 - From fronted side:
     - `HomeFeedPage.js`, `MessageGroupsPage.js`, `MessageGroupPage.js`, `MessageForm.js` were adapted to make the `GET` request with the `access token` and display the information received from backend side.
 
 Execution log:
 
-<p align="center"><img src="assets/week5/group_message_list.png" alt="accessibility text" width="500"></p>
+<p align="center"><img src="assets/week5/group_message_list.png" alt="accessibility text" ></p>
 
 <b>Link to files:</b>
 - [ddb.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/lib/ddb.py)
@@ -438,35 +438,60 @@ Execution log:
 ### Implement (Pattern C) Listing Messages Group into Application
 :white_check_mark: DONE.
 
-Pattern C is created to describe the needed paramaters to create new message groups.
+Pattern C is created to describe the needed parameters to create new message group and add ne messages inside.
 
 <p align="center"><img src="assets/week5/patter_c.png" alt="accessibility text" width="500"></p>
 
+To implement the pattern C, the following changes were done in backend and frontend side:
+- From backend side:
+    -  `ddb.py` lib was adapted with the function `create_message_group`h supports the connection with `boto3` to local `DynamoDB`.
+    -  `app.py` was adapted with new route called `data_users_short` service.
+    -  `short.sql` this file was created to be used to extract user's: uuid, handle and displayname from postgres DB.
+    -  `users_short.py` service was created to execute the query in `short.sql` in postgress DB and returns the user information.
+    -  `create_message.py` was adapted to write a new message_group in DB and return it's uuid.
+- From fronted side:
+    - `app.js` was adapted with new route to `MessageGroupNewPage` to create new message group.
+    - `MessageGroupNewPage.js` was created to display the list of message groups and their messages.
+    - `MessageGroupNewItem.js` this service was created to trigger the the creation of new message group by changing the URL address to: `/messages/new/<<handle>>`.
+    - `MessageGroupFeed.js`, `MessageForm.js` were adapted display the information received from backend side route it to the right service.
+
 Execution log:
 
-<p align="center"><img src="assets/week5/new_chat.png" alt="accessibility text" width="500"></p>
+<p align="center"><img src="assets/week5/new_chat.png" alt="accessibility text"></p>
+
+<b>Link to files:</b>
+- [ddb.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/lib/ddb.py)
+- [app.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/app.py)
+- [short.sql](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/db/sql/users/short.sql)
+- [users_short.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/users_short.py)
+- [create_message.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/services/create_message.py)
+- [app.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/App.js)
+- [MessageGroupNewPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/MessageGroupNewPage.js)
+- [MessageGroupNewItem.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/MessageGroupNewItem.js)
+- [MessageGroupFeed.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/MessageGroupFeed.js)
+- [MessageForm.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/MessageForm.js)
 
 ### Implement (Pattern D) Listing Messages Group into Application
 :white_check_mark: DONE.
 
-Pattern D is created to describe the needed paramaters to create new message within message group.
+Pattern D is created to describe the needed parameters to create new message within message group.
 
 <p align="center"><img src="assets/week5/patter_d.png" alt="accessibility text" width="500"></p>
 
-To implment the pattern D, the following changes were done in backend and frontend side:
+To implement the pattern D, the following changes were done in backend and frontend side:
 - From backend side:
-    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` informationation already loaded.
+    - Make sure that local DynamoDB and Postgres are running with the `schema` and `seed` information already loaded.
     - Save in gitpod and `docker-compose.yml` the local environment variable `AWS_ENDPOINT_URL` where Dynamo.
     -  `ddb.py` lib was adapted with function`create_message` which supports the connection with `boto3` to local `DynamoDB` to sabe the messages there.
-    -  `app.py` was adapted to validate the autentication sent by frontend to backend and extract `cognito user id` and route it to`create_message.py` service.
+    -  `app.py` was adapted to validate the autentication sent by frontend to backend and extract `cognito user id` and route it to `create_message.py` service.
     -   `create_message_users.sql` this file was created to be used to save messages from frontend into local DynamoDB.
-    -   `create_message.py` service was adapted to save the message within local no-estructured DB (DynamoDB).
+    -   `create_message.py` service was adapted to save the message within local no-structured DB (DynamoDB).
 - From fronted side:
     - `MessageForm.js` were adapted to pass the message with `user_uuid`, `message_group_uuid`, `message` to backend side, once there it should be added into DynamoDB
 
 Execution log:
 
-<p align="center"><img src="assets/week5/add_message.png" alt="accessibility text" width="500"></p>
+<p align="center"><img src="assets/week5/add_message.png" alt="accessibility text"></p>
 
 <b>Link to files:</b>
 - [ddb.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/lib/ddb.py)
@@ -478,3 +503,38 @@ Execution log:
 
 
 ### Implement (Pattern E) Listing Messages Group into Application
+:white_check_mark: DONE.
+
+Pattern E is created to describe the needed parameters to update the message group.
+
+<p align="center"><img src="assets/week5/patter_e.png" alt="accessibility text" width="300"></p>
+
+To implement the pattern E, the following changes were done in backend and frontend side:
+- From backend side:
+    - In `schema-load` was updated to create the table `cruddur-messages` in AWS DynamoDB  with secondary index.
+    - In `docker-compose.yml` file the env variable that allows the connection to local dynamodb is commented.
+    - The the schema is loaded in AWS dynamoDB with the command: `./bin/ddb/schema-load prod`
+    <p align="center"><img src="assets/week5/aws_dynamoDB_table_creation.png" alt="accessibility text"></p>
+    - Table created seen from AWS console:
+    <p align="center"><img src="assets/week5/aws_dynamoDB_table_creation2.png" alt="accessibility text"></p>
+    - VPC endpoint gateway should be created to get access to DynamoDB without reaching internet:
+    <p align="center"><img src="assets/week5/vpc_gateway_endpoint.png" alt="accessibility text"></p>
+    - Lambda function `cruddur-messaging-stream` was created to trigger the save of information in DynamoDB table (during creation process previous vpc gateway was used):
+    <p align="center"><img src="assets/week5/lambda.png" alt="accessibility text"></p>
+    - The permissions are fixed in lambda function to to have the right access to DynamoDB:
+    <p align="center"><img src="assets/week5/lambda_policy.png" alt="accessibility text"></p>
+    - Stream is configured in DynamoDB as NewImage and the trigger the lambda function previously created to save the streamed information.
+    <p align="center"><img src="assets/week5/dynamodb_stream_and_trigger.png" alt="accessibility text"></p>
+    - New message group and its message are created from application side:
+    <p align="center"><img src="assets/week5/chat_new.png" alt="accessibility text"></p>
+    - Logs seen of lambda execution
+    <p align="center"><img src="assets/week5/logs_success.png" alt="accessibility text"></p>
+
+<b>Link to files:</b>
+- [schema-load](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/ddb/schema-load)
+- [docker-compose.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml)
+- [cruddur-messaging-stream.py](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/lambdas/cruddur-messaging-stream.py)
+- [cruddur-messaging-stream-policy.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/policies/cruddur-messaging-stream-policy.json)
+
+### Watch What cloud hiring managers want from your resume!
+:white_check_mark: DONE. Video was watched and homework done as well.
