@@ -97,15 +97,15 @@ except Exception as e:
 4. Create new logs groups in AWS with the follwing commands:
 
 ```bash
-aws logs create-log-group --log-group-name "/cruddur/fargate-cluster"
-aws logs put-retention-policy --log-group-name "/cruddur/fargate-cluster" --retention-in-days 1
+aws logs create-log-group --log-group-name "cruddur-fargate-cluster"
+aws logs put-retention-policy --log-group-name "cruddur-fargate-cluster" --retention-in-days 1
 ```
 
 <b>Note:</b> The information will be retained 1 day only, then it will be removed by the system itself.
 
 <p align="center"><img src="assets/week6/new_logs_cruddur.png" alt="accessibility text"></p>
 
-### Creating Cluster
+### Provision ECS Cluster
 :white_check_mark: DONE.
 To create the ECS cluster from AWS CLI we have to run the following command:
 
@@ -121,7 +121,7 @@ In the picture below is shown the ECS cluster created from previous command (it 
 
 ### Create ECR repo and push image for backend-flask
 :white_check_mark: DONE.
-####  Storing ours containers on ECR
+#### Storing ours containers on ECR
 We are going to store ours containers as private and it will be done from Gitpod console.
 
 There is going to be 3 repos:
@@ -129,7 +129,7 @@ There is going to be 3 repos:
 - Flask.
 - React.
 
-1. Create `cruddur-python` repo as mutable from Gitpod CLI:
+##### 1. Create `cruddur-python` repo as mutable from Gitpod CLI:
 
 ```bash
 aws ecr create-repository \
@@ -181,7 +181,7 @@ After running the db and backend service, we see the flask healthcheck is workig
 
 <p align="center"><img src="assets/week6/test_flask_health_check.png" alt="accessibility text"></p>
 
-2. Create `bakend-flask` repo as mutable from Gitpod CLI:
+##### 2. Create `bakend-flask` repo as mutable from Gitpod CLI:
 
 ```bash
 #Create repo
@@ -217,10 +217,24 @@ Image seen from AWS repo:
 
 <p align="center"><img src="assets/week6/image_from_repo.png" alt="accessibility text"></p>
 
-- Testing pushed images in AWS ECS
+### Deploy Backend Flask app as a service to Fargate
+:white_check_mark: DONE.
+To deploy backend flask app in Fargate, it is necessary to follow the next steps:
+#### Implement parameters
+
+#### Implement AWS service policy
+AIM roles are needed for Fargate task definition, do we need to create a new `role` in AIM service called `CruddurServiceExecutionRole` with the json configuration in this file :point_right: [aws/policies/service-execution-policy.json]() --->FIX!!
+
+The execution was done with AWS CLI with the command below:
+
+```bash
+aws iam create-role \
+    --role-name CruddurServiceExecutionRole \
+    --assume-role-policy-document file://aws/policies/service-execution-policy.json
+```
+
 From AWS console go to ECS service -> task definitions
 <b>Note:</b> task definitions is `similar to docker-`compose file where we define how the containers will run. [LINK](https://docs.docker.com/cloud/ecs-integration/)
 
 From AWS console go to ECS service -> cruddur cluster -> services.
-<b>Note:</b> we will use service because at the end when the container is stoped, it will be killed if we implment it as a task. For that reason we will use it as a service.
-
+<b>Note:</b> we will use service because at the end when the container is stoped, it will be killed if we implment it as a task. For that reason we will use it as a service. 
