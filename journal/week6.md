@@ -221,20 +221,207 @@ Image seen from AWS repo:
 :white_check_mark: DONE.
 To deploy backend flask app in Fargate, it is necessary to follow the next steps:
 #### Implement parameters
+1. Load enviroment variables to AWS Application Management paramater store
+
+```bash
+aws ssm put-parameter --type "SecureString" --name "/cruddur/backend-flask/AWS_ACCESS_KEY_ID" --value $AWS_ACCESS_KEY_ID
+aws ssm put-parameter --type "SecureString" --name "/cruddur/backend-flask/AWS_SECRET_ACCESS_KEY" --value $AWS_SECRET_ACCESS_KEY
+aws ssm put-parameter --type "SecureString" --name "/cruddur/backend-flask/CONNECTION_URL" --value $PROD_CONNECTION_URL
+aws ssm put-parameter --type "SecureString" --name "/cruddur/backend-flask/ROLLBAR_ACCESS_TOKEN" --value $ROLLBAR_ACCESS_TOKEN
+aws ssm put-parameter --type "SecureString" --name "/cruddur/backend-flask/OTEL_EXPORTER_OTLP_HEADERS" --value "x-honeycomb-team=$HONEYCOMB_API_KEY"
+```
+
+<p align="center"><img src="assets/week6/secret_management.png" alt="accessibility text"></p>
+
+2. From AWS console go to -> AWS Systems Manager -> Application Management -> Parameter Store to see the loaded parameters:
+
+<p align="center"><img src="assets/week6/saved_aws_paramaeters.png" alt="accessibility text"></p>
 
 #### Implement AWS service policy
-AIM roles are needed for Fargate task definition, do we need to create a new `role` in AIM service called `CruddurServiceExecutionRole` with the json configuration in this file :point_right: [aws/policies/service-execution-policy.json]() --->FIX!!
+AIM roles are needed for Fargate task definition, we need to do:
+- create a new `role` in AIM service called `CruddurServiceExecutionRole` with the json configuration in this file :point_right: [aws/policies/service-assume-role-execution-policy.json]() --->FIX!!
+- create a new `policy` in AIM service called `CruddurServiceExecutionPolicy` with the json configuration and this policy is assigned to the role previously created. :point_right: [aws/policies/service-execution-policy.json]() --->FIX!!
 
 The execution was done with AWS CLI with the command below:
 
 ```bash
+
+#Creating the role
 aws iam create-role \
-    --role-name CruddurServiceExecutionRole \
-    --assume-role-policy-document file://aws/policies/service-execution-policy.json
+--role-name CruddurServiceExecutionRole  \
+--assume-role-policy-document file://aws/policies/service-assume-role-execution-policy.json
+
+#Creating the policy and putting the assiidination to the role previously created
+aws iam put-role-policy \
+--role-name CruddurServiceExecutionRole \
+--policy-name CruddurServiceExecutionPolicy \
+--policy-document file://aws/policies/service-execution-policy.json
 ```
 
+<p align="center"><img src="assets/week6/task_execution_policy.png" alt="accessibility text"></p>
+
+#### Creating Task role
+To Create the task role `CruddurTaskRole` and `SSMAccessPolicy` policy and make their association, I ran the commands below:
+
+```bash
+#Creating role CruddurTaskRole
+aws iam create-role \
+    --role-name CruddurTaskRole \
+    --assume-role-policy-document "{
+  \"Version\":\"2012-10-17\",
+  \"Statement\":[{
+    \"Action\":[\"sts:AssumeRole\"],
+    \"Effect\":\"Allow\",
+    \"Principal\":{
+      \"Service\":[\"ecs-tasks.amazonaws.com\"]
+    }
+  }]
+}"
+
+#Attaching SSMAccessPolicy policy to CruddurTaskRole
+aws iam put-role-policy \
+  --policy-name SSMAccessPolicy \
+  --role-name CruddurTaskRole \
+  --policy-document "{
+  \"Version\":\"2012-10-17\",
+  \"Statement\":[{
+    \"Action\":[
+      \"ssmmessages:CreateControlChannel\",
+      \"ssmmessages:CreateDataChannel\",
+      \"ssmmessages:OpenControlChannel\",
+      \"ssmmessages:OpenDataChannel\"
+    ],
+    \"Effect\":\"Allow\",
+    \"Resource\":\"*\"
+  }]
+}
+"
+#Attaching CloudWatchFullAccess policy to CruddurTaskRole
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/CloudWatchFullAccess --role-name CruddurTaskRole
+
+#Attaching AWSXRayDaemonWriteAccess policy to CruddurTaskRole
+aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess --role-name CruddurTaskRole
+```
+
+<p align="center"><img src="assets/week6/task_role.png" alt="accessibility text"></p>
+
+#### Creating Task definition
 From AWS console go to ECS service -> task definitions
 <b>Note:</b> task definitions is `similar to docker-`compose file where we define how the containers will run. [LINK](https://docs.docker.com/cloud/ecs-integration/)
 
-From AWS console go to ECS service -> cruddur cluster -> services.
+In our case will have we have the json file with the information needed to make the implementation: [Link to backend-flas.json]()
+
+With the command below the task is defined:
+```bash
+aws ecs register-task-definition --cli-input-json file://aws/task-definitions/backend-flask.json
+```
+
+<p align="center"><img src="assets/week6/backend_task_definition.png" alt="accessibility text"></p>
+
+#### Creating Security Group
+
+```bash
+#Creating env variable to get the VPC ID
+export DEFAULT_VPC_ID=$(aws ec2 describe-vpcs \
+--filters "Name=isDefault, Values=true" \
+--query "Vpcs[0].VpcId" \
+--output text)
+#Printing the information received
+echo $DEFAULT_VPC_ID
+
+#Creating security group called crud-srv-sg under default VPC 
+export CRUD_SERVICE_SG=$(aws ec2 create-security-group \
+  --group-name "crud-srv-sg" \
+  --description "Security group for Cruddur services on ECS" \
+  --vpc-id $DEFAULT_VPC_ID \
+  --query "GroupId" --output text)
+echo $CRUD_SERVICE_SG
+
+#Authorising port 80 in security group "crud-srv-sg"
+aws ec2 authorize-security-group-ingress \
+  --group-id $CRUD_SERVICE_SG \
+  --protocol tcp \
+  --port 80 \
+  --cidr 0.0.0.0/0
+```
+
+<p align="center"><img src="assets/week6/security_group.png" alt="accessibility text"></p>
+
+#### Deploy Backend Flask app from AWS console
+
+From AWS console go to ECS service -> cruddur cluster -> services --> create service:
 <b>Note:</b> we will use service because at the end when the container is stoped, it will be killed if we implment it as a task. For that reason we will use it as a service. 
+
+Make sure that role `CruddurServiceExecutionRole` has the following policies applied:
+
+<p align="center"><img src="assets/week6/required_policies.png" alt="accessibility text"></p>
+
+```json
+#AllowGetAuthorizationTokenEcr
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+EC2 instance deployed:
+
+<p align="center"><img src="assets/week6/backend_running.png" alt="accessibility text"></p>
+
+#### Deploy Backend Flask app from AWS CLI
+To deploy the backend-flask container as a service via AWS CLI, we will need the json file `service-backend-flask.json` with the updated information of sg and subs. [service-backend-flask.json]() -->FIX!!
+
+Command to create the service:
+
+```bash
+#Get subnet info
+export DEFAULT_SUBNET_IDS=$(aws ec2 describe-subnets  \
+ --filters Name=vpc-id,Values=$DEFAULT_VPC_ID \
+ --query 'Subnets[*].SubnetId' \
+ --output json | jq -r 'join(",")')
+echo $DEFAULT_SUBNET_IDS
+
+#Deploy backend-flask container
+aws ecs create-service --cli-input-json file://aws/json/service-backend-flask.json
+```
+Log from AWS console:
+
+<p align="center"><img src="assets/week6/container_status_ec2_deplo_cli.png" alt="accessibility text"></p>
+
+- Getting logged inside of container console:
+
+```bash
+#Installing session manager
+curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+sudo dpkg -i session-manager-plugin.deb
+session-manager-plugin #Very that it is working
+
+#Getting logged in EC2 instance
+aws ecs execute-command  \
+    --region $AWS_DEFAULT_REGION \
+    --cluster cruddur \
+    --task <<TASK_ID>> \
+    --container backend-flask \
+    --command "/bin/bash" \
+    --interactive
+```
+<p align="center"><img src="assets/week6/login_ecs2_via_aws_cli.png" alt="accessibility text"></p>
+
+- This loging has been scripted under in [backend-flas/bin/fargate/connect-to-service](), with this script we makes easier the access to container for debuging. -->FIX!!
+- Accessing from internet to EC2 instance:
+
+<p align="center"><img src="assets/week6/public_access.png" alt="accessibility text"></p>
