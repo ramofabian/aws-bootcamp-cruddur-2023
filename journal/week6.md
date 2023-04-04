@@ -421,7 +421,111 @@ aws ecs execute-command  \
 ```
 <p align="center"><img src="assets/week6/login_ecs2_via_aws_cli.png" alt="accessibility text"></p>
 
-- This loging has been scripted under in [backend-flas/bin/fargate/connect-to-service](), with this script we makes easier the access to container for debuging. -->FIX!!
+- This loging has been scripted under in [backend-flas/bin/fargate/connect-to-service](), with this script we make easier the access to container for debuging. -->FIX!!
 - Accessing from internet to EC2 instance:
 
 <p align="center"><img src="assets/week6/public_access.png" alt="accessibility text"></p>
+
+- To fix EC2 connection towards RDS instance, we need to add new rule inside RDS security group.
+
+<p align="center"><img src="assets/week6/adding_new_policy.png" alt="accessibility text"></p>
+
+Then we can test the connection:
+
+<p align="center"><img src="assets/week6/testing_access_to_rds_from_ec2.png" alt="accessibility text"></p>
+
+We can also test it from webrowser with the URL 'http://3.72.113.210:4567/api/activities/home':
+
+<p align="center"><img src="assets/week6/getting_data_from_rds.png" alt="accessibility text"></p>
+
+- Enabling service connect option from fargate cluser:
+
+<p align="center"><img src="assets/week6/service_connect_on.png" alt="accessibility text"></p>
+
+#### Creating a load balancer
+Pre-requisities to create a loadbalancer:
+- Create cruddur-alb-sg and allow the traffic for port 3000 and 4567
+- Create Target groups: `cruddur-backend-flask-tg` and `cruddur-frontend-react-js`. For backend enbale healthcheck verification.
+
+- From AWS console go to CE2 -> Load Balancing -> Load Balancers -> create load balancer -> select option -> Application Load Balancer (alb)
+
+- Created load balacer:
+
+<p align="center"><img src="assets/week6/load_balancer_1.png" alt="accessibility text"></p>
+
+- Created target groups:
+
+<p align="center"><img src="assets/week6/target_groups.png" alt="accessibility text"></p>
+
+- Service status with application losad balancer status:
+
+<p align="center"><img src="assets/week6/service_status.png" alt="accessibility text"></p>
+
+### Create ECR repo and push image for fronted-react-js
+:white_check_mark: DONE.
+1. Create new docker file called `Dockerfile.prod` with the code for production container.[Dockerfile.prod]()-->FIX!!
+2. Create the file `nginx.conf` with ngnix server configuration. [nginx.conf]()-->FIX!!
+3. Build the nginx image from `frontend-react-js` folder run the command `npm run build` at the ind the message below should be visible without any error:
+
+<p align="center"><img src="assets/week6/front_endbuild.png" alt="accessibility text"></p>
+
+4. Build docker image with the command below:
+
+```bash
+docker build \
+--build-arg REACT_APP_BACKEND_URL="http://<<LOAD_BALANCER_DNS_NAME>>" \
+--build-arg REACT_APP_AWS_PROJECT_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_COGNITO_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_USER_POOLS_ID="<<REACT_APP_AWS_USER_POOLS_ID>>" \
+--build-arg REACT_APP_CLIENT_ID="<<REACT_APP_CLIENT_ID>>" \
+-t frontend-react-js \
+-f Dockerfile.prod \
+.
+```
+
+5. Create Frontend repo with the command below:
+
+```bash
+#Command to create the repo
+aws ecr create-repository \
+  --repository-name frontend-react-js \
+  --image-tag-mutability MUTABLE
+  
+#Getting ECR URL
+export ECR_FRONTEND_REACT_URL="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/frontend-react-js"
+echo $ECR_FRONTEND_REACT_URL
+
+#Tagging the frontend image
+docker tag frontend-react-js:latest $ECR_FRONTEND_REACT_URL:latest
+
+#Command to test whether image is running ok
+docker run --rm -p 3000:3000 -it frontend-react-js 
+
+#Login in to AWS ECR
+aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
+
+#Push docker image
+docker push $ECR_FRONTEND_REACT_URL:latest
+```
+
+Created repo and pused image:
+
+<p align="center"><img src="assets/week6/frontend_repo2.png" alt="accessibility text"></p>
+
+### Deploy Frontend React JS app as a service to Fargate
+:white_check_mark: DONE.
+
+#### Create task definition fro frontend
+Once the image is pushed in the repo, run the command to register the task:
+
+```bash
+aws ecs register-task-definition --cli-input-json file://aws/task-definitions/frontend-react-js.json
+```
+
+<p align="center"><img src="assets/week6/frontend_task definition.png" alt="accessibility text"></p>
+
+#### Deploy frontend service
+
+```bash
+aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-js.json
+```
