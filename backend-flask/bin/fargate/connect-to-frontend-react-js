@@ -1,0 +1,25 @@
+#! /usr/bin/bash
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="connect-to-frontend-react-js"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+#Check if the conection URL is prod or dev
+if [ -z "$1" ]; then
+    echo "No TASK_ID argument supplied eg ./binecs/connect-to-frontend-react-js 45bc8736563a4d38baaf8cc2befaa0f0 cruddur"
+    exit 1
+fi
+TASK_ID=$1
+
+CONTAINER_NAME=frontend-react-js
+
+echo "TASK_ID:" $TASK_ID
+echo "CONTAINER_NAME:" $CONTAINER_NAME
+
+aws ecs execute-command  \
+    --region $AWS_DEFAULT_REGION \
+    --cluster cruddur \
+    --task $TASK_ID \
+    --container $CONTAINER_NAME \
+    --command "/bin/sh" \
+    --interactive
