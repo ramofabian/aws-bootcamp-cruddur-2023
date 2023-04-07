@@ -453,11 +453,15 @@ Pre-requisities to create a loadbalancer:
 
 <p align="center"><img src="assets/week6/load_balancer_1.png" alt="accessibility text"></p>
 
+- Security group rules:
+
+<p align="center"><img src="assets/week6/load_balacer_security_group.png" alt="accessibility text"></p>
+
 - Created target groups:
 
 <p align="center"><img src="assets/week6/target_groups.png" alt="accessibility text"></p>
 
-- Service status with application losad balancer status:
+- Service status with application load balancer status:
 
 <p align="center"><img src="assets/week6/service_status.png" alt="accessibility text"></p>
 
@@ -473,7 +477,7 @@ Pre-requisities to create a loadbalancer:
 
 ```bash
 docker build \
---build-arg REACT_APP_BACKEND_URL="http://<<LOAD_BALANCER_DNS_NAME>>" \
+--build-arg REACT_APP_BACKEND_URL="http://<<LOAD_BALANCER_DNS_NAME>>:4567" \
 --build-arg REACT_APP_AWS_PROJECT_REGION="$AWS_DEFAULT_REGION" \
 --build-arg REACT_APP_AWS_COGNITO_REGION="$AWS_DEFAULT_REGION" \
 --build-arg REACT_APP_AWS_USER_POOLS_ID="<<REACT_APP_AWS_USER_POOLS_ID>>" \
@@ -515,17 +519,37 @@ Created repo and pused image:
 ### Deploy Frontend React JS app as a service to Fargate
 :white_check_mark: DONE.
 
-#### Create task definition fro frontend
+#### Create task definition for frontend
 Once the image is pushed in the repo, run the command to register the task:
 
 ```bash
 aws ecs register-task-definition --cli-input-json file://aws/task-definitions/frontend-react-js.json
 ```
 
+Evidence of task definition from AWS console:
+
 <p align="center"><img src="assets/week6/frontend_task definition.png" alt="accessibility text"></p>
 
 #### Deploy frontend service
+- To deploy the service for frontend, we need to execute the command below:
 
 ```bash
 aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-js.json
 ```
+
+<b>NOTE:</b> To avoid any issue, make sure that security groups for `target group`, services are allowing TCP ports 4567 and 3000.
+
+- Services running heathing from ECS:
+
+<p align="center"><img src="assets/week6/services_running.png" alt="accessibility text"></p>
+
+- Web access to frontend:
+
+<p align="center"><img src="assets/week6/frontend_deployed.png" alt="accessibility text"></p>
+
+- Healthcheck status from Target groups:
+
+<p align="center"><img src="assets/week6/target_check.png" alt="accessibility text"></p>
+
+### Manage your domain useing Route53 via hosted zone
+:white_check_mark: DONE.
