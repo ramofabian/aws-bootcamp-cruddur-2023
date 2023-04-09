@@ -553,3 +553,66 @@ aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-j
 
 ### Manage your domain useing Route53 via hosted zone
 :white_check_mark: DONE.
+In my case I have bougth the domain `cr-cloud.online` from [Ionos](https://www.ionos.es/). Although, I created the subdomain `cruddur.cr-cloud.online` to be used with this app.
+
+To manage my domain using Route53 I had to perform the following steps:
+- Create a `Hosted zone` from `Route 53` service with the subdomain `cruddur.cr-cloud.online` and enable the setting of public hosted zone.
+
+<p align="center"><img src="assets/week6/hosted_zone.png" alt="accessibility text"></p>
+
+- Add the records in `Ionos` as `NS`:
+
+<p align="center"><img src="assets/week6/ionos_registros.png" alt="accessibility text"></p>
+
+### Create an SSL cerificate via ACM
+:white_check_mark: DONE.
+To create an SSL certificate we need to go from AWS console to `AWS Certificate Manager (ACM)`, then click on `Request` and set the following options:
+- Request a public certificate. 
+- Add the Fully qualified domain name: `cruddur.cr-cloud.online` and `*.cruddur.cr-cloud.online`.
+- DNS validation - recommended.
+- Key algorithm: RSA 2048
+
+<p align="center"><img src="assets/week6/ssl_certificate.png" alt="accessibility text"></p>
+
+Once the certificate is created, we need to set the records in Route 53 and wait till the status be in `Success` state and check that new CNAME` record has been added in Route 53. 
+
+<p align="center"><img src="assets/week6/record_cname_ssl_certificate.png" alt="accessibility text"></p>
+
+### Setup a record set for naked domain to point to frontend-react-js
+:white_check_mark: DONE.
+To setup a record for naked domain to point to `frontend` app, I followed the next steps:
+- From AWS console, go to: EC2 --> Load balancers --> cruddur-alb --> Listeners
+- Add a new listener with a rule that redirects the port 80(http) to 443(https)
+- Add a new listener with a rule that forwards the port 443(http) to frontend app and add the SSl certificate.
+
+<p align="center"><img src="assets/week6/redirect_to_frontend.png" alt="accessibility text"></p>
+
+- Go to Route 53 and add the record for the route `cruddur.cr-cloud.online` and enable the alias to set the route to loadbalancer:
+
+<p align="center"><img src="assets/week6/frontend_record.png" alt="accessibility text"></p>
+
+Accessing from URL: [https://cruddur.cr-cloud.online](https://cruddur.cr-cloud.online/):
+
+<p align="center"><img src="assets/week6/accessing_frontend_with_my_domain.png" alt="accessibility text"></p>
+
+### Setup a record set for api subdomain to point to the backend-flask
+:white_check_mark: DONE.
+To setup a record for naked domain to point to `backend` app, I followed the next steps:
+- From AWS console, go to: EC2 --> Load balancers --> cruddur-alb --> Listeners --> edit listener `HTTPS:443`
+- Add new rule where the header be: `api.cruddur.cr-cloud.online` forward to: `cruddur-backend-flask-tg` (bakend target group)
+
+<p align="center"><img src="assets/week6/redirect_to_backend.png" alt="accessibility text"></p>
+
+- Go to Route 53 and add the record for the route `api.cruddur.cr-cloud.online` and enable the alias to set the route to loadbalancer:
+
+<p align="center"><img src="assets/week6/backend_record.png" alt="accessibility text"></p>
+ 
+Accessing from URL: [https://cruddur.cr-cloud.online/](https://api.cruddur.cr-cloud.online/api/health-check):
+
+<p align="center"><img src="assets/week6/accessing_backend_with_my_domain.png" alt="accessibility text"></p>
+
+Checking the access to freontend and backend via gitpod CLI:
+
+<p align="center"><img src="assets/week6/acces_cli_curl.png" alt="accessibility text"></p>
+
+### Configure CORS to only permit traffic from our domain
