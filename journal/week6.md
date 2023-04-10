@@ -616,3 +616,78 @@ Checking the access to freontend and backend via gitpod CLI:
 <p align="center"><img src="assets/week6/acces_cli_curl.png" alt="accessibility text"></p>
 
 ### Configure CORS to only permit traffic from our domain
+:white_check_mark: DONE.
+To configure CORS to only permit traffic from our domain, to make some changes from backend and frontend side.
+#### Backend side
+To fix the CORS from backend side we need to follow the next steps:
+- We need to change from `*` to the new URLs for backend and frontend in fields: `FRONTEND_URL` and `BACKEND_URL` in [aws/task-definitions/backend-flask.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/task-definitions/backend-flask.json) file.
+
+<p align="center"><img src="assets/week6/fixing_cors.png" alt="accessibility text"></p>
+
+- Once it is fixed, we need to update the taks definition in to AWS ECS task definition service.
+
+```bash
+aws ecs register-task-definition --cli-input-json file://aws/task-definitions/backend-flask.json
+```
+
+Now I have the version 5 of the task definition for backend:
+
+<p align="center"><img src="assets/week6/new_task_definitions.png" alt="accessibility text"></p>
+
+- Now we have to update the `backend-flask` service from AWS console
+
+<p align="center"><img src="assets/week6/update_backend_service.png" alt="accessibility text"></p>
+
+#### Frontend side
+Since we are fixing the CORS from backend side we we have to fix the `REACT_APP_BACKEND_URL` in the frontend. To do it, we need to build a new image with the new backend URL, with the commands below:
+
+```bash
+#Go to frontend folder
+cd frontend-react-js
+
+#Build the new image
+docker build \
+--build-arg REACT_APP_BACKEND_URL="https://api.cruddur.cr-cloud.online" \
+--build-arg REACT_APP_AWS_PROJECT_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_COGNITO_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_USER_POOLS_ID="<<REACT_APP_AWS_USER_POOLS_ID>>" \
+--build-arg REACT_APP_CLIENT_ID="<<REACT_APP_CLIENT_ID>>" \
+-t frontend-react-js \
+-f Dockerfile.prod \
+.
+
+#Getting ECR URL
+export ECR_FRONTEND_REACT_URL="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/frontend-react-js"
+echo $ECR_FRONTEND_REACT_URL
+
+#Tagging the frontend image
+docker tag frontend-react-js:latest $ECR_FRONTEND_REACT_URL:latest
+
+#Login in to AWS ECR
+aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
+
+#Push docker image in to ECR
+docker push $ECR_FRONTEND_REACT_URL:latest
+```
+
+Evidence of the new upladed image:
+
+<p align="center"><img src="assets/week6/new_frontend_image.png" alt="accessibility text"></p>
+
+Then we have to update the `frontend-react-js` service 
+Note: Don't fortget enble the option `Force new deployment`, otherwise the service will nto create a new task with the new image.
+
+<p align="center"><img src="assets/week6/services_status.png" alt="accessibility text"></p>
+
+#### Testing web access with new domain
+- Testing frontend access:
+
+<p align="center"><img src="assets/week6/frontend_access_no_errors.png" alt="accessibility text"></p>
+
+- Testing `Messages`tab":
+
+<p align="center"><img src="assets/week6/messages_in_prod.png" alt="accessibility text"></p>
+
+- Testing backend:
+
+<p align="center"><img src="assets/week6/backend_test_in_prod.png" alt="accessibility text"></p>
