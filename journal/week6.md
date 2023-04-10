@@ -239,8 +239,8 @@ aws ssm put-parameter --type "SecureString" --name "/cruddur/backend-flask/OTEL_
 
 #### Implement AWS service policy
 AIM roles are needed for Fargate task definition, we need to do:
-- create a new `role` in AIM service called `CruddurServiceExecutionRole` with the json configuration in this file :point_right: [aws/policies/service-assume-role-execution-policy.json]() --->FIX!!
-- create a new `policy` in AIM service called `CruddurServiceExecutionPolicy` with the json configuration and this policy is assigned to the role previously created. :point_right: [aws/policies/service-execution-policy.json]() --->FIX!!
+- create a new `role` in AIM service called `CruddurServiceExecutionRole` with the json configuration in this file :point_right: [aws/policies/service-assume-role-execution-policy.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/policies/service-assume-role-execution-policy.json)
+- create a new `policy` in AIM service called `CruddurServiceExecutionPolicy` with the json configuration and this policy is assigned to the role previously created. :point_right: [aws/policies/service-execution-policy.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/policies/service-execution-policy.json)
 
 The execution was done with AWS CLI with the command below:
 
@@ -383,7 +383,7 @@ EC2 instance deployed:
 <p align="center"><img src="assets/week6/backend_running.png" alt="accessibility text"></p>
 
 #### Deploy Backend Flask app from AWS CLI
-To deploy the backend-flask container as a service via AWS CLI, we will need the json file `service-backend-flask.json` with the updated information of sg and subs. [service-backend-flask.json]() -->FIX!!
+To deploy the backend-flask container as a service via AWS CLI, we will need the json file `service-backend-flask.json` with the updated information of sg and subs. :point_right: [service-backend-flask.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/json/service-backend-flask.json)
 
 Command to create the service:
 
@@ -421,7 +421,7 @@ aws ecs execute-command  \
 ```
 <p align="center"><img src="assets/week6/login_ecs2_via_aws_cli.png" alt="accessibility text"></p>
 
-- This loging has been scripted under in [backend-flas/bin/fargate/connect-to-service](), with this script we make easier the access to container for debuging. -->FIX!!
+- This loging has been scripted under in [backend-flask/bin/fargate/connect-to-backend-flask](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/fargate/connect-to-backend-flask) and [backend-flask/bin/fargate/connect-to-frontend-react-js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/bin/fargate/connect-to-frontend-react-js), with these scripts we make easier the access to containers for debuging.
 - Accessing from internet to EC2 instance:
 
 <p align="center"><img src="assets/week6/public_access.png" alt="accessibility text"></p>
@@ -467,8 +467,8 @@ Pre-requisities to create a loadbalancer:
 
 ### Create ECR repo and push image for fronted-react-js
 :white_check_mark: DONE.
-1. Create new docker file called `Dockerfile.prod` with the code for production container.[Dockerfile.prod]()-->FIX!!
-2. Create the file `nginx.conf` with ngnix server configuration. [nginx.conf]()-->FIX!!
+1. Create new docker file called `Dockerfile.prod` with the code for production container.:point_right: [Dockerfile.prod](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/Dockerfile.prod)
+2. Create the file `nginx.conf` with ngnix server configuration. :point_right: [nginx.conf](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/nginx.conf)
 3. Build the nginx image from `frontend-react-js` folder run the command `npm run build` at the ind the message below should be visible without any error:
 
 <p align="center"><img src="assets/week6/front_endbuild.png" alt="accessibility text"></p>
