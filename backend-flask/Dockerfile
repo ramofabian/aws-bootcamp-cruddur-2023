@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y wget curl
 COPY . .
 
 # ENV FLASK_ENV=development
-ENV FLASK_DEBUG=1
+# ENV FLASK_DEBUG=1
 
 EXPOSE ${PORT}
 # CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"] 

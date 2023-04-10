@@ -1,0 +1,17 @@
+#! /usr/bin/bash
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="Build frontend-react-js-prod image locally"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+cd /workspace/aws-bootcamp-cruddur-2023/frontend-react-js
+docker build \
+--build-arg REACT_APP_BACKEND_URL="https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}" \
+--build-arg REACT_APP_AWS_PROJECT_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_COGNITO_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_USER_POOLS_ID="eu-central-1_b8J7JZoLP" \
+--build-arg REACT_APP_CLIENT_ID="1qjcgh0p91vqguu31jd8k6ra8q" \
+-t frontend-react-js-prod \
+-f Dockerfile.prod \
+.
