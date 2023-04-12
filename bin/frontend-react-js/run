@@ -1,0 +1,23 @@
+#! /usr/bin/bash
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="Run frontend-react-js-prod image locally"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+ABS_PATH=$(readlink -f "$0")
+BACKEND_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $BACKEND_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+ENVFILE_PATH="$PROJECT_PATH/frontend-react-js.env"
+
+docker run --rm \
+  -e REACT_APP_BACKEND_URL="https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}" \
+  -e REACT_AWS_PROJECT_REGION: "${AWS_DEFAULT_REGION}" \
+  -e REACT_APP_AWS_COGNITO_REGION: "${AWS_DEFAULT_REGION}" \
+  -e REACT_APP_AWS_USER_POOLS_ID: "eu-central-1_b8J7JZoLP" \
+  -e REACT_APP_CLIENT_ID: "1qjcgh0p91vqguu31jd8k6ra8q" \
+  --network="aws-bootcamp-cruddur-2023_default" \
+  --publish 4567:4567 \
+  -it frontend-react-js-prod
+

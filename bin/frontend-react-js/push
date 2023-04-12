@@ -1,0 +1,12 @@
+#! /usr/bin/bash
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="Push image to ECR"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+ECR_FRONTEND_REACT_URL="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/frontend-react-js"
+echo $ECR_FRONTEND_REACT_URL
+
+docker tag frontend-react-js-prod:latest $ECR_FRONTEND_REACT_URL:latest
+docker push $ECR_FRONTEND_REACT_URL:latest

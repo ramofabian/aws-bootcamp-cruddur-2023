@@ -117,7 +117,10 @@ class Db():
         # this will return a tuple
         # the first field being the data
         results = cur.fetchone()
-        return results[0]
+        if results == None:
+          return "{}"
+        else:
+          return results[0]
   
   def query_value(self, sql, params={}):
     #Function to launch a query and return and array of json objects

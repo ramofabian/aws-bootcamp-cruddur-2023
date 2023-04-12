@@ -7,7 +7,7 @@ LABEL="db-setup"
 printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
 
 #find bind folder
-bin_path=$(find /workspace/aws-bootcamp-cruddur-2023/backend-flask/bin/ -type d -name db)
+bin_path=$(find /workspace/aws-bootcamp-cruddur-2023/bin/ -type d -name db)
 echo $bin_path
 
 #Execute the bash scripts
