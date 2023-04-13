@@ -691,3 +691,24 @@ Note: Don't fortget enble the option `Force new deployment`, otherwise the servi
 - Testing backend:
 
 <p align="center"><img src="assets/week6/backend_test_in_prod.png" alt="accessibility text"></p>
+
+### Secure Flask by not running in debug mode
+:white_check_mark: DONE.
+- To disbale debug mode in Fask we have to add the options `"--no-debug", "--no-debugger", "--no-reload"` in the CMD line, like this:
+
+```docker
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567", "--no-debug", "--no-debugger", "--no-reload"] 
+```
+
+- Then remove the line with `ENV FLASK_DEBUG=1`.
+- Modify the `health-check` enpoint to cause a failure and run the docker image for production in Gitpod to see if it is working with the new change.
+
+<p align="center"><img src="assets/week6/secure_debug_3.png" alt="accessibility text"></p>
+
+When an error curres, the meesage below shuld be visible:
+
+<p align="center"><img src="assets/week6/secure_debug_1.png" alt="accessibility text"></p>
+
+- Revert the changes done in `health-check` enpoint and push the image in ECR.
+
+### Implement Refresh Token for Amazon Cognito
