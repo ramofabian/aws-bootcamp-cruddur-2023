@@ -712,3 +712,110 @@ When an error curres, the meesage below shuld be visible:
 - Revert the changes done in `health-check` enpoint and push the image in ECR.
 
 ### Implement Refresh Token for Amazon Cognito
+:white_check_mark: DONE.
+To implement the Token refresh for Amazon cognito, we need to add the code below in side of `CheckAuth.js` file, where there is some code running but it is not working as expected and the token is not being refreshed.
+
+```js
+// congnito ------------------
+import { Auth } from 'aws-amplify';
+
+export async function getAccessToken() {
+  Auth.currentSession()
+  .then((cognito_user_session) => {
+    const access_token = cognito_user_session.accessToken.jwtToken
+    // console.log('Xaccess_token', access_token) 
+    localStorage.setItem("access_token", access_token)  
+  })
+  .catch((err) => console.log(err));
+}
+
+export async function checkAuth(setUser) {
+    Auth.currentAuthenticatedUser({
+      // Optional, By default is false. 
+      // If set to true, this call will send a 
+      // request to Cognito to get the latest user data
+      bypassCache: false 
+    })
+    .then((cognito_user) => {
+      console.log('cognito_user',cognito_user);
+      setUser({
+        display_name: cognito_user.attributes.name,
+        handle: cognito_user.attributes.preferred_username
+      })
+      return Auth.currentSession()
+    }).then((cognito_user_session) => {
+        console.log('cognito_user_session', cognito_user_session);  
+        localStorage.setItem("access_token", cognito_user_session.accessToken.jwtToken)      
+    })
+    .catch((err) => console.log(err));
+};
+```
+
+Then, we need to upade the files where the `Authorization` header is being used to start using the function `getAccessToken()`. 
+```js
+await getAccessToken()
+const access_token = localStorage.getItem("access_token")
+Authorization: `Bearer ${access_token}`
+```
+So I did the change in the following files:
+- [MessageForm.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/components/MessageForm.js)
+- [HomeFeedPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/HomeFeedPage.js)
+- [MessageGroupNewPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/MessageGroupNewPage.js)
+- [MessageGroupsPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/MessageGroupsPage.js)
+
+Comparison of refresed token and Cognito token (both are the same):
+
+<p align="center"><img src="assets/week6/refresh_token.png" alt="accessibility text"></p>
+
+### Refactor bin directory to be top level
+:white_check_mark: DONE.
+The `bin` directory was previously placed inside of `Backend-flask` folder is now moved to top level to make more intuitive and easy the execution of those scripts, please find below new folder distribution:
+
+```bash
+gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ tree bin/
+bin/
+├── backend-flask
+│   ├── build
+│   ├── connect
+│   ├── deploy
+│   ├── push
+│   ├── register
+│   └── run
+├── cognito
+│   └── list-users
+├── db
+│   ├── connect
+│   ├── create
+│   ├── drop
+│   ├── kill-all
+│   ├── schema-load
+│   ├── seed
+│   ├── sessions
+│   ├── setup
+│   ├── test
+│   └── update_cognito_user_id
+├── ddb
+│   ├── drop
+│   ├── list-tables
+│   ├── patterns
+│   │   ├── get-converstations
+│   │   └── list-conversation
+│   ├── scan
+│   ├── schema-load
+│   └── seed
+├── ecr
+│   └── login
+├── frontend-react-js
+│   ├── build
+│   ├── connect
+│   ├── deploy
+│   ├── push
+│   ├── register
+│   └── run
+└── rds
+    └── update-sg-rule
+
+8 directories, 32 files
+gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ 
+```
+Link to folder[bin](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/bin).
