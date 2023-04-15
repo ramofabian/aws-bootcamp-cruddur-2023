@@ -822,7 +822,7 @@ Link to folder[bin](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree
 
 ### Configure task defintions to contain x-ray and turn on Container Insights
 :white_check_mark: DONE.
-In [aws/task-definitions/backend-flask.json]() and [aws/task-definitions/frontend-react-js.json]() add a new container called `xray`with the config below:
+In [aws/task-definitions/backend-flask.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/task-definitions/backend-flask.json) and [aws/task-definitions/frontend-react-js.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/task-definitions/frontend-react-js.json) add a new container called `xray`with the config below:
 
 ```json
 "containerDefinitions": [
@@ -854,3 +854,60 @@ After appling this change, we need to register the latest task definition and de
 ./bin/frontend-react-js/deploy
 ```
 
+Logs for backend (the x-ray container has the healthcheck status in unknown becuase the image doesn't have the needed tools tu run a helth check):
+
+<p align="center"><img src="assets/week6/backend_xray.png" alt="accessibility text"></p>
+
+Logs for frontend (the x-ray container has the healthcheck status in unknown becuase the image doesn't have the needed tools tu run a helth check):
+
+<p align="center"><img src="assets/week6/frontend_xray.png" alt="accessibility text"></p>
+
+### Change Docker Compose to explicitly use a user-defined network
+:white_check_mark: DONE.
+To implement an explicit user-defined network calleed `cruddur-net` apply the configuration below in [docker-compose.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml)
+
+```yml
+networks:
+  default:
+    driver: bridge
+    name: cruddur-net
+```
+
+### Create Dockerfile specfically for production use case	
+:white_check_mark: DONE.
+Create the file [Dockerfile.prod](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/Dockerfile.prod) with the configuration below:
+
+```yml
+FROM XXXXXXXX.dkr.ecr.eu-central-1.amazonaws.com/cruddur-python:3.10-slim-buster
+
+# #For debugging
+# RUN apt-get update -y
+# RUN apt-get install iputils-ping -y
+
+WORKDIR /backend-flask
+
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+RUN apt-get update && apt-get install -y wget curl
+
+COPY . .
+
+EXPOSE ${PORT}
+
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567", "--no-debug", "--no-debugger", "--no-reload"] 
+#Replacing the CMD command above with the following comand and using bash script to run the command: python3 -m flask run --host=0.0.0.0 --port=4567
+```
+
+To run build and run the image run the following script:
+
+```bash
+#Login in ECR
+./bin/ecr/login
+#build image
+./bin/backend-flask/build
+#run image
+./bin/backend-flask/run
+```
+
+### Using ruby generate out env dot files for docker using erb templates
+:white_check_mark: DONE.
