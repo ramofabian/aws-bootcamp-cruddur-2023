@@ -1,0 +1,12 @@
+#! /usr/bin/bash
+
+CYAN='\033[1;36m'
+NO_COLOR='\033[0m'
+LABEL="Run busybox locally"
+printf "${CYAN}== ${LABEL}${NO_COLOR}\n"
+
+docker run --rm \
+-p 4567:4567 \
+--network="cruddur-net" \
+--name=busybox \
+-it busybox

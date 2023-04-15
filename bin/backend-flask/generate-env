@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+#lib for templating
+require 'erb' 
+
+#read template
+template = File.read("erb/backend-flask.erb")
+#make the render
+content = ERB.new(template).result(binding)
+#save the file
+filename = 'backend-flask.env'
+File.write(filename, content)
