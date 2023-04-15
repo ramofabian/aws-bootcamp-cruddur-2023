@@ -819,3 +819,38 @@ bin/
 gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $ 
 ```
 Link to folder[bin](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/bin).
+
+### Configure task defintions to contain x-ray and turn on Container Insights
+:white_check_mark: DONE.
+In [aws/task-definitions/backend-flask.json]() and [aws/task-definitions/frontend-react-js.json]() add a new container called `xray`with the config below:
+
+```json
+"containerDefinitions": [
+      {
+        "name": "xray",
+        "image": "public.ecr.aws/xray/aws-xray-daemon",
+        "essential": true,
+        "user": "1337",
+        "portMappings": [
+          {
+            "name": "xray",
+            "containerPort": 2000,
+            "protocol": "udp"
+          }
+        ]
+      }
+#output ommited for brevety ---
+```
+
+After appling this change, we need to register the latest task definition and deploy the new tasks with the latest info:
+
+```bash
+#for backend
+./bin/backend-flask/register #Update task definition
+./bin/backend-flask/deploy #deply new task with latest docker image and task definition
+
+#for frontend
+./bin/frontend-react-js/register
+./bin/frontend-react-js/deploy
+```
+
