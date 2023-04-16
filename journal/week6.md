@@ -1,12 +1,14 @@
-# Week 6 — Deploying Containers
+# Week 6-7 — Deploying Containers & Solving CORS with a Load Balancer and Custom Domain
 ## Mandatory tasks
 ### Watched Ashish's Week 6 - Amazon ECS Security Best Practices
+:white_check_mark: DONE.
+### Watch Fargate Technical Questions with Maish (Not yet uploaded)
 :white_check_mark: DONE.
 ### Watched ECS Fargate (Part 1)
 :white_check_mark: DONE.
 ### Forecast cost of Fargate
 :white_check_mark: DONE.
-In we worst case if we have 2 containers running every day for the whole month the cost will be arround 20USD. This forecast has been done with AWS calculator and using the parameters below:
+In we worst case if we have 2 containers running every day for the whole month the cost will be around 20USD. This forecast has been done with AWS calculator and using the parameters below:
 
 ```
 - Region: Europe (Frankfurt)
@@ -23,9 +25,9 @@ Log output:
 
 <p align="center"><img src="assets/week6/aws_fargate_forecast cost.png" alt="accessibility text"></p>
 
-### Creating healthchecks
+### Creating health checks
 :white_check_mark: DONE.
-#### Healthcheck RDS connection
+#### Health checks RDS connection
 Script to test the connection to AWS RDS DB, this script will be named as `test` and will be placed in `backend-flask/bin/db/`
 
 ```py
@@ -60,7 +62,7 @@ Execute python `test` to test if RDS DB is alive and conection stablished, `./bi
 
 <p align="center"><img src="assets/week6/RDS_test_connection.png" alt="accessibility text"></p>
 
-#### Healthcheck endpoint for Flask
+#### Health check endpoint for Flask
 1. In `backend-flask\app.py` we need to add a new endpoint with the route `/api/health-check` and returns 200 message as success.
 
 ```py
@@ -70,7 +72,7 @@ def health_check():
   return {'success': True}, 200
 ```
 
-2. Then we need to create a python scritp at `bin/flask/health-check` with the code below:
+2. Then we need to create a python script at `bin/flask/health-check` with the code below:
 
 ```py
 #!/usr/bin/env python3
@@ -90,11 +92,11 @@ except Exception as e:
     exit(1) #fail message
 ```
 
-3. Fix the permissions `chmod u+x bin/flask/health-check` and run the script (first try not succeded becuase local postgres DB was not running):
+3. Fix the permissions `chmod u+x bin/flask/health-check` and run the script (first attempt was not succeeded because local postgres DB was not running):
 
 <p align="center"><img src="assets/week6/flask_check.png" alt="accessibility text"></p>
 
-4. Create new logs groups in AWS with the follwing commands:
+4. Create new logs groups in AWS with the following commands:
 
 ```bash
 aws logs create-log-group --log-group-name "cruddur-fargate-cluster"
@@ -177,7 +179,7 @@ Logs AWS console:
 
 <p align="center"><img src="assets/week6/pushed_image_aws_repo.png" alt="accessibility text"></p>
 
-After running the db and backend service, we see the flask healthcheck is workig:
+After running the db and backend service, we see the flask health check is working:
 
 <p align="center"><img src="assets/week6/test_flask_health_check.png" alt="accessibility text"></p>
 
@@ -221,7 +223,7 @@ Image seen from AWS repo:
 :white_check_mark: DONE.
 To deploy backend flask app in Fargate, it is necessary to follow the next steps:
 #### Implement parameters
-1. Load enviroment variables to AWS Application Management paramater store
+1. Load environment variables to AWS Application Management parameter store
 
 ```bash
 aws ssm put-parameter --type "SecureString" --name "/cruddur/backend-flask/AWS_ACCESS_KEY_ID" --value $AWS_ACCESS_KEY_ID
@@ -239,8 +241,8 @@ aws ssm put-parameter --type "SecureString" --name "/cruddur/backend-flask/OTEL_
 
 #### Implement AWS service policy
 AIM roles are needed for Fargate task definition, we need to do:
-- create a new `role` in AIM service called `CruddurServiceExecutionRole` with the json configuration in this file :point_right: [aws/policies/service-assume-role-execution-policy.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/policies/service-assume-role-execution-policy.json)
-- create a new `policy` in AIM service called `CruddurServiceExecutionPolicy` with the json configuration and this policy is assigned to the role previously created. :point_right: [aws/policies/service-execution-policy.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/policies/service-execution-policy.json)
+- Create a new `role` in AIM service called `CruddurServiceExecutionRole` with the json configuration in this file :point_right: [aws/policies/service-assume-role-execution-policy.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/policies/service-assume-role-execution-policy.json)
+- Create a new `policy` in AIM service called `CruddurServiceExecutionPolicy` with the json configuration and this policy is assigned to the role previously created. :point_right: [aws/policies/service-execution-policy.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/policies/service-execution-policy.json)
 
 The execution was done with AWS CLI with the command below:
 
@@ -251,7 +253,7 @@ aws iam create-role \
 --role-name CruddurServiceExecutionRole  \
 --assume-role-policy-document file://aws/policies/service-assume-role-execution-policy.json
 
-#Creating the policy and putting the assiidination to the role previously created
+#Creating the policy with the template `service-execution-policy.json` and attach it to the role previously created.
 aws iam put-role-policy \
 --role-name CruddurServiceExecutionRole \
 --policy-name CruddurServiceExecutionPolicy \
@@ -309,7 +311,7 @@ aws iam attach-role-policy --policy-arn arn:aws:iam::aws:policy/AWSXRayDaemonWri
 From AWS console go to ECS service -> task definitions
 <b>Note:</b> task definitions is `similar to docker-`compose file where we define how the containers will run. [LINK](https://docs.docker.com/cloud/ecs-integration/)
 
-In our case will have we have the json file with the information needed to make the implementation: [Link to backend-flas.json]()
+In our case will have we have the json file with the information needed to make the implementation: [Link to backend-flask.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/task-definitions/backend-flask.json)
 
 With the command below the task is defined:
 ```bash
@@ -350,7 +352,7 @@ aws ec2 authorize-security-group-ingress \
 #### Deploy Backend Flask app from AWS console
 
 From AWS console go to ECS service -> cruddur cluster -> services --> create service:
-<b>Note:</b> we will use service because at the end when the container is stoped, it will be killed if we implment it as a task. For that reason we will use it as a service. 
+<b>Note:</b> we will use service because at the end when the container is stoped, it will be killed if we implement it as a task. For that reason we will use it as a service. 
 
 Make sure that role `CruddurServiceExecutionRole` has the following policies applied:
 
@@ -438,18 +440,18 @@ We can also test it from webrowser with the URL 'http://3.72.113.210:4567/api/ac
 
 <p align="center"><img src="assets/week6/getting_data_from_rds.png" alt="accessibility text"></p>
 
-- Enabling service connect option from fargate cluser:
+- Enabling service connect option from Fargate cluster:
 
 <p align="center"><img src="assets/week6/service_connect_on.png" alt="accessibility text"></p>
 
 #### Creating a load balancer
-Pre-requisities to create a loadbalancer:
+Pre-requisites to create a load balancer:
 - Create cruddur-alb-sg and allow the traffic for port 3000 and 4567
 - Create Target groups: `cruddur-backend-flask-tg` and `cruddur-frontend-react-js`. For backend enbale healthcheck verification.
 
 - From AWS console go to CE2 -> Load Balancing -> Load Balancers -> create load balancer -> select option -> Application Load Balancer (alb)
 
-- Created load balacer:
+- Created load balancer:
 
 <p align="center"><img src="assets/week6/load_balancer_1.png" alt="accessibility text"></p>
 
@@ -469,7 +471,7 @@ Pre-requisities to create a loadbalancer:
 :white_check_mark: DONE.
 1. Create new docker file called `Dockerfile.prod` with the code for production container.:point_right: [Dockerfile.prod](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/Dockerfile.prod)
 2. Create the file `nginx.conf` with ngnix server configuration. :point_right: [nginx.conf](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/nginx.conf)
-3. Build the nginx image from `frontend-react-js` folder run the command `npm run build` at the ind the message below should be visible without any error:
+3. Build the nginx image from `frontend-react-js` folder run the command `npm run build` at the message below should be visible without any error:
 
 <p align="center"><img src="assets/week6/front_endbuild.png" alt="accessibility text"></p>
 
@@ -512,7 +514,7 @@ aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --usernam
 docker push $ECR_FRONTEND_REACT_URL:latest
 ```
 
-Created repo and pused image:
+Created repo and pushed image:
 
 <p align="center"><img src="assets/week6/frontend_repo2.png" alt="accessibility text"></p>
 
@@ -539,7 +541,7 @@ aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-j
 
 <b>NOTE:</b> To avoid any issue, make sure that security groups for `target group`, services are allowing TCP ports 4567 and 3000.
 
-- Services running heathing from ECS:
+- Services running healthy from ECS:
 
 <p align="center"><img src="assets/week6/services_running.png" alt="accessibility text"></p>
 
@@ -547,11 +549,11 @@ aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-j
 
 <p align="center"><img src="assets/week6/frontend_deployed.png" alt="accessibility text"></p>
 
-- Healthcheck status from Target groups:
+- Health check status from Target groups:
 
 <p align="center"><img src="assets/week6/target_check.png" alt="accessibility text"></p>
 
-### Manage your domain useing Route53 via hosted zone
+### Manage your domain using Route53 via hosted zone
 :white_check_mark: DONE.
 In my case I have bougth the domain `cr-cloud.online` from [Ionos](https://www.ionos.es/). Although, I created the subdomain `cruddur.cr-cloud.online` to be used with this app.
 
@@ -564,7 +566,7 @@ To manage my domain using Route53 I had to perform the following steps:
 
 <p align="center"><img src="assets/week6/ionos_registros.png" alt="accessibility text"></p>
 
-### Create an SSL cerificate via ACM
+### Create an SSL certificate via ACM
 :white_check_mark: DONE.
 To create an SSL certificate we need to go from AWS console to `AWS Certificate Manager (ACM)`, then click on `Request` and set the following options:
 - Request a public certificate. 
@@ -587,7 +589,7 @@ To setup a record for naked domain to point to `frontend` app, I followed the ne
 
 <p align="center"><img src="assets/week6/redirect_to_frontend.png" alt="accessibility text"></p>
 
-- Go to Route 53 and add the record for the route `cruddur.cr-cloud.online` and enable the alias to set the route to loadbalancer:
+- Go to Route 53 and add the record for the route `cruddur.cr-cloud.online` and enable the alias to set the route to load balancer:
 
 <p align="center"><img src="assets/week6/frontend_record.png" alt="accessibility text"></p>
 
@@ -599,11 +601,11 @@ Accessing from URL: [https://cruddur.cr-cloud.online](https://cruddur.cr-cloud.o
 :white_check_mark: DONE.
 To setup a record for naked domain to point to `backend` app, I followed the next steps:
 - From AWS console, go to: EC2 --> Load balancers --> cruddur-alb --> Listeners --> edit listener `HTTPS:443`
-- Add new rule where the header be: `api.cruddur.cr-cloud.online` forward to: `cruddur-backend-flask-tg` (bakend target group)
+- Add new rule where the header be: `api.cruddur.cr-cloud.online` forward to: `cruddur-backend-flask-tg` (backend target group)
 
 <p align="center"><img src="assets/week6/redirect_to_backend.png" alt="accessibility text"></p>
 
-- Go to Route 53 and add the record for the route `api.cruddur.cr-cloud.online` and enable the alias to set the route to loadbalancer:
+- Go to Route 53 and add the record for the route `api.cruddur.cr-cloud.online` and enable the alias to set the route to load balancer:
 
 <p align="center"><img src="assets/week6/backend_record.png" alt="accessibility text"></p>
  
@@ -611,7 +613,7 @@ Accessing from URL: [https://cruddur.cr-cloud.online/](https://api.cruddur.cr-cl
 
 <p align="center"><img src="assets/week6/accessing_backend_with_my_domain.png" alt="accessibility text"></p>
 
-Checking the access to freontend and backend via gitpod CLI:
+Checking the access to frontend and backend via gitpod CLI:
 
 <p align="center"><img src="assets/week6/acces_cli_curl.png" alt="accessibility text"></p>
 
@@ -624,7 +626,7 @@ To fix the CORS from backend side we need to follow the next steps:
 
 <p align="center"><img src="assets/week6/fixing_cors.png" alt="accessibility text"></p>
 
-- Once it is fixed, we need to update the taks definition in to AWS ECS task definition service.
+- Once it is fixed, we need to update the tasks definition in to AWS ECS task definition service.
 
 ```bash
 aws ecs register-task-definition --cli-input-json file://aws/task-definitions/backend-flask.json
@@ -639,7 +641,7 @@ Now I have the version 5 of the task definition for backend:
 <p align="center"><img src="assets/week6/update_backend_service.png" alt="accessibility text"></p>
 
 #### Frontend side
-Since we are fixing the CORS from backend side we we have to fix the `REACT_APP_BACKEND_URL` in the frontend. To do it, we need to build a new image with the new backend URL, with the commands below:
+Since we are fixing the CORS from backend side we have to fix the `REACT_APP_BACKEND_URL` in the frontend. To do it, we need to build a new image with the new backend URL, with the commands below:
 
 ```bash
 #Go to frontend folder
@@ -670,12 +672,12 @@ aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --usernam
 docker push $ECR_FRONTEND_REACT_URL:latest
 ```
 
-Evidence of the new upladed image:
+Evidence of the new uploaded image:
 
 <p align="center"><img src="assets/week6/new_frontend_image.png" alt="accessibility text"></p>
 
 Then we have to update the `frontend-react-js` service 
-Note: Don't fortget enble the option `Force new deployment`, otherwise the service will nto create a new task with the new image.
+Note: Don't forget enable the option `Force new deployment`, otherwise the service will not create a new task with the new image.
 
 <p align="center"><img src="assets/week6/services_status.png" alt="accessibility text"></p>
 
@@ -694,26 +696,26 @@ Note: Don't fortget enble the option `Force new deployment`, otherwise the servi
 
 ### Secure Flask by not running in debug mode
 :white_check_mark: DONE.
-- To disbale debug mode in Fask we have to add the options `"--no-debug", "--no-debugger", "--no-reload"` in the CMD line, like this:
+- To disable debug mode in Flask, we have to add the options `"--no-debug", "--no-debugger", "--no-reload"` in the CMD line, like this:
 
 ```docker
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567", "--no-debug", "--no-debugger", "--no-reload"] 
 ```
 
 - Then remove the line with `ENV FLASK_DEBUG=1`.
-- Modify the `health-check` enpoint to cause a failure and run the docker image for production in Gitpod to see if it is working with the new change.
+- Modify the `health-check` endpoint to cause a failure and run the docker image for production in Gitpod to see if it is working with the new change.
 
 <p align="center"><img src="assets/week6/secure_debug_3.png" alt="accessibility text"></p>
 
-When an error curres, the meesage below shuld be visible:
+When an error occurs, the message below should be visible:
 
 <p align="center"><img src="assets/week6/secure_debug_1.png" alt="accessibility text"></p>
 
-- Revert the changes done in `health-check` enpoint and push the image in ECR.
+- Revert the changes done in `health-check` endpoint and push the image in ECR.
 
 ### Implement Refresh Token for Amazon Cognito
 :white_check_mark: DONE.
-To implement the Token refresh for Amazon cognito, we need to add the code below in side of `CheckAuth.js` file, where there is some code running but it is not working as expected and the token is not being refreshed.
+To implement the Token refresh for Amazon Cognito, we need to add the code below in side of `CheckAuth.js` file, where there is some code running but it is not working as expected and the token is not being refreshed.
 
 ```js
 // congnito ------------------
@@ -751,7 +753,7 @@ export async function checkAuth(setUser) {
 };
 ```
 
-Then, we need to upade the files where the `Authorization` header is being used to start using the function `getAccessToken()`. 
+Then, we need to update the files where the `Authorization` header is being used to start using the function `getAccessToken()`. 
 ```js
 await getAccessToken()
 const access_token = localStorage.getItem("access_token")
@@ -763,7 +765,7 @@ So I did the change in the following files:
 - [MessageGroupNewPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/MessageGroupNewPage.js)
 - [MessageGroupsPage.js](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/src/pages/MessageGroupsPage.js)
 
-Comparison of refresed token and Cognito token (both are the same):
+Comparison of refreshed token and Cognito token (both are the same):
 
 <p align="center"><img src="assets/week6/refresh_token.png" alt="accessibility text"></p>
 
@@ -820,9 +822,9 @@ gitpod /workspace/aws-bootcamp-cruddur-2023 (main) $
 ```
 Link to folder[bin](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/tree/main/bin).
 
-### Configure task defintions to contain x-ray and turn on Container Insights
+### Configure task definition to contain x-ray and turn on Container Insights
 :white_check_mark: DONE.
-In [aws/task-definitions/backend-flask.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/task-definitions/backend-flask.json) and [aws/task-definitions/frontend-react-js.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/task-definitions/frontend-react-js.json) add a new container called `xray`with the config below:
+In [aws/task-definitions/backend-flask.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/task-definitions/backend-flask.json) and [aws/task-definitions/frontend-react-js.json](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/aws/task-definitions/frontend-react-js.json) add a new container called `xray` with the config below:
 
 ```json
 "containerDefinitions": [
@@ -839,10 +841,10 @@ In [aws/task-definitions/backend-flask.json](https://github.com/ramofabian/aws-b
           }
         ]
       }
-#output ommited for brevety ---
+#output omitted for brevity ---
 ```
 
-After appling this change, we need to register the latest task definition and deploy the new tasks with the latest info:
+After applying this change, we need to register the latest task definition and deploy the new tasks with the latest info:
 
 ```bash
 #for backend
@@ -854,17 +856,17 @@ After appling this change, we need to register the latest task definition and de
 ./bin/frontend-react-js/deploy
 ```
 
-Logs for backend (the x-ray container has the healthcheck status in unknown becuase the image doesn't have the needed tools tu run a helth check):
+Logs for backend (the x-ray container has the health check status in unknown because the image doesn't have the needed tools to run a health check):
 
 <p align="center"><img src="assets/week6/backend_xray.png" alt="accessibility text"></p>
 
-Logs for frontend (the x-ray container has the healthcheck status in unknown becuase the image doesn't have the needed tools tu run a helth check):
+Logs for frontend (the x-ray container has the health check status in unknown because the image doesn't have the needed tools to run a health check):
 
 <p align="center"><img src="assets/week6/frontend_xray.png" alt="accessibility text"></p>
 
 ### Change Docker Compose to explicitly use a user-defined network
 :white_check_mark: DONE.
-To implement an explicit user-defined network calleed `cruddur-net` apply the configuration below in [docker-compose.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml)
+To implement an explicit user-defined network called `cruddur-net` apply the configuration below in [docker-compose.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/docker-compose.yml)
 
 ```yml
 networks:
@@ -877,11 +879,11 @@ Execution log from command `docker-compose up -d --rm`:
 
 <p align="center"><img src="assets/week6/execution_compose.png" alt="accessibility text"></p>
 
-Inspection seein from command `docker network inspect cruddur-net  |grep -iE "name|mac|ipv4|subnet|gateway"`:
+Inspection seen from command `docker network inspect cruddur-net  |grep -iE "name|mac|ipv4|subnet|gateway"`:
 
 <p align="center"><img src="assets/week6/docker_net_inspect.png" alt="accessibility text"></p>
 
-### Create Dockerfile specfically for production use case	
+### Create Dockerfile specifically for production use case	
 :white_check_mark: DONE.
 Create the file [Dockerfile.prod](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/Dockerfile.prod) with the configuration below:
 
@@ -1017,14 +1019,14 @@ File.write(filename, content)</pre>Template .erb: <a href="https://github.com/ra
     frontend-react-js:
     env_file:
       - frontend-react-js.env
-      #output ommited for brevety ---</pre>
+      #output omitted for brevity ---</pre>
     </td>
     <td> 
       <pre lang='yml'>
     backend-flask:
     env_file:
       - backend-flask.env
-      #output ommited for brevety ---</pre>
+      #output omitted for brevity ---</pre>
     </td>
   </tr>
 </table>
