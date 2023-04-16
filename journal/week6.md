@@ -873,6 +873,14 @@ networks:
     name: cruddur-net
 ```
 
+Execution log from command `docker-compose up -d --rm`:
+
+<p align="center"><img src="assets/week6/execution_compose.png" alt="accessibility text"></p>
+
+Inspection seein from command `docker network inspect cruddur-net  |grep -iE "name|mac|ipv4|subnet|gateway"`:
+
+<p align="center"><img src="assets/week6/docker_net_inspect.png" alt="accessibility text"></p>
+
 ### Create Dockerfile specfically for production use case	
 :white_check_mark: DONE.
 Create the file [Dockerfile.prod](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/backend-flask/Dockerfile.prod) with the configuration below:
@@ -905,9 +913,140 @@ To run build and run the image run the following script:
 ./bin/ecr/login
 #build image
 ./bin/backend-flask/build
-#run image
+
+#Run DB containers + frontend (optional), the load DBs information
+docker-compose up --rm -d 
+./bin/db/setup
+./bin/ddb/schema-load
+./bin/ddb/seed
+
+#run image (Don't forget to attach the container to `cruddur-net` network)
 ./bin/backend-flask/run
 ```
 
+Execution logs from CLI:
+
+<p align="center"><img src="assets/week6/prod_backend_test.png" alt="accessibility text"></p>
+
+Execution logs from web:
+<p align="center"><img src="assets/week6/backend_prod_local_exec.png" alt="accessibility text"></p>
+
 ### Using ruby generate out env dot files for docker using erb templates
 :white_check_mark: DONE.
+- The following scripts are used to generate the `.env` files based on `.erb` templates for backend and frontend, those files to pass all environment variables to run docker images or docker-compose setup:
+
+<table>
+  <tr>
+    <th>Frontend</th>
+    <th>backend</th>
+  </tr>
+  <tr>
+    <td>      
+      File located at: <a href="https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/bin/frontend-react-js/generate-env">bin/backend-flask/generate-env</a>
+      <pre lang="ruby">
+#!/usr/bin/env ruby
+
+#lib for templating
+require 'erb' 
+
+#read template
+template = File.read("erb/frontend-react-js.erb")
+#make the render
+content = ERB.new(template).result(binding)
+#save the file
+filename = 'frontend-react-js.env'
+File.write(filename, content)</pre>Template .erb: <a href="https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/erb/frontend-react-js.erb">erb/backend-flask.erb</a>
+    </td>
+    <td>
+       File located at: <a href="https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/bin/backend-flask/generate-env">bin/frontend-react-js/generate-env</a>
+      <pre lang="ruby">
+#!/usr/bin/env ruby
+
+#lib for templating
+require 'erb' 
+
+#read template
+template = File.read("erb/backend-flask.erb")
+#make the render
+content = ERB.new(template).result(binding)
+#save the file
+filename = 'backend-flask.env'
+File.write(filename, content)</pre>Template .erb: <a href="https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/erb/backend-flask.erb">erb/frontend-react-js.erb</a>
+    </td>
+  </tr>
+</table>
+
+- To the `.env` files automatically generated every time we load a new workspace in gitpod, we can add the following code in our [.gitpod.yml](https://github.com/ramofabian/aws-bootcamp-cruddur-2023/blob/main/.gitpod.yml):
+
+<table>
+  <tr>
+    <th>Frontend</th>
+    <th>backend</th>
+  </tr>
+  <tr>
+    <td>  
+       <pre lang="yml">
+- name: flask
+    command: |
+      cd "$THEIA_WORKSPACE_ROOT"
+      ./bin/backend-flask/generate-env
+      cd backend-flask
+      pip install -r requirements.txt</pre>
+    </td>
+    <td>
+      <pre lang="yml">
+- name: react-js
+    command: |
+      cd "$THEIA_WORKSPACE_ROOT"
+      ./bin/frontend-react-js/generate-env
+      cd frontend-react-js
+      npm i</pre>
+    </td>
+  </tr>
+</table>
+
+- In our `docker-compose.yml` file we can remore the list of local env vatialbles by the following lines:
+<table>
+  <tr>
+    <th>Frontend</th>
+    <th>backend</th>
+  </tr>
+  <tr>
+    <td>
+    <pre lang='yml'>
+    frontend-react-js:
+    env_file:
+      - frontend-react-js.env
+      #output ommited for brevety ---</pre>
+    </td>
+    <td> 
+      <pre lang='yml'>
+    backend-flask:
+    env_file:
+      - backend-flask.env
+      #output ommited for brevety ---</pre>
+    </td>
+  </tr>
+</table>
+
+- Execution logs:
+<table>
+  <tr>
+    <th>Frontend</th>
+    <th>backend</th>
+  </tr>
+  <tr>
+    <td>
+      <p align="center"><img src="assets/week6/frontend_excution.png" alt="accessibility text"></p>
+    </td>
+    <td> 
+      <p align="center"><img src="assets/week6/backend_excution.png" alt="accessibility text"></p>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      Generated files:
+      <p align="center"><img src="assets/week6/generated_files.png" alt="accessibility text"></p>
+    </td>
+  </tr>
+</table>
